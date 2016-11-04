@@ -1,0 +1,15 @@
+{
+  "name": "pulltorefresh",
+  "version": "1.0.0",
+  "description": "Pull To Refresh ===",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "coffee-script": "^1.11.1",
+    "gulp": "^3.9.1"
+  }
+}
