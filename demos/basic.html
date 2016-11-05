@@ -30,27 +30,51 @@ header h1{
 }
 #main{
   padding-top: 20px;
+  transition: transform .3s;
 }
-.ptr {
+
+#main .ptr{
+  pointer-events: none;
+  background: silver;
   position: fixed;
   z-index: 0;
-  top: -100px;
-  height: 100px;
+  left: 0;
+  top: -120px;
+  height: 120px;
+  right: 0;
+  bottom: 0;
+}
+.trigger {
+  float: right;
+}
+
+#main.-pull {
+  transition: none;
+}
+#main.-release .ptr {
+  background: red;
+}
+
+#main.-refresh {
+  transform: translate3d(0, 50px, 0);
+}
+#main.-refresh .ptr {
+  background: green;
 }
 </style>
 </head>
 <body>
 
-
 <header>
   <div class="wrap">
+    <span class='trigger'>PULL</span>
     <h1>Demo</h1>
   </div>
 </header>
 
 <div id="main">
+  <div class="ptr">:)</div>
   <div class="wrap">
-    <div class="ptr">:)</div>
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -61,5 +85,13 @@ header h1{
 </div>
 
 <script src="/dist/pulltorefresh.js"></script>
+<script>
+  /* global PullToRefresh */
+  PullToRefresh.init({
+    bodyElement: '#main',
+    triggerElement: '.trigger',
+    refreshFunction: () => console.log('OK'),
+  });
+</script>
 </body>
 </html>
