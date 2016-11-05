@@ -1,29 +1,23 @@
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (factory());
-}(this, (function () {
-
-var config = {};
+const config = {};
 
 config.distTreshold = 90;
 config.distMax = 120;
-config.resistanceFunction = function ( t ) { return Math.min(1, t / 2.5); };
+config.resistanceFunction = t => Math.min(1, t / 2.5);
 
-var body = document.querySelector('#main');
+const body = document.querySelector('#main');
 
-var pullStartY = null;
-var pullMoveY = null;
-var dist = 0;
-var distResisted = 0;
+let pullStartY = null;
+let pullMoveY = null;
+let dist = 0;
+let distResisted = 0;
 
-window.addEventListener('touchstart', function (e) {
+window.addEventListener('touchstart', (e) => {
   if (!window.scrollY) {
     pullStartY = e.touches[0].screenY;
   }
 });
 
-window.addEventListener('touchmove', function (e) {
+window.addEventListener('touchmove', (e) => {
   if (!pullStartY) {
     if (!window.scrollY) {
       pullStartY = e.touches[0].screenY;
@@ -40,7 +34,7 @@ window.addEventListener('touchmove', function (e) {
 
   if (dist > 0) {
     e.preventDefault();
-    body.style.transform = body.style.webkitTransform = "translate3d(0," + distResisted + "px,0)";
+    body.style.transform = body.style.webkitTransform = `translate3d(0,${distResisted}px,0)`;
     distResisted = config.resistanceFunction(dist / config.distTreshold)
       * Math.min(config.distMax, dist);
 
@@ -50,7 +44,7 @@ window.addEventListener('touchmove', function (e) {
   }
 });
 
-window.addEventListener('touchend', function () {
+window.addEventListener('touchend', () => {
   if (distResisted > config.distTreshold) {
     console.log('GO');
   }
@@ -59,5 +53,3 @@ window.addEventListener('touchend', function () {
   pullStartY = pullMoveY = null;
   dist = distResisted = 0;
 });
-
-})));

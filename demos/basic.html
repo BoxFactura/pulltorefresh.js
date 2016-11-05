@@ -22,6 +22,8 @@ header{
   background: #33c;
   color: #fff;
   padding: 20px 0;
+  position: relative;
+  z-index: 1;
 }
 header h1{
   margin: 0;
@@ -29,9 +31,17 @@ header h1{
 #main{
   padding-top: 20px;
 }
+.ptr {
+  position: fixed;
+  z-index: 0;
+  top: -100px;
+  height: 100px;
+}
 </style>
 </head>
 <body>
+
+
 <header>
   <div class="wrap">
     <h1>Demo</h1>
@@ -40,6 +50,7 @@ header h1{
 
 <div id="main">
   <div class="wrap">
+    <div class="ptr">:)</div>
     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
     tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
