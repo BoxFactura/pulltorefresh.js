@@ -1,0 +1,86 @@
+body {
+  margin: 0;
+  padding: 0;
+  font: 15px / 1.15 Helvetica, Arial, sans-serif;
+}
+
+.wrap {
+  max-width: 800px;
+  padding: 0 10px;
+  margin: 0 auto;
+}
+
+header {
+  background: #33c;
+  color: #fff;
+  padding: 20px 0;
+  position: relative;
+  z-index: 1;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+#main {
+  padding-top: 20px;
+  transition: transform .3s;
+
+  &.-pull { transition: none; }
+  &.-release .ptr .icon { transform: rotate(180deg); }
+  &.-refresh { transform: translate3d(0, 30px, 0); }
+  &.-refresh .ptr .-on { display: none; }
+  &.-refresh .ptr .-off { display: inline-block; }
+  &.-refresh .ptr {
+    height: 30px;
+    top: -30px;
+  }
+}
+
+.trigger {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  float: right;
+  display: block;
+  border: 1px solid white;
+}
+
+.ptr {
+  pointer-events: none;
+  transition: all .3s;
+  background: silver;
+  position: fixed;
+  z-index: 0;
+  left: 0;
+  top: -120px;
+  height: 120px;
+  right: 0;
+  bottom: 0;
+}
+
+.box {
+  height: 100%;
+  position: relative;
+
+  .content {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 10em;
+    height: 20px;
+    line-height: 20px;
+    margin: auto;
+    position: absolute;
+    text-align: center;
+
+    span {
+      transition: all .3s;
+    }
+  }
+}
+
+.-off { display: none; }
+.-on { display: inline-block; }

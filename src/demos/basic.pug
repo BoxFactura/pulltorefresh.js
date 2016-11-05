@@ -1,0 +1,10 @@
+extend _layout
+
+block run
+  script.
+    /* global PullToRefresh */
+    PullToRefresh.init({
+      bodyElement: '#main',
+      triggerElement: '.trigger',
+      refreshFunction: () => console.log('OK'),
+    });

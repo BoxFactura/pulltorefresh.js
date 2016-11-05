@@ -5,17 +5,24 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tarima -ws",
+    "lint": "eslint src",
     "build": "tarima -f"
   },
   "author": "Rafael Soto",
   "license": "MIT",
   "tarima": {
     "public": ".",
-    "dest": "dist",
+    "dest": ".",
     "cacheFile": "dist/build.json",
-    "bundle": true,
     "rename": [
-      "**/src/index.js:{filepath/1}/pulltorefresh.js"
+      "**/*.css:{filepath/1}/{filename}.css",
+      "**/*.html:{filepath/1}/{filename}.html",
+      "**/src/index.js:{filepath/1}/dist/pulltorefresh.js"
+    ],
+    "filter": [
+      "!_*",
+      "!**/_*",
+      "!**/_*/**"
     ],
     "ignoreFiles": [
       ".gitignore"
@@ -33,11 +40,13 @@
     }
   },
   "devDependencies": {
-    "buble": "0.5.3",
+    "buble": "0.14.2",
     "chokidar": "1.6.0",
     "eslint": "3.5.0",
     "eslint-config-airbnb-base": "7.1.0",
     "eslint-plugin-import": "1.15.0",
+    "less": "2.7.1",
+    "pug": "2.0.0-beta6",
     "rollup": "0.36.3",
     "tarima-cli": "0.2.10",
     "tarima-lr": "0.0.5"
