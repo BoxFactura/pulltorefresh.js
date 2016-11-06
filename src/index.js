@@ -4,7 +4,7 @@ _bundle: PullToRefresh
 ---
 */
 
-import { _closestElement } from './_helpers';
+import { _getIcon, _getLabel, _closestElement } from './_helpers';
 
 /* eslint-disable import/no-unresolved */
 
@@ -17,15 +17,17 @@ const _defaults = {
   distTreshold: 90,
   distMax: 120,
   distReload: 50,
-  bodyElement: 'body',
   bodyOffset: 20,
+  mainElement: 'body',
   triggerElement: 'body',
   ptrElement: '.ptr',
   classPrefix: 'ptr--',
   cssProp: 'padding-top',
   refreshTimeout: 500,
-  getMarkup: () => _ptrMarkup(),
-  getStyles: () => _ptrStyles(),
+  getIcon: _getIcon,
+  getLabel: _getLabel,
+  getMarkup: _ptrMarkup,
+  getStyles: _ptrStyles,
   refreshFunction: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
 };
@@ -39,6 +41,13 @@ let _state = 'pending';
 let _setup = false;
 let _enable = false;
 let _timeout;
+
+function _update() {
+  const { getIcon, getLabel, ptrElement, classPrefix } = _SETTINGS;
+
+  ptrElement.querySelector(`.${classPrefix}icon`).innerHTML = getIcon(_state);
+  ptrElement.querySelector(`.${classPrefix}text`).innerHTML = getLabel(_state);
+}
 
 function _setupEvents() {
   const { classPrefix } = _SETTINGS;
@@ -75,6 +84,7 @@ function _setupEvents() {
     if (_state === 'pending') {
       ptrElement.classList.add(`${classPrefix}pull`);
       _state = 'pulling';
+      _update();
     }
 
     if (pullStartY && pullMoveY) {
@@ -92,11 +102,13 @@ function _setupEvents() {
       if (_state === 'pulling' && distResisted > distTreshold) {
         ptrElement.classList.add(`${classPrefix}release`);
         _state = 'releasing';
+        _update();
       }
 
       if (_state === 'releasing' && distResisted < distTreshold) {
         ptrElement.classList.remove(`${classPrefix}release`);
         _state = 'pulling';
+        _update();
       }
     }
   });
@@ -121,7 +133,9 @@ function _setupEvents() {
 
     ptrElement.classList.remove(`${classPrefix}release`);
     ptrElement.classList.remove(`${classPrefix}pull`);
+
     _state = 'pending';
+    _update();
 
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
@@ -130,13 +144,13 @@ function _setupEvents() {
 
 function _run() {
   const {
-    bodyElement, getMarkup, getStyles, classPrefix,
+    mainElement, getMarkup, getStyles, classPrefix,
   } = _SETTINGS;
 
   if (!_SETTINGS.ptrElement) {
     const ptr = document.createElement('div');
 
-    bodyElement.parentNode.insertBefore(ptr, bodyElement);
+    mainElement.parentNode.insertBefore(ptr, mainElement);
 
     ptr.classList.add(`${classPrefix}ptr`);
     ptr.innerHTML = getMarkup()
@@ -160,12 +174,8 @@ export default {
       _SETTINGS[key] = options[key] || _defaults[key];
     });
 
-    if (!_SETTINGS.triggerElement) {
-      _SETTINGS.triggerElement = _SETTINGS.bodyElement;
-    }
-
-    if (typeof _SETTINGS.bodyElement === 'string') {
-      _SETTINGS.bodyElement = document.querySelector(_SETTINGS.bodyElement);
+    if (typeof _SETTINGS.mainElement === 'string') {
+      _SETTINGS.mainElement = document.querySelector(_SETTINGS.mainElement);
     }
 
     if (typeof _SETTINGS.ptrElement === 'string') {
