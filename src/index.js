@@ -40,7 +40,7 @@ const _defaults = {
         align-items: flex-end;
         align-content: stretch;
       }
-      .ptr--refresh{
+      .ptr--refresh, .ptr--release{
         transition: height 0.12s;
       }
       .box {
@@ -145,7 +145,6 @@ function _setupEvents() {
         * Math.min(_SETTINGS.distMax, dist);
 
       if (_state === 'pulling' && distResisted > _SETTINGS.distTreshold) {
-        _SETTINGS.ptrElement.classList.add(`${_SETTINGS.classPrefix}release`);
         _state = 'releasing';
       }
 
@@ -167,10 +166,11 @@ function _setupEvents() {
 
       _SETTINGS.ptrElement.classList.add(`${_SETTINGS.classPrefix}refresh`);
     } else {
+      _SETTINGS.ptrElement.classList.add(`${_SETTINGS.classPrefix}release`);
       _SETTINGS.ptrElement.style.height = `0px`;
     }
 
-    _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}release`);
+    // _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}release`);
     _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}pull`);
     _state = 'pending';
 

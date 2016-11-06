@@ -27,7 +27,7 @@ var _defaults = {
   },
   styleFunction: function (){
     var styleEl = document.createElement('style');
-    var cssCont = "\n      .ptr {\n        box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n        pointer-events: none;\n        font-size: 0.85em;\n        font-weight: bold;\n        position: relative;\n        top: 0;\n        height: 0;\n        text-align: center;\n        width: 100%;\n        overflow: hidden;\n        display: flex;\n        align-items: flex-end;\n        align-content: stretch;\n      }\n      .ptr--refresh{\n        transition: height 0.12s;\n      }\n      .box {\n        padding: 10px;\n        flex-basis: 100%;\n      }\n      .box .content {\n      }\n      .box .content span {\n      }\n    ";
+    var cssCont = "\n      .ptr {\n        box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n        pointer-events: none;\n        font-size: 0.85em;\n        font-weight: bold;\n        position: relative;\n        top: 0;\n        height: 0;\n        text-align: center;\n        width: 100%;\n        overflow: hidden;\n        display: flex;\n        align-items: flex-end;\n        align-content: stretch;\n      }\n      .ptr--refresh, .ptr--release{\n        transition: height 0.12s;\n      }\n      .box {\n        padding: 10px;\n        flex-basis: 100%;\n      }\n      .box .content {\n      }\n      .box .content span {\n      }\n    ";
     styleEl.innerText = cssCont;
     document.head.appendChild(styleEl);
   },
@@ -121,7 +121,6 @@ function _setupEvents() {
         * Math.min(_SETTINGS.distMax, dist);
 
       if (_state === 'pulling' && distResisted > _SETTINGS.distTreshold) {
-        _SETTINGS.ptrElement.classList.add(((_SETTINGS.classPrefix) + "release"));
         _state = 'releasing';
       }
 
@@ -143,10 +142,11 @@ function _setupEvents() {
 
       _SETTINGS.ptrElement.classList.add(((_SETTINGS.classPrefix) + "refresh"));
     } else {
+      _SETTINGS.ptrElement.classList.add(((_SETTINGS.classPrefix) + "release"));
       _SETTINGS.ptrElement.style.height = "0px";
     }
 
-    _SETTINGS.ptrElement.classList.remove(((_SETTINGS.classPrefix) + "release"));
+    // _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}release`);
     _SETTINGS.ptrElement.classList.remove(((_SETTINGS.classPrefix) + "pull"));
     _state = 'pending';
 
