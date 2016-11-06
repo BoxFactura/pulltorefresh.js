@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <div class="wrap">
+      <div class="wrap"><span class="trigger">&darr;</span>
         <h1>Demo</h1>
       </div>
     </header>
@@ -31,6 +31,7 @@
       /* global PullToRefresh */
       PullToRefresh.init({
         bodyElement: '#main',
+        triggerElement: '.trigger',
         refreshFunction: function() { console.log('refresh') }
       });
     </script>

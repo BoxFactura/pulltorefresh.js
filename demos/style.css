@@ -31,9 +31,3 @@ header h1 {
   display: block;
   border: 1px solid white;
 }
-.-off {
-  display: none;
-}
-.-on {
-  display: inline-block;
-}
