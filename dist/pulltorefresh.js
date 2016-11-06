@@ -15,6 +15,12 @@ var _defaults = {
   bodyElement: 'body',
   triggerElement: 'body',
   refreshTimeout: 500,
+  styleFunction: function (){
+    var styleEl = document.createElement('style');
+    var cssCont = "\n      .ptr {\n        pointer-events: none;\n        transition: all .3s;\n        background: silver;\n        position: fixed;\n        z-index: 0;\n        left: 0;\n        top: -120px;\n        height: 120px;\n        right: 0;\n        bottom: 0;\n      }\n      .box {\n        height: 100%;\n        position: relative;\n      }\n      .box .content {\n        top: 0;\n        left: 0;\n        right: 0;\n        bottom: 0;\n        width: 10em;\n        height: 20px;\n        line-height: 20px;\n        margin: auto;\n        position: absolute;\n        text-align: center;\n      }\n      .box .content span {\n        transition: all .3s;\n      }\n    ";
+    styleEl.innerText = cssCont;
+    document.head.appendChild(styleEl);
+  },
   refreshFunction: function () { return location.reload(); },
   resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
 };
@@ -56,6 +62,7 @@ function _closestElement(node, selector) {
 }
 
 function _setupEvents() {
+  if(typeof _SETTINGS.styleFunction == 'function') { _SETTINGS.styleFunction(); }
   window.addEventListener('touchstart', function (e) {
     _enable = _closestElement(e.target, _SETTINGS.triggerElement);
 
