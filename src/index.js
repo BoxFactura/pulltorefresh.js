@@ -16,7 +16,7 @@ const _SETTINGS = {};
 const _defaults = {
   distTreshold: 90,
   distMax: 120,
-  distReload: 50,
+  distReload: 60,
   bodyOffset: 20,
   mainElement: 'body',
   triggerElement: 'body',
@@ -150,7 +150,11 @@ function _run() {
   if (!_SETTINGS.ptrElement) {
     const ptr = document.createElement('div');
 
-    mainElement.parentNode.insertBefore(ptr, mainElement);
+    if (mainElement !== document.body) {
+      mainElement.parentNode.insertBefore(ptr, mainElement);
+    } else {
+      document.body.insertBefore(ptr, document.body.firstChild);
+    }
 
     ptr.classList.add(`${classPrefix}ptr`);
     ptr.innerHTML = getMarkup()
