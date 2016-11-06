@@ -30,25 +30,47 @@
     } while (node.parentNode);
   }
 
-  function _ptrMarkup(){return "<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">---</div>\n</div>";};;
+  function _getIcon(state) {
+    if (state === 'pending') {
+      return '&hellip;';
+    }
 
-  function _ptrStyles(){return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height .3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}";};;
+    return '&darr;';
+  }
+
+  function _getLabel(state) {
+    if (state === 'releasing') {
+      return 'Release to refresh';
+    }
+
+    if (state === 'pending') {
+      return 'Refreshing';
+    }
+
+    return 'Pull down to refresh';
+  }
+
+  function _ptrMarkup(){return "<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__text\"></div>\n    <div class=\"__PREFIX__icon\"></div>\n  </div>\n</div>";};;
+
+  function _ptrStyles(){return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height .3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}\n.__PREFIX__text {\n  color: rgba(0, 0, 0, 0.3);\n  margin-bottom: .33em;\n}\n.__PREFIX__icon {\n  transition: transform .3s;\n}\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}";};;
 
   var _SETTINGS = {};
 
   var _defaults = {
     distTreshold: 90,
     distMax: 120,
-    distReload: 50,
-    bodyElement: 'body',
+    distReload: 60,
     bodyOffset: 20,
+    mainElement: 'body',
     triggerElement: 'body',
     ptrElement: '.ptr',
     classPrefix: 'ptr--',
     cssProp: 'padding-top',
     refreshTimeout: 500,
-    getMarkup: function () { return _ptrMarkup(); },
-    getStyles: function () { return _ptrStyles(); },
+    getIcon: _getIcon,
+    getLabel: _getLabel,
+    getMarkup: _ptrMarkup,
+    getStyles: _ptrStyles,
     refreshFunction: function () { return location.reload(); },
     resistanceFunction: function ( t ) { return Math.min(1, t / 2.5); },
   };
@@ -62,6 +84,13 @@
   var _setup = false;
   var _enable = false;
   var _timeout;
+
+  function _update() {
+    var getIcon = _SETTINGS.getIcon, getLabel = _SETTINGS.getLabel, ptrElement = _SETTINGS.ptrElement, classPrefix = _SETTINGS.classPrefix;
+
+    ptrElement.querySelector(("." + classPrefix + "icon")).innerHTML = getIcon(_state);
+    ptrElement.querySelector(("." + classPrefix + "text")).innerHTML = getLabel(_state);
+  }
 
   function _setupEvents() {
     var classPrefix = _SETTINGS.classPrefix;
@@ -96,6 +125,7 @@
       if (_state === 'pending') {
         ptrElement.classList.add(("" + classPrefix + "pull"));
         _state = 'pulling';
+        _update();
       }
 
       if (pullStartY && pullMoveY) {
@@ -113,11 +143,13 @@
         if (_state === 'pulling' && distResisted > distTreshold) {
           ptrElement.classList.add(("" + classPrefix + "release"));
           _state = 'releasing';
+          _update();
         }
 
         if (_state === 'releasing' && distResisted < distTreshold) {
           ptrElement.classList.remove(("" + classPrefix + "release"));
           _state = 'pulling';
+          _update();
         }
       }
     });
@@ -140,7 +172,9 @@
 
       ptrElement.classList.remove(("" + classPrefix + "release"));
       ptrElement.classList.remove(("" + classPrefix + "pull"));
+
       _state = 'pending';
+      _update();
 
       pullStartY = pullMoveY = null;
       dist = distResisted = 0;
@@ -148,12 +182,16 @@
   }
 
   function _run() {
-    var bodyElement = _SETTINGS.bodyElement, getMarkup = _SETTINGS.getMarkup, getStyles = _SETTINGS.getStyles, classPrefix = _SETTINGS.classPrefix;
+    var mainElement = _SETTINGS.mainElement, getMarkup = _SETTINGS.getMarkup, getStyles = _SETTINGS.getStyles, classPrefix = _SETTINGS.classPrefix;
 
     if (!_SETTINGS.ptrElement) {
       var ptr = document.createElement('div');
 
-      bodyElement.parentNode.insertBefore(ptr, bodyElement);
+      if (mainElement !== document.body) {
+        mainElement.parentNode.insertBefore(ptr, mainElement);
+      } else {
+        document.body.insertBefore(ptr, document.body.firstChild);
+      }
 
       ptr.classList.add(("" + classPrefix + "ptr"));
       ptr.innerHTML = getMarkup()
@@ -179,12 +217,8 @@
         _SETTINGS[key] = options[key] || _defaults[key];
       });
 
-      if (!_SETTINGS.triggerElement) {
-        _SETTINGS.triggerElement = _SETTINGS.bodyElement;
-      }
-
-      if (typeof _SETTINGS.bodyElement === 'string') {
-        _SETTINGS.bodyElement = document.querySelector(_SETTINGS.bodyElement);
+      if (typeof _SETTINGS.mainElement === 'string') {
+        _SETTINGS.mainElement = document.querySelector(_SETTINGS.mainElement);
       }
 
       if (typeof _SETTINGS.ptrElement === 'string') {
