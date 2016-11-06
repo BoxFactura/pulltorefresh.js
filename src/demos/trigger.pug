@@ -1,0 +1,14 @@
+extend _layout
+
+block header
+  span.trigger &darr;
+  h1 Demo
+
+block run
+  script.
+    /* global PullToRefresh */
+    PullToRefresh.init({
+      bodyElement: '#main',
+      triggerElement: '.trigger',
+      refreshFunction: function() { console.log('refresh') }
+    });

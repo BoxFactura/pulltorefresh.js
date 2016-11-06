@@ -4,57 +4,28 @@ _bundle: PullToRefresh
 ---
 */
 
+import { _closestElement } from './_helpers';
+
+/* eslint-disable import/no-unresolved */
+
+import _ptrMarkup from './_markup';
+import _ptrStyles from './_styles';
+
 const _SETTINGS = {};
 
 const _defaults = {
   distTreshold: 90,
   distMax: 120,
   distReload: 50,
-  bodyElement: '#main',
+  bodyElement: 'body',
   bodyOffset: 20,
   triggerElement: 'body',
   ptrElement: '.ptr',
   classPrefix: 'ptr--',
   cssProp: 'padding-top',
   refreshTimeout: 500,
-  markupFunction: ()=>{
-    let ptr = document.createElement('div');
-    _SETTINGS.bodyElement.parentNode.insertBefore(ptr, _SETTINGS.bodyElement);
-    ptr.outerHTML = '<div class="ptr"><div class="box"><div class="content">---</div></div></div>'
-  },
-  styleFunction: ()=>{
-    let styleEl = document.createElement('style');
-    let cssCont = `
-      .ptr {
-        box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);
-        pointer-events: none;
-        font-size: 0.85em;
-        font-weight: bold;
-        position: relative;
-        top: 0;
-        height: 0;
-        text-align: center;
-        width: 100%;
-        overflow: hidden;
-        display: flex;
-        align-items: flex-end;
-        align-content: stretch;
-      }
-      .ptr--refresh, .ptr--release{
-        transition: height 0.12s;
-      }
-      .box {
-        padding: 10px;
-        flex-basis: 100%;
-      }
-      .box .content {
-      }
-      .box .content span {
-      }
-    `
-    styleEl.innerText = cssCont;
-    document.head.appendChild(styleEl);
-  },
+  getMarkup: () => _ptrMarkup(),
+  getStyles: () => _ptrStyles(),
   refreshFunction: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
 };
@@ -69,41 +40,15 @@ let _setup = false;
 let _enable = false;
 let _timeout;
 
-function _closestElement(node, selector) {
-  let depth = 10;
-
-  do {
-    if (!(node && node.tagName) || !depth) {
-      return null;
-    }
-
-    if (node.tagName && node.tagName === selector) {
-      return node;
-    }
-
-    if (selector.charAt() === '#' && node.id === selector.substr(1)) {
-      return node;
-    }
-
-    if (selector.charAt() === '.' && node.classList.contains(selector.substr(1))) {
-      return node;
-    }
-
-    depth -= 1;
-
-    node = node.parentNode;
-  } while (node.parentNode);
-}
-
 function _setupEvents() {
-  window.addEventListener('touchstart', (e) => {
-    _enable = _closestElement(e.target, _SETTINGS.triggerElement);
+  const { classPrefix } = _SETTINGS;
 
-    if(typeof _enable == 'undefined') _enable = _SETTINGS.triggerElement;
+  window.addEventListener('touchstart', (e) => {
+    const { ptrElement, triggerElement } = _SETTINGS;
 
     if (_state === 'pending') {
-      _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}release`);
-      _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}refresh`);
+      ptrElement.classList.remove(`${classPrefix}release`);
+      ptrElement.classList.remove(`${classPrefix}refresh`);
     }
 
     clearTimeout(_timeout);
@@ -111,9 +56,15 @@ function _setupEvents() {
     if (!window.scrollY) {
       pullStartY = e.touches[0].screenY;
     }
+
+    _enable = _closestElement(e.target, triggerElement);
   });
 
   window.addEventListener('touchmove', (e) => {
+    const {
+      ptrElement, resistanceFunction, distMax, distTreshold,
+    } = _SETTINGS;
+
     if (!_enable) {
       return;
     }
@@ -127,7 +78,7 @@ function _setupEvents() {
     }
 
     if (_state === 'pending') {
-      _SETTINGS.ptrElement.classList.add(`${_SETTINGS.classPrefix}pull`);
+      ptrElement.classList.add(`${classPrefix}pull`);
       _state = 'pulling';
     }
 
@@ -136,54 +87,75 @@ function _setupEvents() {
     }
 
     if (dist > 0) {
-      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = `${_SETTINGS.bodyOffset}px`;
       e.preventDefault();
 
-      _SETTINGS.ptrElement.style.height = `${distResisted}px`;
+      ptrElement.style.height = `${distResisted}px`;
 
-      distResisted = _SETTINGS.resistanceFunction(dist / _SETTINGS.distTreshold)
-        * Math.min(_SETTINGS.distMax, dist);
+      distResisted = resistanceFunction(dist / distTreshold)
+        * Math.min(distMax, dist);
 
-      if (_state === 'pulling' && distResisted > _SETTINGS.distTreshold) {
+      if (_state === 'pulling' && distResisted > distTreshold) {
         _state = 'releasing';
       }
 
-      if (_state === 'releasing' && distResisted < _SETTINGS.distTreshold) {
-        _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}release`);
+      if (_state === 'releasing' && distResisted < distTreshold) {
+        ptrElement.classList.remove(`${classPrefix}release`);
         _state = 'pulling';
       }
     }
   });
 
   window.addEventListener('touchend', () => {
-    if (_state === 'releasing' && distResisted > _SETTINGS.distTreshold) {
+    const {
+      ptrElement, refreshFunction, refreshTimeout, distTreshold, distReload,
+    } = _SETTINGS;
+
+    if (_state === 'releasing' && distResisted > distTreshold) {
       _timeout = setTimeout(() => {
-        _SETTINGS.refreshFunction();
-        _SETTINGS.ptrElement.style.height = `0px`;
-      }, _SETTINGS.refreshTimeout);
+        refreshFunction();
+        ptrElement.style.height = '0px';
+        ptrElement.classList.remove(`${classPrefix}refresh`);
+      }, refreshTimeout);
 
-      _SETTINGS.ptrElement.style.height = `${_SETTINGS.distReload}px`;
-
-      _SETTINGS.ptrElement.classList.add(`${_SETTINGS.classPrefix}refresh`);
+      ptrElement.style.height = `${distReload}px`;
+      ptrElement.classList.add(`${classPrefix}refresh`);
     } else {
-      _SETTINGS.ptrElement.classList.add(`${_SETTINGS.classPrefix}release`);
-      _SETTINGS.ptrElement.style.height = `0px`;
+      ptrElement.classList.add(`${classPrefix}release`);
+      ptrElement.style.height = '0px';
     }
 
-    // _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}release`);
-    _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}pull`);
+    ptrElement.classList.remove(`${classPrefix}pull`);
     _state = 'pending';
 
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
   });
+}
 
-  if(typeof _SETTINGS.styleFunction == 'function') _SETTINGS.styleFunction()
-  if(typeof _SETTINGS.markupFunction == 'function') _SETTINGS.markupFunction()
+function _run() {
+  const {
+    bodyElement, getMarkup, getStyles, classPrefix,
+  } = _SETTINGS;
 
-  if (typeof _SETTINGS.ptrElement === 'string') {
-    _SETTINGS.ptrElement = document.querySelector(_SETTINGS.ptrElement);
+  if (!_SETTINGS.ptrElement) {
+    const ptr = document.createElement('div');
+
+    bodyElement.parentNode.insertBefore(ptr, bodyElement);
+
+    ptr.classList.add(`${classPrefix}ptr`);
+    ptr.innerHTML = getMarkup()
+      .replace(/__PREFIX__/g, classPrefix);
+
+    _SETTINGS.ptrElement = ptr;
   }
+
+  const styleEl = document.createElement('style');
+
+  styleEl.innerText = getStyles()
+    .replace(/__PREFIX__/g, classPrefix)
+    .replace(/\s+/g, ' ');
+
+  document.head.appendChild(styleEl);
 }
 
 export default {
@@ -192,13 +164,23 @@ export default {
       _SETTINGS[key] = options[key] || _defaults[key];
     });
 
+    if (!_SETTINGS.triggerElement) {
+      _SETTINGS.triggerElement = _SETTINGS.bodyElement;
+    }
+
     if (typeof _SETTINGS.bodyElement === 'string') {
       _SETTINGS.bodyElement = document.querySelector(_SETTINGS.bodyElement);
+    }
+
+    if (typeof _SETTINGS.ptrElement === 'string') {
+      _SETTINGS.ptrElement = document.querySelector(_SETTINGS.ptrElement);
     }
 
     if (!_setup) {
       _setupEvents();
       _setup = true;
     }
+
+    _run();
   },
 };
