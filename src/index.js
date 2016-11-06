@@ -44,12 +44,7 @@ function _setupEvents() {
   const { classPrefix } = _SETTINGS;
 
   window.addEventListener('touchstart', (e) => {
-    const { ptrElement, triggerElement } = _SETTINGS;
-
-    if (_state === 'pending') {
-      ptrElement.classList.remove(`${classPrefix}release`);
-      ptrElement.classList.remove(`${classPrefix}refresh`);
-    }
+    const { triggerElement } = _SETTINGS;
 
     clearTimeout(_timeout);
 
@@ -95,6 +90,7 @@ function _setupEvents() {
         * Math.min(distMax, dist);
 
       if (_state === 'pulling' && distResisted > distTreshold) {
+        ptrElement.classList.add(`${classPrefix}release`);
         _state = 'releasing';
       }
 
@@ -120,10 +116,10 @@ function _setupEvents() {
       ptrElement.style.height = `${distReload}px`;
       ptrElement.classList.add(`${classPrefix}refresh`);
     } else {
-      ptrElement.classList.add(`${classPrefix}release`);
       ptrElement.style.height = '0px';
     }
 
+    ptrElement.classList.remove(`${classPrefix}release`);
     ptrElement.classList.remove(`${classPrefix}pull`);
     _state = 'pending';
 
