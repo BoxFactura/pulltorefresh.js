@@ -25,7 +25,7 @@ var _defaults = {
   },
   styleFunction: function (){
     var styleEl = document.createElement('style');
-    var cssCont = "\n      .ptr {\n        box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n        pointer-events: none;\n        font-size: 0.85em;\n        font-weight: bold;\n        position: absolute;\n        top: 0;\n        height: 0;\n        text-align: center;\n        width: 100%;\n        overflow: hidden;\n        display: flex;\n        align-items: flex-end;\n        align-content: stretch;\n      }\n      .box {\n        padding: 10px;\n        flex-basis: 100%;\n      }\n      .box .content {\n      }\n      .box .content span {\n      }\n    ";
+    var cssCont = "\n      .ptr {\n        box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n        pointer-events: none;\n        font-size: 0.85em;\n        font-weight: bold;\n        position: relative;\n        top: 0;\n        height: 0;\n        text-align: center;\n        width: 100%;\n        overflow: hidden;\n        display: flex;\n        align-items: flex-end;\n        align-content: stretch;\n      }\n      .box {\n        padding: 10px;\n        flex-basis: 100%;\n      }\n      .box .content {\n      }\n      .box .content span {\n      }\n    ";
     styleEl.innerText = cssCont;
     document.head.appendChild(styleEl);
   },
@@ -110,7 +110,7 @@ function _setupEvents() {
     }
 
     if (dist > 0) {
-      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = (distResisted+_SETTINGS.bodyOffset) + "px";
+      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = (_SETTINGS.bodyOffset) + "px";
       e.preventDefault();
 
       _SETTINGS.ptrElement.style.height = distResisted + "px";
@@ -153,7 +153,6 @@ function _setupEvents() {
 
   if (typeof _SETTINGS.ptrElement === 'string') {
     _SETTINGS.ptrElement = document.querySelector(_SETTINGS.ptrElement);
-    _SETTINGS.ptrElement.style.top = (_SETTINGS.bodyElement.offsetTop) + "px";
   }
 }
 

@@ -28,7 +28,7 @@ const _defaults = {
         pointer-events: none;
         font-size: 0.85em;
         font-weight: bold;
-        position: absolute;
+        position: relative;
         top: 0;
         height: 0;
         text-align: center;
@@ -131,7 +131,7 @@ function _setupEvents() {
     }
 
     if (dist > 0) {
-      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = `${distResisted+_SETTINGS.bodyOffset}px`;
+      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = `${_SETTINGS.bodyOffset}px`;
       e.preventDefault();
 
       _SETTINGS.ptrElement.style.height = `${distResisted}px`;
@@ -174,7 +174,6 @@ function _setupEvents() {
 
   if (typeof _SETTINGS.ptrElement === 'string') {
     _SETTINGS.ptrElement = document.querySelector(_SETTINGS.ptrElement);
-    _SETTINGS.ptrElement.style.top = `${_SETTINGS.bodyElement.offsetTop}px`;
   }
 }
 
