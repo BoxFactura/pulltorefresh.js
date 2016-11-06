@@ -1,6 +1,9 @@
 body {
   margin: 0;
   padding: 0;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
   font: 15px / 1.15 Helvetica, Arial, sans-serif;
 }
 .wrap {
@@ -18,7 +21,14 @@ header {
 header h1 {
   margin: 0;
 }
+pre {
+  background: rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  overflow: auto;
+  padding: 5px;
+}
 #main {
+  flex: 1;
   padding-top: 20px;
   transition: transform .3s;
 }
@@ -30,4 +40,11 @@ header h1 {
   float: right;
   display: block;
   border: 1px solid white;
+}
+.links a ~ a {
+  margin-left: 1em;
+}
+#footer {
+  background: #eef;
+  padding: 10px 0;
 }

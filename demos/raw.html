@@ -21,6 +21,7 @@
         consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
         cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
         proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <p class="links"><a href="/demos/raw.html">Raw</a><a href="/demos/basic.html">Basic</a><a href="/demos/trigger.html">Trigger</a></p>
       </div>
     </div>
     <div id="footer">
@@ -29,7 +30,9 @@
     <script src="/dist/pulltorefresh.js"></script>
     <script>
       /* global PullToRefresh */
-      PullToRefresh.init();
+      PullToRefresh.init({
+        refreshFunction: function() { alert('refresh') },
+      });
     </script>
   </body>
 </html>
