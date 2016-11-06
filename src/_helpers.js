@@ -25,7 +25,7 @@ export function _closestElement(node, selector) {
 }
 
 export function _getIcon(state) {
-  if (state === 'pending') {
+  if (state === 'refreshing') {
     return '&hellip;';
   }
 
@@ -37,11 +37,13 @@ export function _getLabel(state) {
     return 'Release to refresh';
   }
 
-  if (state === 'pending') {
-    return 'Refreshing';
+  if (state === 'pulling' || state === 'pending') {
+    return 'Pull down to refresh';
   }
 
-  return 'Pull down to refresh';
+  if (state === 'refreshing') {
+    return 'Refreshing';
+  }
 }
 
 export default {

@@ -119,23 +119,26 @@ function _setupEvents() {
     } = _SETTINGS;
 
     if (_state === 'releasing' && distResisted > distTreshold) {
-      _timeout = setTimeout(() => {
-        refreshFunction();
-        ptrElement.style.height = '0px';
-        ptrElement.classList.remove(`${classPrefix}refresh`);
-      }, refreshTimeout);
+      _state = 'refreshing';
 
       ptrElement.style.height = `${distReload}px`;
       ptrElement.classList.add(`${classPrefix}refresh`);
+
+      _timeout = setTimeout(() => {
+        ptrElement.classList.remove(`${classPrefix}refresh`);
+        ptrElement.style.height = '0px';
+        refreshFunction();
+      }, refreshTimeout);
     } else {
+      _state = 'pending';
+
       ptrElement.style.height = '0px';
     }
 
+    _update();
+
     ptrElement.classList.remove(`${classPrefix}release`);
     ptrElement.classList.remove(`${classPrefix}pull`);
-
-    _state = 'pending';
-    _update();
 
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
