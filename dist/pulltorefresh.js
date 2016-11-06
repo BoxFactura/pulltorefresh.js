@@ -12,8 +12,10 @@ var _SETTINGS = {};
 var _defaults = {
   distTreshold: 90,
   distMax: 120,
-  bodyElement: 'body',
+  bodyElement: '#main',
+  bodyOffset: 20,
   triggerElement: 'body',
+  ptrElement: '.ptr',
   cssProp: 'padding-top',
   refreshTimeout: 500,
   markupFunction: function (){
@@ -23,7 +25,7 @@ var _defaults = {
   },
   styleFunction: function (){
     var styleEl = document.createElement('style');
-    var cssCont = "\n      .ptr {\n        pointer-events: none;\n        transition: all .3s;\n        background: silver;\n        position: fixed;\n        z-index: 0;\n        left: 0;\n        top: -120px;\n        height: 120px;\n        right: 0;\n        bottom: 0;\n      }\n      .box {\n        height: 100%;\n        position: relative;\n      }\n      .box .content {\n        top: 0;\n        left: 0;\n        right: 0;\n        bottom: 0;\n        width: 10em;\n        height: 20px;\n        line-height: 20px;\n        margin: auto;\n        position: absolute;\n        text-align: center;\n      }\n      .box .content span {\n        transition: all .3s;\n      }\n    ";
+    var cssCont = "\n      .ptr {\n        box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n        pointer-events: none;\n        font-size: 0.85em;\n        font-weight: bold;\n        position: absolute;\n        top: 0;\n        height: 0;\n        text-align: center;\n        width: 100%;\n        overflow: hidden;\n        display: flex;\n        align-items: flex-end;\n        align-content: stretch;\n      }\n      .box {\n        padding: 10px;\n        flex-basis: 100%;\n      }\n      .box .content {\n      }\n      .box .content span {\n      }\n    ";
     styleEl.innerText = cssCont;
     document.head.appendChild(styleEl);
   },
@@ -108,9 +110,10 @@ function _setupEvents() {
     }
 
     if (dist > 0) {
+      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = (distResisted+_SETTINGS.bodyOffset) + "px";
       e.preventDefault();
 
-      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = distResisted + "px";
+      _SETTINGS.ptrElement.style.height = distResisted + "px";
 
       distResisted = _SETTINGS.resistanceFunction(dist / _SETTINGS.distTreshold)
         * Math.min(_SETTINGS.distMax, dist);
@@ -147,6 +150,11 @@ function _setupEvents() {
 
   if(typeof _SETTINGS.styleFunction == 'function') { _SETTINGS.styleFunction(); }
   if(typeof _SETTINGS.markupFunction == 'function') { _SETTINGS.markupFunction(); }
+
+  if (typeof _SETTINGS.ptrElement === 'string') {
+    _SETTINGS.ptrElement = document.querySelector(_SETTINGS.ptrElement);
+    _SETTINGS.ptrElement.style.top = (_SETTINGS.bodyElement.offsetTop) + "px";
+  }
 }
 
 var index = {

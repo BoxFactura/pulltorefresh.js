@@ -9,8 +9,10 @@ const _SETTINGS = {};
 const _defaults = {
   distTreshold: 90,
   distMax: 120,
-  bodyElement: 'body',
+  bodyElement: '#main',
+  bodyOffset: 20,
   triggerElement: 'body',
+  ptrElement: '.ptr',
   cssProp: 'padding-top',
   refreshTimeout: 500,
   markupFunction: ()=>{
@@ -22,35 +24,27 @@ const _defaults = {
     let styleEl = document.createElement('style');
     let cssCont = `
       .ptr {
+        box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);
         pointer-events: none;
-        transition: all .3s;
-        background: silver;
-        position: fixed;
-        z-index: 0;
-        left: 0;
-        top: -120px;
-        height: 120px;
-        right: 0;
-        bottom: 0;
+        font-size: 0.85em;
+        font-weight: bold;
+        position: absolute;
+        top: 0;
+        height: 0;
+        text-align: center;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+        align-content: stretch;
       }
       .box {
-        height: 100%;
-        position: relative;
+        padding: 10px;
+        flex-basis: 100%;
       }
       .box .content {
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 10em;
-        height: 20px;
-        line-height: 20px;
-        margin: auto;
-        position: absolute;
-        text-align: center;
       }
       .box .content span {
-        transition: all .3s;
       }
     `
     styleEl.innerText = cssCont;
@@ -137,9 +131,10 @@ function _setupEvents() {
     }
 
     if (dist > 0) {
+      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = `${distResisted+_SETTINGS.bodyOffset}px`;
       e.preventDefault();
 
-      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = `${distResisted}px`;
+      _SETTINGS.ptrElement.style.height = `${distResisted}px`;
 
       distResisted = _SETTINGS.resistanceFunction(dist / _SETTINGS.distTreshold)
         * Math.min(_SETTINGS.distMax, dist);
@@ -176,6 +171,11 @@ function _setupEvents() {
 
   if(typeof _SETTINGS.styleFunction == 'function') _SETTINGS.styleFunction()
   if(typeof _SETTINGS.markupFunction == 'function') _SETTINGS.markupFunction()
+
+  if (typeof _SETTINGS.ptrElement === 'string') {
+    _SETTINGS.ptrElement = document.querySelector(_SETTINGS.ptrElement);
+    _SETTINGS.ptrElement.style.top = `${_SETTINGS.bodyElement.offsetTop}px`;
+  }
 }
 
 export default {

@@ -22,25 +22,6 @@ header h1 {
   padding-top: 20px;
   transition: transform .3s;
 }
-#main.-pull {
-  transition: none;
-}
-#main.-release .ptr .icon {
-  transform: rotate(180deg);
-}
-#main.-refresh {
-  transform: translate3d(0, 30px, 0);
-}
-#main.-refresh .ptr .-on {
-  display: none;
-}
-#main.-refresh .ptr .-off {
-  display: inline-block;
-}
-#main.-refresh .ptr {
-  height: 30px;
-  top: -30px;
-}
 .trigger {
   width: 35px;
   height: 35px;
