@@ -9,10 +9,12 @@ const _SETTINGS = {};
 const _defaults = {
   distTreshold: 90,
   distMax: 120,
+  distReload: 50,
   bodyElement: '#main',
   bodyOffset: 20,
   triggerElement: 'body',
   ptrElement: '.ptr',
+  classPrefix: 'ptr--',
   cssProp: 'padding-top',
   refreshTimeout: 500,
   markupFunction: ()=>{
@@ -37,6 +39,9 @@ const _defaults = {
         display: flex;
         align-items: flex-end;
         align-content: stretch;
+      }
+      .ptr--refresh{
+        transition: height 0.12s;
       }
       .box {
         padding: 10px;
@@ -97,8 +102,8 @@ function _setupEvents() {
     if(typeof _enable == 'undefined') _enable = _SETTINGS.triggerElement;
 
     if (_state === 'pending') {
-      _SETTINGS.bodyElement.classList.remove('-release');
-      _SETTINGS.bodyElement.classList.remove('-refresh');
+      _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}release`);
+      _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}refresh`);
     }
 
     clearTimeout(_timeout);
@@ -122,7 +127,7 @@ function _setupEvents() {
     }
 
     if (_state === 'pending') {
-      _SETTINGS.bodyElement.classList.add('-pull');
+      _SETTINGS.ptrElement.classList.add(`${_SETTINGS.classPrefix}pull`);
       _state = 'pulling';
     }
 
@@ -140,12 +145,12 @@ function _setupEvents() {
         * Math.min(_SETTINGS.distMax, dist);
 
       if (_state === 'pulling' && distResisted > _SETTINGS.distTreshold) {
-        _SETTINGS.bodyElement.classList.add('-release');
+        _SETTINGS.ptrElement.classList.add(`${_SETTINGS.classPrefix}release`);
         _state = 'releasing';
       }
 
       if (_state === 'releasing' && distResisted < _SETTINGS.distTreshold) {
-        _SETTINGS.bodyElement.classList.remove('-release');
+        _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}release`);
         _state = 'pulling';
       }
     }
@@ -155,14 +160,18 @@ function _setupEvents() {
     if (_state === 'releasing' && distResisted > _SETTINGS.distTreshold) {
       _timeout = setTimeout(() => {
         _SETTINGS.refreshFunction();
+        _SETTINGS.ptrElement.style.height = `0px`;
       }, _SETTINGS.refreshTimeout);
 
-      _SETTINGS.bodyElement.classList.add('-refresh');
+      _SETTINGS.ptrElement.style.height = `${_SETTINGS.distReload}px`;
+
+      _SETTINGS.ptrElement.classList.add(`${_SETTINGS.classPrefix}refresh`);
+    } else {
+      _SETTINGS.ptrElement.style.height = `0px`;
     }
 
-    _SETTINGS.bodyElement.classList.remove('-release');
-    _SETTINGS.bodyElement.classList.remove('-pull');
-    _SETTINGS.bodyElement.style.transform = '';
+    _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}release`);
+    _SETTINGS.ptrElement.classList.remove(`${_SETTINGS.classPrefix}pull`);
     _state = 'pending';
 
     pullStartY = pullMoveY = null;

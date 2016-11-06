@@ -12,10 +12,12 @@ var _SETTINGS = {};
 var _defaults = {
   distTreshold: 90,
   distMax: 120,
+  distReload: 50,
   bodyElement: '#main',
   bodyOffset: 20,
   triggerElement: 'body',
   ptrElement: '.ptr',
+  classPrefix: 'ptr--',
   cssProp: 'padding-top',
   refreshTimeout: 500,
   markupFunction: function (){
@@ -25,7 +27,7 @@ var _defaults = {
   },
   styleFunction: function (){
     var styleEl = document.createElement('style');
-    var cssCont = "\n      .ptr {\n        box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n        pointer-events: none;\n        font-size: 0.85em;\n        font-weight: bold;\n        position: relative;\n        top: 0;\n        height: 0;\n        text-align: center;\n        width: 100%;\n        overflow: hidden;\n        display: flex;\n        align-items: flex-end;\n        align-content: stretch;\n      }\n      .box {\n        padding: 10px;\n        flex-basis: 100%;\n      }\n      .box .content {\n      }\n      .box .content span {\n      }\n    ";
+    var cssCont = "\n      .ptr {\n        box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n        pointer-events: none;\n        font-size: 0.85em;\n        font-weight: bold;\n        position: relative;\n        top: 0;\n        height: 0;\n        text-align: center;\n        width: 100%;\n        overflow: hidden;\n        display: flex;\n        align-items: flex-end;\n        align-content: stretch;\n      }\n      .ptr--refresh{\n        transition: height 0.12s;\n      }\n      .box {\n        padding: 10px;\n        flex-basis: 100%;\n      }\n      .box .content {\n      }\n      .box .content span {\n      }\n    ";
     styleEl.innerText = cssCont;
     document.head.appendChild(styleEl);
   },
@@ -76,8 +78,8 @@ function _setupEvents() {
     if(typeof _enable == 'undefined') { _enable = _SETTINGS.triggerElement; }
 
     if (_state === 'pending') {
-      _SETTINGS.bodyElement.classList.remove('-release');
-      _SETTINGS.bodyElement.classList.remove('-refresh');
+      _SETTINGS.ptrElement.classList.remove(((_SETTINGS.classPrefix) + "release"));
+      _SETTINGS.ptrElement.classList.remove(((_SETTINGS.classPrefix) + "refresh"));
     }
 
     clearTimeout(_timeout);
@@ -101,7 +103,7 @@ function _setupEvents() {
     }
 
     if (_state === 'pending') {
-      _SETTINGS.bodyElement.classList.add('-pull');
+      _SETTINGS.ptrElement.classList.add(((_SETTINGS.classPrefix) + "pull"));
       _state = 'pulling';
     }
 
@@ -119,12 +121,12 @@ function _setupEvents() {
         * Math.min(_SETTINGS.distMax, dist);
 
       if (_state === 'pulling' && distResisted > _SETTINGS.distTreshold) {
-        _SETTINGS.bodyElement.classList.add('-release');
+        _SETTINGS.ptrElement.classList.add(((_SETTINGS.classPrefix) + "release"));
         _state = 'releasing';
       }
 
       if (_state === 'releasing' && distResisted < _SETTINGS.distTreshold) {
-        _SETTINGS.bodyElement.classList.remove('-release');
+        _SETTINGS.ptrElement.classList.remove(((_SETTINGS.classPrefix) + "release"));
         _state = 'pulling';
       }
     }
@@ -134,14 +136,18 @@ function _setupEvents() {
     if (_state === 'releasing' && distResisted > _SETTINGS.distTreshold) {
       _timeout = setTimeout(function () {
         _SETTINGS.refreshFunction();
+        _SETTINGS.ptrElement.style.height = "0px";
       }, _SETTINGS.refreshTimeout);
 
-      _SETTINGS.bodyElement.classList.add('-refresh');
+      _SETTINGS.ptrElement.style.height = (_SETTINGS.distReload) + "px";
+
+      _SETTINGS.ptrElement.classList.add(((_SETTINGS.classPrefix) + "refresh"));
+    } else {
+      _SETTINGS.ptrElement.style.height = "0px";
     }
 
-    _SETTINGS.bodyElement.classList.remove('-release');
-    _SETTINGS.bodyElement.classList.remove('-pull');
-    _SETTINGS.bodyElement.style.transform = '';
+    _SETTINGS.ptrElement.classList.remove(((_SETTINGS.classPrefix) + "release"));
+    _SETTINGS.ptrElement.classList.remove(((_SETTINGS.classPrefix) + "pull"));
     _state = 'pending';
 
     pullStartY = pullMoveY = null;
