@@ -14,7 +14,13 @@ var _defaults = {
   distMax: 120,
   bodyElement: 'body',
   triggerElement: 'body',
+  cssProp: 'padding-top',
   refreshTimeout: 500,
+  markupFunction: function (){
+    var ptr = document.createElement('div');
+    _SETTINGS.bodyElement.parentNode.insertBefore(ptr, _SETTINGS.bodyElement);
+    ptr.outerHTML = '<div class="ptr"><div class="box"><div class="content">---</div></div></div>';
+  },
   styleFunction: function (){
     var styleEl = document.createElement('style');
     var cssCont = "\n      .ptr {\n        pointer-events: none;\n        transition: all .3s;\n        background: silver;\n        position: fixed;\n        z-index: 0;\n        left: 0;\n        top: -120px;\n        height: 120px;\n        right: 0;\n        bottom: 0;\n      }\n      .box {\n        height: 100%;\n        position: relative;\n      }\n      .box .content {\n        top: 0;\n        left: 0;\n        right: 0;\n        bottom: 0;\n        width: 10em;\n        height: 20px;\n        line-height: 20px;\n        margin: auto;\n        position: absolute;\n        text-align: center;\n      }\n      .box .content span {\n        transition: all .3s;\n      }\n    ";
@@ -62,7 +68,6 @@ function _closestElement(node, selector) {
 }
 
 function _setupEvents() {
-  if(typeof _SETTINGS.styleFunction == 'function') { _SETTINGS.styleFunction(); }
   window.addEventListener('touchstart', function (e) {
     _enable = _closestElement(e.target, _SETTINGS.triggerElement);
 
@@ -105,8 +110,7 @@ function _setupEvents() {
     if (dist > 0) {
       e.preventDefault();
 
-      _SETTINGS.bodyElement.style.transform =
-      _SETTINGS.bodyElement.style.webkitTransform = "translate3d(0," + distResisted + "px,0)";
+      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = distResisted + "px";
 
       distResisted = _SETTINGS.resistanceFunction(dist / _SETTINGS.distTreshold)
         * Math.min(_SETTINGS.distMax, dist);
@@ -140,6 +144,9 @@ function _setupEvents() {
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
   });
+
+  if(typeof _SETTINGS.styleFunction == 'function') { _SETTINGS.styleFunction(); }
+  if(typeof _SETTINGS.markupFunction == 'function') { _SETTINGS.markupFunction(); }
 }
 
 var index = {

@@ -11,7 +11,13 @@ const _defaults = {
   distMax: 120,
   bodyElement: 'body',
   triggerElement: 'body',
+  cssProp: 'padding-top',
   refreshTimeout: 500,
+  markupFunction: ()=>{
+    let ptr = document.createElement('div');
+    _SETTINGS.bodyElement.parentNode.insertBefore(ptr, _SETTINGS.bodyElement);
+    ptr.outerHTML = '<div class="ptr"><div class="box"><div class="content">---</div></div></div>'
+  },
   styleFunction: ()=>{
     let styleEl = document.createElement('style');
     let cssCont = `
@@ -91,7 +97,6 @@ function _closestElement(node, selector) {
 }
 
 function _setupEvents() {
-  if(typeof _SETTINGS.styleFunction == 'function') _SETTINGS.styleFunction()
   window.addEventListener('touchstart', (e) => {
     _enable = _closestElement(e.target, _SETTINGS.triggerElement);
 
@@ -134,8 +139,7 @@ function _setupEvents() {
     if (dist > 0) {
       e.preventDefault();
 
-      _SETTINGS.bodyElement.style.transform =
-      _SETTINGS.bodyElement.style.webkitTransform = `translate3d(0,${distResisted}px,0)`;
+      _SETTINGS.bodyElement.style[_SETTINGS.cssProp] = `${distResisted}px`;
 
       distResisted = _SETTINGS.resistanceFunction(dist / _SETTINGS.distTreshold)
         * Math.min(_SETTINGS.distMax, dist);
@@ -169,6 +173,9 @@ function _setupEvents() {
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
   });
+
+  if(typeof _SETTINGS.styleFunction == 'function') _SETTINGS.styleFunction()
+  if(typeof _SETTINGS.markupFunction == 'function') _SETTINGS.markupFunction()
 }
 
 export default {
