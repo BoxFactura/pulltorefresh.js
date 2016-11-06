@@ -56,6 +56,8 @@ function _setupEvents() {
   window.addEventListener('touchstart', (e) => {
     _enable = _closestElement(e.target, _SETTINGS.triggerElement);
 
+    if(typeof _enable == 'undefined') _enable = _SETTINGS.triggerElement;
+
     if (_state === 'pending') {
       _SETTINGS.bodyElement.classList.remove('-release');
       _SETTINGS.bodyElement.classList.remove('-refresh');
