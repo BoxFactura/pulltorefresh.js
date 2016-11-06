@@ -14,9 +14,9 @@ import _ptrStyles from './_styles';
 const _SETTINGS = {};
 
 const _defaults = {
-  distTreshold: 90,
-  distMax: 120,
-  distReload: 60,
+  distTreshold: 60,
+  distMax: 80,
+  distReload: 50,
   bodyOffset: 20,
   mainElement: 'body',
   triggerElement: 'body',
@@ -62,6 +62,8 @@ function _setupEvents() {
     }
 
     _enable = _closestElement(e.target, triggerElement);
+    _state = 'pending';
+    _update();
   });
 
   window.addEventListener('touchmove', (e) => {

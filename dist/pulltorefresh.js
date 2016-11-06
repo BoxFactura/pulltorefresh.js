@@ -31,7 +31,7 @@
   }
 
   function _getIcon(state) {
-    if (state === 'pending') {
+    if (state === 'refreshing') {
       return '&hellip;';
     }
 
@@ -43,23 +43,25 @@
       return 'Release to refresh';
     }
 
-    if (state === 'pending') {
-      return 'Refreshing';
+    if (state === 'pulling' || state === 'pending') {
+      return 'Pull down to refresh';
     }
 
-    return 'Pull down to refresh';
+    if (state === 'refreshing') {
+      return 'Refreshing';
+    }
   }
 
-  function _ptrMarkup(){return "<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__text\"></div>\n    <div class=\"__PREFIX__icon\"></div>\n  </div>\n</div>";};;
+  function _ptrMarkup(){return "<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>";};;
 
-  function _ptrStyles(){return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height .3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}\n.__PREFIX__text {\n  color: rgba(0, 0, 0, 0.3);\n  margin-bottom: .33em;\n}\n.__PREFIX__icon {\n  transition: transform .3s;\n}\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}";};;
+  function _ptrStyles(){return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height .3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}";};;
 
   var _SETTINGS = {};
 
   var _defaults = {
-    distTreshold: 90,
-    distMax: 120,
-    distReload: 60,
+    distTreshold: 60,
+    distMax: 80,
+    distReload: 50,
     bodyOffset: 20,
     mainElement: 'body',
     triggerElement: 'body',
@@ -105,6 +107,8 @@
       }
 
       _enable = _closestElement(e.target, triggerElement);
+      _state = 'pending';
+      _update();
     });
 
     window.addEventListener('touchmove', function (e) {
@@ -158,23 +162,26 @@
       var ptrElement = _SETTINGS.ptrElement, refreshFunction = _SETTINGS.refreshFunction, refreshTimeout = _SETTINGS.refreshTimeout, distTreshold = _SETTINGS.distTreshold, distReload = _SETTINGS.distReload;
 
       if (_state === 'releasing' && distResisted > distTreshold) {
-        _timeout = setTimeout(function () {
-          refreshFunction();
-          ptrElement.style.height = '0px';
-          ptrElement.classList.remove(("" + classPrefix + "refresh"));
-        }, refreshTimeout);
+        _state = 'refreshing';
 
         ptrElement.style.height = "" + distReload + "px";
         ptrElement.classList.add(("" + classPrefix + "refresh"));
+
+        _timeout = setTimeout(function () {
+          ptrElement.classList.remove(("" + classPrefix + "refresh"));
+          ptrElement.style.height = '0px';
+          refreshFunction();
+        }, refreshTimeout);
       } else {
+        _state = 'pending';
+
         ptrElement.style.height = '0px';
       }
 
+      _update();
+
       ptrElement.classList.remove(("" + classPrefix + "release"));
       ptrElement.classList.remove(("" + classPrefix + "pull"));
-
-      _state = 'pending';
-      _update();
 
       pullStartY = pullMoveY = null;
       dist = distResisted = 0;
