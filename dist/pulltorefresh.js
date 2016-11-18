@@ -182,9 +182,12 @@ function _setupEvents() {
       ptrElement.style.height = distReload + "px";
       ptrElement.classList.add((classPrefix + "refresh"));
 
-      _timeout = setTimeout(function () {
+      release = function(){
         ptrElement.classList.remove((classPrefix + "refresh"));
         ptrElement.style.height = '0px';
+      };
+
+      _timeout = setTimeout(function () {
         onRefresh();
       }, refreshTimeout);
     } else {

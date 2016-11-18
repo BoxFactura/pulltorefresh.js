@@ -31,7 +31,7 @@
     <script>
       /* global PullToRefresh */
       PullToRefresh.init({
-        onRefresh: function() { alert('refresh') },
+        onRefresh: function() { alert('refresh'); this.release(); },
       });
     </script>
   </body>

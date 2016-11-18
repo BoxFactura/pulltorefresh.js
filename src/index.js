@@ -28,7 +28,7 @@ const _defaults = {
   getLabel: _getLabel,
   getMarkup: _ptrMarkup,
   getStyles: _ptrStyles,
-  onRefresh: () => location.reload(),
+  onRefresh: () => /*this.release();*/ location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
 };
 
@@ -126,9 +126,12 @@ function _setupEvents() {
       ptrElement.style.height = `${distReload}px`;
       ptrElement.classList.add(`${classPrefix}refresh`);
 
-      _timeout = setTimeout(() => {
+      release = function(){
         ptrElement.classList.remove(`${classPrefix}refresh`);
         ptrElement.style.height = '0px';
+      }
+
+      _timeout = setTimeout(() => {
         onRefresh();
       }, refreshTimeout);
     } else {
