@@ -28,7 +28,7 @@ const _defaults = {
   getLabel: _getLabel,
   getMarkup: _ptrMarkup,
   getStyles: _ptrStyles,
-  refreshFunction: () => location.reload(),
+  onRefresh: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
 };
 
@@ -117,7 +117,7 @@ function _setupEvents() {
 
   window.addEventListener('touchend', () => {
     const {
-      ptrElement, refreshFunction, refreshTimeout, distTreshold, distReload,
+      ptrElement, onRefresh, refreshTimeout, distTreshold, distReload,
     } = _SETTINGS;
 
     if (_state === 'releasing' && distResisted > distTreshold) {
@@ -129,7 +129,7 @@ function _setupEvents() {
       _timeout = setTimeout(() => {
         ptrElement.classList.remove(`${classPrefix}refresh`);
         ptrElement.style.height = '0px';
-        refreshFunction();
+        onRefresh();
       }, refreshTimeout);
     } else {
       _state = 'pending';
