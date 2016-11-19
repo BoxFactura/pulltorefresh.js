@@ -28,7 +28,7 @@ const _defaults = {
   getLabel: _getLabel,
   getMarkup: _ptrMarkup,
   getStyles: _ptrStyles,
-  onRefresh: () => /*this.release();*/ location.reload(),
+  onRefresh: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
 };
 
@@ -51,6 +51,13 @@ function _update() {
 
 function _setupEvents() {
   const { classPrefix } = _SETTINGS;
+
+  function onReset() {
+    const { ptrElement } = _SETTINGS;
+
+    ptrElement.classList.remove(`${classPrefix}refresh`);
+    ptrElement.style.height = '0px';
+  }
 
   window.addEventListener('touchstart', (e) => {
     const { triggerElement } = _SETTINGS;
@@ -126,13 +133,16 @@ function _setupEvents() {
       ptrElement.style.height = `${distReload}px`;
       ptrElement.classList.add(`${classPrefix}refresh`);
 
-      release = function(){
-        ptrElement.classList.remove(`${classPrefix}refresh`);
-        ptrElement.style.height = '0px';
-      }
-
       _timeout = setTimeout(() => {
-        onRefresh();
+        const retval = onRefresh(onReset);
+
+        if (retval && typeof retval.then === 'function') {
+          retval.then(onReset);
+        }
+
+        if (!retval && !onReset.length) {
+          onReset();
+        }
       }, refreshTimeout);
     } else {
       _state = 'pending';

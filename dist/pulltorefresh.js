@@ -97,6 +97,13 @@
   function _setupEvents() {
     var classPrefix = _SETTINGS.classPrefix;
 
+    function onReset() {
+      var ptrElement = _SETTINGS.ptrElement;
+
+      ptrElement.classList.remove(("" + classPrefix + "refresh"));
+      ptrElement.style.height = '0px';
+    }
+
     window.addEventListener('touchstart', function (e) {
       var triggerElement = _SETTINGS.triggerElement;
 
@@ -167,13 +174,16 @@
         ptrElement.style.height = "" + distReload + "px";
         ptrElement.classList.add(("" + classPrefix + "refresh"));
 
-        release = function(){
-          ptrElement.classList.remove(("" + classPrefix + "refresh"));
-          ptrElement.style.height = '0px';
-        }
-
         _timeout = setTimeout(function () {
-          onRefresh();
+          var retval = onRefresh(onReset);
+
+          if (retval && typeof retval.then === 'function') {
+            retval.then(onReset);
+          }
+
+          if (!retval && !onReset.length) {
+            onReset();
+          }
         }, refreshTimeout);
       } else {
         _state = 'pending';
