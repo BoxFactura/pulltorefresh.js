@@ -216,7 +216,7 @@
     document.head.appendChild(styleEl);
   }
 
-  var index = {
+  var pulltorefresh = {
     init: function init(options) {
       if ( options === void 0 ) options = {};
 
@@ -241,6 +241,6 @@
     },
   };
 
-  return index;
+  return pulltorefresh;
 
 }));

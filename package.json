@@ -17,7 +17,7 @@
     "rename": [
       "**/*.css:{filepath/1}/{filename}.css",
       "**/*.html:{filepath/1}/{filename}.html",
-      "**/src/index.js:{filepath/1}/dist/pulltorefresh.js"
+      "**/src/*.js:{filepath/1}/dist/{filename}.js"
     ],
     "filter": [
       "!_*",
