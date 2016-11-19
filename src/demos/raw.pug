@@ -4,5 +4,5 @@ block run
   script.
     /* global PullToRefresh */
     PullToRefresh.init({
-      refreshFunction: function() { alert('refresh') },
+      onRefresh: function() { alert('refresh'); this.release(); },
     });

@@ -73,7 +73,7 @@
     getLabel: _getLabel,
     getMarkup: _ptrMarkup,
     getStyles: _ptrStyles,
-    refreshFunction: function () { return location.reload(); },
+    onRefresh: function () { return location.reload(); },
     resistanceFunction: function ( t ) { return Math.min(1, t / 2.5); },
   };
 
@@ -159,7 +159,7 @@
     });
 
     window.addEventListener('touchend', function () {
-      var ptrElement = _SETTINGS.ptrElement, refreshFunction = _SETTINGS.refreshFunction, refreshTimeout = _SETTINGS.refreshTimeout, distTreshold = _SETTINGS.distTreshold, distReload = _SETTINGS.distReload;
+      var ptrElement = _SETTINGS.ptrElement, onRefresh = _SETTINGS.onRefresh, refreshTimeout = _SETTINGS.refreshTimeout, distTreshold = _SETTINGS.distTreshold, distReload = _SETTINGS.distReload;
 
       if (_state === 'releasing' && distResisted > distTreshold) {
         _state = 'refreshing';
@@ -167,10 +167,13 @@
         ptrElement.style.height = "" + distReload + "px";
         ptrElement.classList.add(("" + classPrefix + "refresh"));
 
-        _timeout = setTimeout(function () {
+        release = function(){
           ptrElement.classList.remove(("" + classPrefix + "refresh"));
           ptrElement.style.height = '0px';
-          refreshFunction();
+        }
+
+        _timeout = setTimeout(function () {
+          onRefresh();
         }, refreshTimeout);
       } else {
         _state = 'pending';
