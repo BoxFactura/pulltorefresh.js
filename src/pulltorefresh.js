@@ -58,10 +58,6 @@ function _update() {
 function _setupEvents() {
   const { classPrefix } = _SETTINGS;
 
-  if (typeof _SETTINGS.onInit === 'function') {
-    _SETTINGS.onInit();
-  }
-
   function onReset() {
     const { ptrElement } = _SETTINGS;
 
@@ -198,6 +194,10 @@ function _run() {
     .replace(/\s+/g, ' ');
 
   document.head.appendChild(styleEl);
+
+  if (typeof _SETTINGS.onInit === 'function') {
+    _SETTINGS.onInit();
+  }
 }
 
 export default {
