@@ -24,30 +24,6 @@ export function _closestElement(node, selector) {
   } while (node.parentNode);
 }
 
-export function _getIcon(state) {
-  if (state === 'refreshing') {
-    return '&hellip;';
-  }
-
-  return '&darr;';
-}
-
-export function _getLabel(state) {
-  if (state === 'releasing') {
-    return 'Release to refresh';
-  }
-
-  if (state === 'pulling' || state === 'pending') {
-    return 'Pull down to refresh';
-  }
-
-  if (state === 'refreshing') {
-    return 'Refreshing';
-  }
-}
-
 export default {
   _closestElement,
-  _getLabel,
-  _getIcon,
 };

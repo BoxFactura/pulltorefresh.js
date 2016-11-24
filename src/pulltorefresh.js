@@ -4,7 +4,7 @@ _bundle: PullToRefresh
 ---
 */
 
-import { _getIcon, _getLabel, _closestElement } from './_helpers';
+import { _closestElement } from './_helpers';
 
 /* eslint-disable import/no-unresolved */
 
@@ -29,11 +29,9 @@ const _defaults = {
   instructionsReleaseToRefresh: 'Release to refresh',
   instructionsRefreshing: 'Refreshing',
   refreshTimeout: 500,
-  getIcon: _getIcon,
-  getLabel: _getLabel,
   getMarkup: _ptrMarkup,
   getStyles: _ptrStyles,
-  onInit: ()=>{ },
+  onInit: () => {},
   onRefresh: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
 };
@@ -49,20 +47,46 @@ let _enable = false;
 let _timeout;
 
 function _update() {
-  const { getIcon, getLabel, ptrElement, classPrefix } = _SETTINGS;
+  const {
+    classPrefix,
+    ptrElement,
+    iconArrow,
+    iconRefreshing,
+    instructionsRefreshing,
+    instructionsPullToRefresh,
+    instructionsReleaseToRefresh,
+  } = _SETTINGS;
 
-  ptrElement.querySelector(`.${classPrefix}icon`).innerHTML = getIcon(_state);
-  ptrElement.querySelector(`.${classPrefix}text`).innerHTML = getLabel(_state);
+  const iconEl = ptrElement.querySelector(`.${classPrefix}icon`);
+  const textEl = ptrElement.querySelector(`.${classPrefix}text`);
+
+  if (_state === 'refreshing') {
+    iconEl.innerHTML = iconRefreshing;
+  } else {
+    iconEl.innerHTML = iconArrow;
+  }
+
+  if (_state === 'releasing') {
+    textEl.innerHTML = instructionsReleaseToRefresh;
+  }
+
+  if (_state === 'pulling' || _state === 'pending') {
+    textEl.innerHTML = instructionsPullToRefresh;
+  }
+
+  if (_state === 'refreshing') {
+    textEl.innerHTML = instructionsRefreshing;
+  }
 }
 
 function _setupEvents() {
   const { classPrefix } = _SETTINGS;
 
   function onReset() {
-    const { ptrElement } = _SETTINGS;
+    const { cssProp, ptrElement } = _SETTINGS;
 
     ptrElement.classList.remove(`${classPrefix}refresh`);
-    ptrElement.style[_SETTINGS.cssProp] = '0px';
+    ptrElement.style[cssProp] = '0px';
   }
 
   window.addEventListener('touchstart', (e) => {
@@ -81,7 +105,7 @@ function _setupEvents() {
 
   window.addEventListener('touchmove', (e) => {
     const {
-      ptrElement, resistanceFunction, distMax, distTreshold,
+      ptrElement, resistanceFunction, distMax, distTreshold, cssProp,
     } = _SETTINGS;
 
     if (!_enable) {
@@ -109,7 +133,7 @@ function _setupEvents() {
     if (dist > 0) {
       e.preventDefault();
 
-      ptrElement.style[_SETTINGS.cssProp] = `${distResisted}px`;
+      ptrElement.style[cssProp] = `${distResisted}px`;
 
       distResisted = resistanceFunction(dist / distTreshold)
         * Math.min(distMax, dist);
@@ -130,13 +154,13 @@ function _setupEvents() {
 
   window.addEventListener('touchend', () => {
     const {
-      ptrElement, onRefresh, refreshTimeout, distTreshold, distReload,
+      ptrElement, onRefresh, refreshTimeout, distTreshold, distReload, cssProp,
     } = _SETTINGS;
 
     if (_state === 'releasing' && distResisted > distTreshold) {
       _state = 'refreshing';
 
-      ptrElement.style[_SETTINGS.cssProp] = `${distReload}px`;
+      ptrElement.style[cssProp] = `${distReload}px`;
       ptrElement.classList.add(`${classPrefix}refresh`);
 
       _timeout = setTimeout(() => {
@@ -153,7 +177,7 @@ function _setupEvents() {
     } else {
       _state = 'pending';
 
-      ptrElement.style[_SETTINGS.cssProp] = '0px';
+      ptrElement.style[cssProp] = '0px';
     }
 
     _update();
@@ -168,7 +192,7 @@ function _setupEvents() {
 
 function _run() {
   const {
-    mainElement, getMarkup, getStyles, classPrefix,
+    mainElement, getMarkup, getStyles, classPrefix, onInit,
   } = _SETTINGS;
 
   if (!_SETTINGS.ptrElement) {
@@ -195,8 +219,8 @@ function _run() {
 
   document.head.appendChild(styleEl);
 
-  if (typeof _SETTINGS.onInit === 'function') {
-    _SETTINGS.onInit();
+  if (typeof onInit === 'function') {
+    onInit(_SETTINGS);
   }
 }
 
