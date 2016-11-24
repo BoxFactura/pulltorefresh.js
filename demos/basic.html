@@ -32,8 +32,8 @@
       /* global PullToRefresh */
       PullToRefresh.init({
         mainElement: '#main',
-        onRefresh() { alert('refresh'); },
+        onRefresh: function() { alert('refresh') }
       });
-</script>
+    </script>
   </body>
 </html>

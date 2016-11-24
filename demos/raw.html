@@ -30,7 +30,9 @@
     <script src="/dist/pulltorefresh.js"></script>
     <script>
       /* global PullToRefresh */
-      PullToRefresh.init();
-</script>
+      PullToRefresh.init({
+        onRefresh: function() { alert('refresh'); this.release(); },
+      });
+    </script>
   </body>
 </html>

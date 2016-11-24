@@ -30,28 +30,6 @@ function _closestElement(node, selector) {
   } while (node.parentNode);
 }
 
-function _getIcon(state) {
-  if (state === 'refreshing') {
-    return '&hellip;';
-  }
-
-  return '&darr;';
-}
-
-function _getLabel(state) {
-  if (state === 'releasing') {
-    return 'Release to refresh';
-  }
-
-  if (state === 'pulling' || state === 'pending') {
-    return 'Pull down to refresh';
-  }
-
-  if (state === 'refreshing') {
-    return 'Refreshing';
-  }
-}
-
 var _ptrMarkup = function(){return "<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>";};
 
 var _ptrStyles = function(){return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}";};
@@ -79,11 +57,9 @@ var _defaults = {
   instructionsReleaseToRefresh: 'Release to refresh',
   instructionsRefreshing: 'Refreshing',
   refreshTimeout: 500,
-  getIcon: _getIcon,
-  getLabel: _getLabel,
   getMarkup: _ptrMarkup,
   getStyles: _ptrStyles,
-  onInit: function (){ },
+  onInit: function () {},
   onRefresh: function () { return location.reload(); },
   resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
 };
@@ -99,23 +75,45 @@ var _enable = false;
 var _timeout;
 
 function _update() {
-  var getIcon = _SETTINGS.getIcon;
-  var getLabel = _SETTINGS.getLabel;
-  var ptrElement = _SETTINGS.ptrElement;
   var classPrefix = _SETTINGS.classPrefix;
+  var ptrElement = _SETTINGS.ptrElement;
+  var iconArrow = _SETTINGS.iconArrow;
+  var iconRefreshing = _SETTINGS.iconRefreshing;
+  var instructionsRefreshing = _SETTINGS.instructionsRefreshing;
+  var instructionsPullToRefresh = _SETTINGS.instructionsPullToRefresh;
+  var instructionsReleaseToRefresh = _SETTINGS.instructionsReleaseToRefresh;
 
-  ptrElement.querySelector(("." + classPrefix + "icon")).innerHTML = getIcon(_state);
-  ptrElement.querySelector(("." + classPrefix + "text")).innerHTML = getLabel(_state);
+  var iconEl = ptrElement.querySelector(("." + classPrefix + "icon"));
+  var textEl = ptrElement.querySelector(("." + classPrefix + "text"));
+
+  if (_state === 'refreshing') {
+    iconEl.innerHTML = iconRefreshing;
+  } else {
+    iconEl.innerHTML = iconArrow;
+  }
+
+  if (_state === 'releasing') {
+    textEl.innerHTML = instructionsReleaseToRefresh;
+  }
+
+  if (_state === 'pulling' || _state === 'pending') {
+    textEl.innerHTML = instructionsPullToRefresh;
+  }
+
+  if (_state === 'refreshing') {
+    textEl.innerHTML = instructionsRefreshing;
+  }
 }
 
 function _setupEvents() {
   var classPrefix = _SETTINGS.classPrefix;
 
   function onReset() {
+    var cssProp = _SETTINGS.cssProp;
     var ptrElement = _SETTINGS.ptrElement;
 
     ptrElement.classList.remove((classPrefix + "refresh"));
-    ptrElement.style[_SETTINGS.cssProp] = '0px';
+    ptrElement.style[cssProp] = '0px';
   }
 
   window.addEventListener('touchstart', function (e) {
@@ -137,6 +135,7 @@ function _setupEvents() {
     var resistanceFunction = _SETTINGS.resistanceFunction;
     var distMax = _SETTINGS.distMax;
     var distTreshold = _SETTINGS.distTreshold;
+    var cssProp = _SETTINGS.cssProp;
 
     if (!_enable) {
       return;
@@ -163,7 +162,7 @@ function _setupEvents() {
     if (dist > 0) {
       e.preventDefault();
 
-      ptrElement.style[_SETTINGS.cssProp] = distResisted + "px";
+      ptrElement.style[cssProp] = distResisted + "px";
 
       distResisted = resistanceFunction(dist / distTreshold)
         * Math.min(distMax, dist);
@@ -188,11 +187,12 @@ function _setupEvents() {
     var refreshTimeout = _SETTINGS.refreshTimeout;
     var distTreshold = _SETTINGS.distTreshold;
     var distReload = _SETTINGS.distReload;
+    var cssProp = _SETTINGS.cssProp;
 
     if (_state === 'releasing' && distResisted > distTreshold) {
       _state = 'refreshing';
 
-      ptrElement.style[_SETTINGS.cssProp] = distReload + "px";
+      ptrElement.style[cssProp] = distReload + "px";
       ptrElement.classList.add((classPrefix + "refresh"));
 
       _timeout = setTimeout(function () {
@@ -209,7 +209,7 @@ function _setupEvents() {
     } else {
       _state = 'pending';
 
-      ptrElement.style[_SETTINGS.cssProp] = '0px';
+      ptrElement.style[cssProp] = '0px';
     }
 
     _update();
@@ -227,6 +227,7 @@ function _run() {
   var getMarkup = _SETTINGS.getMarkup;
   var getStyles = _SETTINGS.getStyles;
   var classPrefix = _SETTINGS.classPrefix;
+  var onInit = _SETTINGS.onInit;
 
   if (!_SETTINGS.ptrElement) {
     var ptr = document.createElement('div');
@@ -252,8 +253,8 @@ function _run() {
 
   document.head.appendChild(styleEl);
 
-  if (typeof _SETTINGS.onInit === 'function') {
-    _SETTINGS.onInit();
+  if (typeof onInit === 'function') {
+    onInit(_SETTINGS);
   }
 }
 
