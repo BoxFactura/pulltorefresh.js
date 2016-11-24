@@ -83,6 +83,7 @@ var _defaults = {
   getLabel: _getLabel,
   getMarkup: _ptrMarkup,
   getStyles: _ptrStyles,
+  onInit: function (){ },
   onRefresh: function () { return location.reload(); },
   resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
 };
@@ -109,6 +110,10 @@ function _update() {
 
 function _setupEvents() {
   var classPrefix = _SETTINGS.classPrefix;
+
+  if (typeof _SETTINGS.onInit === 'function') {
+    _SETTINGS.onInit();
+  }
 
   function onReset() {
     var ptrElement = _SETTINGS.ptrElement;
