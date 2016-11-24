@@ -1,0 +1,4 @@
+$ git shortlog -sn
+
+22  Alvaro Cabrera
+15  Rafael Soto
