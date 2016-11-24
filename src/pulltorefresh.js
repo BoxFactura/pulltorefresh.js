@@ -22,7 +22,7 @@ const _defaults = {
   triggerElement: 'body',
   ptrElement: '.ptr',
   classPrefix: 'ptr--',
-  cssProp: 'padding-top',
+  cssProp: 'height',
   refreshTimeout: 500,
   getIcon: _getIcon,
   getLabel: _getLabel,
@@ -56,7 +56,7 @@ function _setupEvents() {
     const { ptrElement } = _SETTINGS;
 
     ptrElement.classList.remove(`${classPrefix}refresh`);
-    ptrElement.style.height = '0px';
+    ptrElement.style[_SETTINGS.cssProp] = '0px';
   }
 
   window.addEventListener('touchstart', (e) => {
@@ -103,7 +103,7 @@ function _setupEvents() {
     if (dist > 0) {
       e.preventDefault();
 
-      ptrElement.style.height = `${distResisted}px`;
+      ptrElement.style[_SETTINGS.cssProp] = `${distResisted}px`;
 
       distResisted = resistanceFunction(dist / distTreshold)
         * Math.min(distMax, dist);
@@ -130,7 +130,7 @@ function _setupEvents() {
     if (_state === 'releasing' && distResisted > distTreshold) {
       _state = 'refreshing';
 
-      ptrElement.style.height = `${distReload}px`;
+      ptrElement.style[_SETTINGS.cssProp] = `${distReload}px`;
       ptrElement.classList.add(`${classPrefix}refresh`);
 
       _timeout = setTimeout(() => {
@@ -147,7 +147,7 @@ function _setupEvents() {
     } else {
       _state = 'pending';
 
-      ptrElement.style.height = '0px';
+      ptrElement.style[_SETTINGS.cssProp] = '0px';
     }
 
     _update();
