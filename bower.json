@@ -1,5 +1,5 @@
 {
-  "name": "pulltorefresh",
+  "name": "pulltorefresh.js",
   "version": "0.0.0",
   "description": "Pull To Refresh",
   "main": "dist/pulltorefresh.js",
