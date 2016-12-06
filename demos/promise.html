@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <div class="wrap"><span class="trigger">&darr;</span>
+      <div class="wrap">
         <h1>Demo</h1>
       </div>
     </header>
@@ -31,9 +31,18 @@
     <script>
       /* global PullToRefresh */
       PullToRefresh.init({
-        mainElement: '#main',
-        triggerElement: '.trigger',
-        onRefresh: function() { alert('refresh') }
+        mainElement: '#main', // above which element?
+        onRefresh: function(){
+          var promise = new Promise(
+            function(resolve, reject){
+              setTimeout(()=>{
+                resolve();
+                alert('refresh');
+              }, 1500);
+            }
+          );
+          return promise;
+        }
       });
     </script>
   </body>

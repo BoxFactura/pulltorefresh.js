@@ -1,0 +1,19 @@
+extend _layout
+
+block run
+  script.
+    /* global PullToRefresh */
+    PullToRefresh.init({
+      mainElement: '#main', // above which element?
+      onRefresh: function(){
+        var promise = new Promise(
+          function(resolve, reject){
+            setTimeout(()=>{
+              resolve();
+              alert('refresh');
+            }, 1500);
+          }
+        );
+        return promise;
+      }
+    });
