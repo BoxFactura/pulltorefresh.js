@@ -1,5 +1,7 @@
+*.md
+*.txt
+*.json
 img
 src
 demos
 node_modules
-dist/build.json
