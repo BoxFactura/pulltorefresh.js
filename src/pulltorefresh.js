@@ -150,7 +150,7 @@ function _setupEvents() {
         _update();
       }
     }
-  });
+  }, { passive: false });
 
   window.addEventListener('touchend', () => {
     const {
