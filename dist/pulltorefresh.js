@@ -199,7 +199,7 @@ function _setupEvents() {
         var retval = onRefresh(onReset);
 
         if (retval && typeof retval.then === 'function') {
-          retval.then(onReset);
+          retval.then(function () { return onReset(); });
         }
 
         if (!retval && !onReset.length) {

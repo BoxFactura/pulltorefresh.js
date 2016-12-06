@@ -31,8 +31,13 @@
     <script>
       /* global PullToRefresh */
       PullToRefresh.init({
-        mainElement: '#main',
-        onRefresh: function() { alert('refresh') }
+        mainElement: '#main', // above which element?
+        onRefresh: function (cb) {
+          setTimeout(function () {
+            cb();
+            alert('refresh');
+          }, 1500);
+        }
       });
     </script>
   </body>
