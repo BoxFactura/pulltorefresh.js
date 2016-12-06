@@ -179,7 +179,7 @@ function _setupEvents() {
         _update();
       }
     }
-  });
+  }, { passive: false });
 
   window.addEventListener('touchend', function () {
     var ptrElement = _SETTINGS.ptrElement;
