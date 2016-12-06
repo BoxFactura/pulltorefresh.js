@@ -167,7 +167,7 @@ function _setupEvents() {
         const retval = onRefresh(onReset);
 
         if (retval && typeof retval.then === 'function') {
-          retval.then(onReset);
+          retval.then(() => onReset());
         }
 
         if (!retval && !onReset.length) {
