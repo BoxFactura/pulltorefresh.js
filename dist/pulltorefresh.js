@@ -42,7 +42,7 @@ var _ptrStyles = function(){return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px
 var _SETTINGS = {};
 
 var _defaults = {
-  distTreshold: 60,
+  distThreshold: 60,
   distMax: 80,
   distReload: 50,
   bodyOffset: 20,
@@ -134,7 +134,7 @@ function _setupEvents() {
     var ptrElement = _SETTINGS.ptrElement;
     var resistanceFunction = _SETTINGS.resistanceFunction;
     var distMax = _SETTINGS.distMax;
-    var distTreshold = _SETTINGS.distTreshold;
+    var distThreshold = _SETTINGS.distThreshold;
     var cssProp = _SETTINGS.cssProp;
 
     if (!_enable) {
@@ -164,16 +164,16 @@ function _setupEvents() {
 
       ptrElement.style[cssProp] = distResisted + "px";
 
-      distResisted = resistanceFunction(dist / distTreshold)
+      distResisted = resistanceFunction(dist / distThreshold)
         * Math.min(distMax, dist);
 
-      if (_state === 'pulling' && distResisted > distTreshold) {
+      if (_state === 'pulling' && distResisted > distThreshold) {
         ptrElement.classList.add((classPrefix + "release"));
         _state = 'releasing';
         _update();
       }
 
-      if (_state === 'releasing' && distResisted < distTreshold) {
+      if (_state === 'releasing' && distResisted < distThreshold) {
         ptrElement.classList.remove((classPrefix + "release"));
         _state = 'pulling';
         _update();
@@ -185,11 +185,11 @@ function _setupEvents() {
     var ptrElement = _SETTINGS.ptrElement;
     var onRefresh = _SETTINGS.onRefresh;
     var refreshTimeout = _SETTINGS.refreshTimeout;
-    var distTreshold = _SETTINGS.distTreshold;
+    var distThreshold = _SETTINGS.distThreshold;
     var distReload = _SETTINGS.distReload;
     var cssProp = _SETTINGS.cssProp;
 
-    if (_state === 'releasing' && distResisted > distTreshold) {
+    if (_state === 'releasing' && distResisted > distThreshold) {
       _state = 'refreshing';
 
       ptrElement.style[cssProp] = distReload + "px";

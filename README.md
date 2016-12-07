@@ -9,7 +9,7 @@ A small, but powerful Javascript library crafted to power your webapp's pull to 
 Install
 ---
 
-Include the JS file in your webapp and intialize it:
+Include the JS file in your webapp and initialize it:
 
 ```
 PullToRefresh.init({
@@ -21,7 +21,7 @@ PullToRefresh.init({
 API
 ---
 
-➡ `distTreshold` (integer, default: `60`)
+➡ `distThreshold` (integer, default: `60`)
 
 Minimum distance required to trigger the refresh.
 
@@ -31,7 +31,7 @@ Maximum distance possible for the element.
 
 ➡ `distReload` (integer, default: `50`)
 
-After the `distTreshold` is reached and released, the element will have this height.
+After the `distThreshold` is reached and released, the element will have this height.
 
 ➡ `mainElement` (string, default: `body`)
 
@@ -67,7 +67,7 @@ The initial instructions string.
 
 ➡ `instructionsReleaseToRefresh` (string, default: `Release to refresh`)
 
-The instructions string when the `distTreshold` has been reached.
+The instructions string when the `distThreshold` has been reached.
 
 ➡ `instructionsRefreshing` (string, default: `Refreshing`)
 
