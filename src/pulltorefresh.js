@@ -14,7 +14,7 @@ import _ptrStyles from './_styles';
 const _SETTINGS = {};
 
 const _defaults = {
-  distTreshold: 60,
+  distThreshold: 60,
   distMax: 80,
   distReload: 50,
   bodyOffset: 20,
@@ -105,7 +105,7 @@ function _setupEvents() {
 
   window.addEventListener('touchmove', (e) => {
     const {
-      ptrElement, resistanceFunction, distMax, distTreshold, cssProp,
+      ptrElement, resistanceFunction, distMax, distThreshold, cssProp,
     } = _SETTINGS;
 
     if (!_enable) {
@@ -135,16 +135,16 @@ function _setupEvents() {
 
       ptrElement.style[cssProp] = `${distResisted}px`;
 
-      distResisted = resistanceFunction(dist / distTreshold)
+      distResisted = resistanceFunction(dist / distThreshold)
         * Math.min(distMax, dist);
 
-      if (_state === 'pulling' && distResisted > distTreshold) {
+      if (_state === 'pulling' && distResisted > distThreshold) {
         ptrElement.classList.add(`${classPrefix}release`);
         _state = 'releasing';
         _update();
       }
 
-      if (_state === 'releasing' && distResisted < distTreshold) {
+      if (_state === 'releasing' && distResisted < distThreshold) {
         ptrElement.classList.remove(`${classPrefix}release`);
         _state = 'pulling';
         _update();
@@ -154,10 +154,10 @@ function _setupEvents() {
 
   window.addEventListener('touchend', () => {
     const {
-      ptrElement, onRefresh, refreshTimeout, distTreshold, distReload, cssProp,
+      ptrElement, onRefresh, refreshTimeout, distThreshold, distReload, cssProp,
     } = _SETTINGS;
 
-    if (_state === 'releasing' && distResisted > distTreshold) {
+    if (_state === 'releasing' && distResisted > distThreshold) {
       _state = 'refreshing';
 
       ptrElement.style[cssProp] = `${distReload}px`;
