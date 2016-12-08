@@ -202,7 +202,7 @@ function _setupEvents() {
           retval.then(function () { return onReset(); });
         }
 
-        if (!retval && !onReset.length) {
+        if (!retval && !onRefresh.length) {
           onReset();
         }
       }, refreshTimeout);

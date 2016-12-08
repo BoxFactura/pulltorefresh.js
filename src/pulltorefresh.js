@@ -170,7 +170,7 @@ function _setupEvents() {
           retval.then(() => onReset());
         }
 
-        if (!retval && !onReset.length) {
+        if (!retval && !onRefresh.length) {
           onReset();
         }
       }, refreshTimeout);
