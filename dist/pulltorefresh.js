@@ -114,10 +114,16 @@ function _setupEvents() {
 
     ptrElement.classList.remove((classPrefix + "refresh"));
     ptrElement.style[cssProp] = '0px';
+
+    _state = 'pending';
   }
 
   window.addEventListener('touchstart', function (e) {
     var triggerElement = _SETTINGS.triggerElement;
+
+    if (_state !== 'pending') {
+      return;
+    }
 
     clearTimeout(_timeout);
 
@@ -137,7 +143,7 @@ function _setupEvents() {
     var distThreshold = _SETTINGS.distThreshold;
     var cssProp = _SETTINGS.cssProp;
 
-    if (!_enable) {
+    if (!_enable || _state === 'refreshing') {
       return;
     }
 
@@ -207,9 +213,13 @@ function _setupEvents() {
         }
       }, refreshTimeout);
     } else {
-      _state = 'pending';
+      if (_state === 'refreshing') {
+        return;
+      }
 
       ptrElement.style[cssProp] = '0px';
+
+      _state = 'pending';
     }
 
     _update();

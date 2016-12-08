@@ -87,10 +87,16 @@ function _setupEvents() {
 
     ptrElement.classList.remove(`${classPrefix}refresh`);
     ptrElement.style[cssProp] = '0px';
+
+    _state = 'pending';
   }
 
   window.addEventListener('touchstart', (e) => {
     const { triggerElement } = _SETTINGS;
+
+    if (_state !== 'pending') {
+      return;
+    }
 
     clearTimeout(_timeout);
 
@@ -108,7 +114,7 @@ function _setupEvents() {
       ptrElement, resistanceFunction, distMax, distThreshold, cssProp,
     } = _SETTINGS;
 
-    if (!_enable) {
+    if (!_enable || _state === 'refreshing') {
       return;
     }
 
@@ -175,9 +181,13 @@ function _setupEvents() {
         }
       }, refreshTimeout);
     } else {
-      _state = 'pending';
+      if (_state === 'refreshing') {
+        return;
+      }
 
       ptrElement.style[cssProp] = '0px';
+
+      _state = 'pending';
     }
 
     _update();
