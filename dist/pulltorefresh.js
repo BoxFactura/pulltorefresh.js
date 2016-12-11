@@ -94,7 +94,6 @@ function _setupEvents() {
 
   window.addEventListener('touchstart', function (e) {
     var triggerElement = _SETTINGS.triggerElement;
-    var triggerNode = document.querySelector(triggerElement);
 
     if (_state !== 'pending') {
       return;
@@ -106,7 +105,7 @@ function _setupEvents() {
       pullStartY = e.touches[0].screenY;
     }
 
-    _enable = triggerNode.contains(e.target);
+    _enable = triggerElement.contains(e.target);
     _state = 'pending';
     _update();
   });
@@ -257,6 +256,10 @@ var pulltorefresh = {
 
     if (typeof _SETTINGS.ptrElement === 'string') {
       _SETTINGS.ptrElement = document.querySelector(_SETTINGS.ptrElement);
+    }
+
+    if (typeof _SETTINGS.triggerElement === 'string') {
+      _SETTINGS.triggerElement = document.querySelector(_SETTINGS.triggerElement);
     }
 
     if (!_setup) {
