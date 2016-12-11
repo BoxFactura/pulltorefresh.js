@@ -40,7 +40,6 @@ let dist = 0;
 let distResisted = 0;
 
 let _state = 'pending';
-let _setup = false;
 let _enable = false;
 let _timeout;
 
@@ -77,11 +76,9 @@ function _update() {
   }
 }
 
-function _setupEvents() {
-  const { classPrefix } = _SETTINGS;
-
+document.addEventListener('DOMContentLoaded', () => {
   function onReset() {
-    const { cssProp, ptrElement } = _SETTINGS;
+    const { cssProp, ptrElement, classPrefix } = _SETTINGS;
 
     ptrElement.classList.remove(`${classPrefix}refresh`);
     ptrElement.style[cssProp] = '0px';
@@ -109,7 +106,7 @@ function _setupEvents() {
 
   window.addEventListener('touchmove', (e) => {
     const {
-      ptrElement, resistanceFunction, distMax, distThreshold, cssProp,
+      ptrElement, resistanceFunction, distMax, distThreshold, cssProp, classPrefix,
     } = _SETTINGS;
 
     if (!_enable || _state === 'refreshing') {
@@ -158,7 +155,7 @@ function _setupEvents() {
 
   window.addEventListener('touchend', () => {
     const {
-      ptrElement, onRefresh, refreshTimeout, distThreshold, distReload, cssProp,
+      ptrElement, onRefresh, refreshTimeout, distThreshold, distReload, cssProp, classPrefix,
     } = _SETTINGS;
 
     if (_state === 'releasing' && distResisted > distThreshold) {
@@ -196,7 +193,7 @@ function _setupEvents() {
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
   });
-}
+});
 
 function _run() {
   const {
@@ -248,11 +245,6 @@ export default {
 
     if (typeof _SETTINGS.triggerElement === 'string') {
       _SETTINGS.triggerElement = document.querySelector(_SETTINGS.triggerElement);
-    }
-
-    if (!_setup) {
-      _setupEvents();
-      _setup = true;
     }
 
     _run();

@@ -44,7 +44,6 @@ var dist = 0;
 var distResisted = 0;
 
 var _state = 'pending';
-var _setup = false;
 var _enable = false;
 var _timeout;
 
@@ -79,12 +78,11 @@ function _update() {
   }
 }
 
-function _setupEvents() {
-  var classPrefix = _SETTINGS.classPrefix;
-
+document.addEventListener('DOMContentLoaded', function () {
   function onReset() {
     var cssProp = _SETTINGS.cssProp;
     var ptrElement = _SETTINGS.ptrElement;
+    var classPrefix = _SETTINGS.classPrefix;
 
     ptrElement.classList.remove((classPrefix + "refresh"));
     ptrElement.style[cssProp] = '0px';
@@ -116,6 +114,7 @@ function _setupEvents() {
     var distMax = _SETTINGS.distMax;
     var distThreshold = _SETTINGS.distThreshold;
     var cssProp = _SETTINGS.cssProp;
+    var classPrefix = _SETTINGS.classPrefix;
 
     if (!_enable || _state === 'refreshing') {
       return;
@@ -168,6 +167,7 @@ function _setupEvents() {
     var distThreshold = _SETTINGS.distThreshold;
     var distReload = _SETTINGS.distReload;
     var cssProp = _SETTINGS.cssProp;
+    var classPrefix = _SETTINGS.classPrefix;
 
     if (_state === 'releasing' && distResisted > distThreshold) {
       _state = 'refreshing';
@@ -204,7 +204,7 @@ function _setupEvents() {
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
   });
-}
+});
 
 function _run() {
   var mainElement = _SETTINGS.mainElement;
@@ -260,11 +260,6 @@ var pulltorefresh = {
 
     if (typeof _SETTINGS.triggerElement === 'string') {
       _SETTINGS.triggerElement = document.querySelector(_SETTINGS.triggerElement);
-    }
-
-    if (!_setup) {
-      _setupEvents();
-      _setup = true;
     }
 
     _run();
