@@ -4,8 +4,6 @@ _bundle: PullToRefresh
 ---
 */
 
-import { _closestElement } from './_helpers';
-
 /* eslint-disable import/no-unresolved */
 
 import _ptrMarkup from './_markup';
@@ -93,6 +91,7 @@ function _setupEvents() {
 
   window.addEventListener('touchstart', (e) => {
     const { triggerElement } = _SETTINGS;
+    const triggerNode = document.querySelector(triggerElement);
 
     if (_state !== 'pending') {
       return;
@@ -104,7 +103,7 @@ function _setupEvents() {
       pullStartY = e.touches[0].screenY;
     }
 
-    _enable = _closestElement(e.target, triggerElement);
+    _enable = triggerNode.contains(e.target);
     _state = 'pending';
     _update();
   });
