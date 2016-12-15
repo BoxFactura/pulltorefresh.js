@@ -243,7 +243,7 @@ function _run() {
 
   var styleEl = document.createElement('style');
 
-  styleEl.innerText = getStyles()
+  styleEl.textContent = getStyles()
     .replace(/__PREFIX__/g, classPrefix)
     .replace(/\s+/g, ' ');
 
