@@ -92,7 +92,7 @@ function _setupEvents() {
     _state = 'pending';
   }
 
-  window.addEventListener('touchstart', function (e) {
+  function _onTouchStart(e) {
     var triggerElement = _SETTINGS.triggerElement;
 
     if (_state !== 'pending') {
@@ -108,9 +108,9 @@ function _setupEvents() {
     _enable = triggerElement.contains(e.target);
     _state = 'pending';
     _update();
-  });
+  }
 
-  window.addEventListener('touchmove', function (e) {
+  function _onTouchMove(e) {
     var ptrElement = _SETTINGS.ptrElement;
     var resistanceFunction = _SETTINGS.resistanceFunction;
     var distMax = _SETTINGS.distMax;
@@ -159,9 +159,9 @@ function _setupEvents() {
         _update();
       }
     }
-  }, { passive: false });
+  }
 
-  window.addEventListener('touchend', function () {
+  function _onTouchEnd() {
     var ptrElement = _SETTINGS.ptrElement;
     var onRefresh = _SETTINGS.onRefresh;
     var refreshTimeout = _SETTINGS.refreshTimeout;
@@ -203,7 +203,18 @@ function _setupEvents() {
 
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
-  });
+  }
+
+  window.addEventListener('touchend', _onTouchEnd);
+  window.addEventListener('touchstart', _onTouchStart);
+  window.addEventListener('touchmove', _onTouchMove, { passive: false });
+
+  // Store event handlers to use for teardown later
+  return {
+    onTouchStart: _onTouchStart,
+    onTouchMove: _onTouchMove,
+    onTouchEnd: _onTouchEnd,
+  };
 }
 
 function _run() {
@@ -240,12 +251,18 @@ function _run() {
   if (typeof onInit === 'function') {
     onInit(_SETTINGS);
   }
+
+  return {
+    styleNode: styleEl,
+    ptrElement: _SETTINGS.ptrElement,
+  };
 }
 
 var pulltorefresh = {
   init: function init(options) {
     if ( options === void 0 ) options = {};
 
+    var handlers;
     Object.keys(_defaults).forEach(function (key) {
       _SETTINGS[key] = options[key] || _defaults[key];
     });
@@ -263,11 +280,35 @@ var pulltorefresh = {
     }
 
     if (!_setup) {
-      _setupEvents();
+      handlers = _setupEvents();
       _setup = true;
     }
 
-    _run();
+    var ref = _run();
+    var styleNode = ref.styleNode;
+    var ptrElement = ref.ptrElement;
+
+    return {
+      destroy: function destroy() {
+        // Teardown event listeners
+        window.removeEventListener('touchstart', handlers.onTouchStart);
+        window.removeEventListener('touchend', handlers.onTouchEnd);
+        window.removeEventListener('touchmove', handlers.onTouchMove);
+
+        // Remove ptr element and style tag
+        styleNode.parentNode.removeChild(styleNode);
+        ptrElement.parentNode.removeChild(ptrElement);
+
+        // Enable setupEvents to run again
+        _setup = false;
+
+        // null object references
+        handlers = null;
+        styleNode = null;
+        ptrElement = null;
+        _SETTINGS = {};
+      },
+    };
   },
 };
 
