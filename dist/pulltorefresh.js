@@ -94,15 +94,15 @@ function _setupEvents() {
   function _onTouchStart(e) {
     var triggerElement = _SETTINGS.triggerElement;
 
+    if (!window.scrollY) {
+      pullStartY = e.touches[0].screenY;
+    }
+
     if (_state !== 'pending') {
       return;
     }
 
     clearTimeout(_timeout);
-
-    if (!window.scrollY) {
-      pullStartY = e.touches[0].screenY;
-    }
 
     _enable = triggerElement.contains(e.target);
     _state = 'pending';
@@ -117,16 +117,17 @@ function _setupEvents() {
     var cssProp = _SETTINGS.cssProp;
     var classPrefix = _SETTINGS.classPrefix;
 
-    if (!_enable || _state === 'refreshing') {
-      return;
-    }
-
     if (!pullStartY) {
       if (!window.scrollY) {
         pullStartY = e.touches[0].screenY;
       }
     } else {
       pullMoveY = e.touches[0].screenY;
+    }
+
+    if (!_enable || _state === 'refreshing') {
+      if(!window.scrollY && pullStartY < pullMoveY) { e.preventDefault(); }
+      return;
     }
 
     if (_state === 'pending') {

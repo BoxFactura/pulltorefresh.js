@@ -90,15 +90,15 @@ function _setupEvents() {
   function _onTouchStart(e) {
     const { triggerElement } = _SETTINGS;
 
+    if (!window.scrollY) {
+      pullStartY = e.touches[0].screenY;
+    }
+
     if (_state !== 'pending') {
       return;
     }
 
     clearTimeout(_timeout);
-
-    if (!window.scrollY) {
-      pullStartY = e.touches[0].screenY;
-    }
 
     _enable = triggerElement.contains(e.target);
     _state = 'pending';
@@ -110,16 +110,17 @@ function _setupEvents() {
       ptrElement, resistanceFunction, distMax, distThreshold, cssProp, classPrefix,
     } = _SETTINGS;
 
-    if (!_enable || _state === 'refreshing') {
-      return;
-    }
-
     if (!pullStartY) {
       if (!window.scrollY) {
         pullStartY = e.touches[0].screenY;
       }
     } else {
       pullMoveY = e.touches[0].screenY;
+    }
+
+    if (!_enable || _state === 'refreshing') {
+      if(!window.scrollY && pullStartY < pullMoveY) e.preventDefault();
+      return;
     }
 
     if (_state === 'pending') {
