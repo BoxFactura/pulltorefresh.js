@@ -5,7 +5,7 @@
 A small, but powerful Javascript library crafted to power your webapp's pull to refresh feature. No markup needed, highly customizable and dependency-free!
 
 ---
-[![CDNJS](https://img.shields.io/cdnjs/v/PullToRefresh.svg)](https://cdnjs.com/libraries/PullToRefresh)
+[![CDNJS](https://img.shields.io/cdnjs/v/pulltorefreshjs.svg)](https://cdnjs.com/libraries/pulltorefreshjs)
 
 Install
 ---
