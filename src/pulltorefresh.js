@@ -119,7 +119,10 @@ function _setupEvents() {
     }
 
     if (!_enable || _state === 'refreshing') {
-      if(!window.scrollY && pullStartY < pullMoveY) e.preventDefault();
+      if (!window.scrollY && pullStartY < pullMoveY) {
+        e.preventDefault();
+      }
+
       return;
     }
 
