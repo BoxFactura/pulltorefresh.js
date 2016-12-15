@@ -9,7 +9,7 @@ _bundle: PullToRefresh
 import _ptrMarkup from './_markup';
 import _ptrStyles from './_styles';
 
-const _SETTINGS = {};
+let _SETTINGS = {};
 
 const _defaults = {
   distThreshold: 60,
@@ -40,6 +40,7 @@ let dist = 0;
 let distResisted = 0;
 
 let _state = 'pending';
+let _setup = false;
 let _enable = false;
 let _timeout;
 
@@ -76,7 +77,7 @@ function _update() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function _setupEvents() {
   function onReset() {
     const { cssProp, ptrElement, classPrefix } = _SETTINGS;
 
@@ -86,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     _state = 'pending';
   }
 
-  window.addEventListener('touchstart', (e) => {
+  function _onTouchStart(e) {
     const { triggerElement } = _SETTINGS;
 
     if (_state !== 'pending') {
@@ -102,9 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
     _enable = triggerElement.contains(e.target);
     _state = 'pending';
     _update();
-  });
+  }
 
-  window.addEventListener('touchmove', (e) => {
+  function _onTouchMove(e) {
     const {
       ptrElement, resistanceFunction, distMax, distThreshold, cssProp, classPrefix,
     } = _SETTINGS;
@@ -151,9 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
         _update();
       }
     }
-  }, { passive: false });
+  }
 
-  window.addEventListener('touchend', () => {
+  function _onTouchEnd() {
     const {
       ptrElement, onRefresh, refreshTimeout, distThreshold, distReload, cssProp, classPrefix,
     } = _SETTINGS;
@@ -192,8 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
-  });
-});
+  }
+
+  window.addEventListener('touchend', _onTouchEnd);
+  window.addEventListener('touchstart', _onTouchStart);
+  window.addEventListener('touchmove', _onTouchMove, { passive: false });
+
+  // Store event handlers to use for teardown later
+  return {
+    onTouchStart: _onTouchStart,
+    onTouchMove: _onTouchMove,
+    onTouchEnd: _onTouchEnd,
+  };
+}
 
 function _run() {
   const {
@@ -227,10 +239,16 @@ function _run() {
   if (typeof onInit === 'function') {
     onInit(_SETTINGS);
   }
+
+  return {
+    styleNode: styleEl,
+    ptrElement: _SETTINGS.ptrElement,
+  };
 }
 
 export default {
   init(options = {}) {
+    let handlers;
     Object.keys(_defaults).forEach((key) => {
       _SETTINGS[key] = options[key] || _defaults[key];
     });
@@ -247,6 +265,33 @@ export default {
       _SETTINGS.triggerElement = document.querySelector(_SETTINGS.triggerElement);
     }
 
-    _run();
+    if (!_setup) {
+      handlers = _setupEvents();
+      _setup = true;
+    }
+
+    let { styleNode, ptrElement } = _run();
+
+    return {
+      destroy() {
+        // Teardown event listeners
+        window.removeEventListener('touchstart', handlers.onTouchStart);
+        window.removeEventListener('touchend', handlers.onTouchEnd);
+        window.removeEventListener('touchmove', handlers.onTouchMove);
+
+        // Remove ptr element and style tag
+        styleNode.parentNode.removeChild(styleNode);
+        ptrElement.parentNode.removeChild(ptrElement);
+
+        // Enable setupEvents to run again
+        _setup = false;
+
+        // null object references
+        handlers = null;
+        styleNode = null;
+        ptrElement = null;
+        _SETTINGS = {};
+      },
+    };
   },
 };
