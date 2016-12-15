@@ -1,4 +1,4 @@
-![PulltoRefresh.js](img/pulltorefresh.gif)
+[![PulltoRefresh.js](img/pulltorefresh.gif)](](http://www.boxfactura.com/pulltorefresh.js/))
 
 [PulltoRefresh.js](http://www.boxfactura.com/pulltorefresh.js/) • [Demos](http://www.boxfactura.com/pulltorefresh.js/demos/basic.html)
 
@@ -96,3 +96,13 @@ Contribute
 1. Install [yarn](https://yarnpkg.com/)
 2. Run `yarn`
 3. Then `yarn dev`
+
+
+Roadmap
+---
+
+- `[ ]` More events: `onPullStart`, `onPullDown(direction, willRefresh)`, `onRelease(willRefresh)`
+- `[ ]` CSS fully customizable
+- `[ ]` Gallery of use cases
+- `[ ]` More advanced demos
+- `[ ]` Tests
