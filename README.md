@@ -1,11 +1,13 @@
-[![PulltoRefresh.js](img/pulltorefresh.gif)](](http://www.boxfactura.com/pulltorefresh.js/))
+![PulltoRefresh.js](img/pulltorefresh.gif)
 
-[PulltoRefresh.js](http://www.boxfactura.com/pulltorefresh.js/) • [Demos](http://www.boxfactura.com/pulltorefresh.js/demos/basic.html)
+[![CDNJS](https://img.shields.io/cdnjs/v/pulltorefreshjs.svg)](https://cdnjs.com/libraries/pulltorefreshjs)
+
+[**PulltoRefresh.js**](http://www.boxfactura.com/pulltorefresh.js/) • [Demos](http://www.boxfactura.com/pulltorefresh.js/demos/basic.html)
 
 A small, but powerful Javascript library crafted to power your webapp's pull to refresh feature. No markup needed, highly customizable and dependency-free!
 
 ---
-[![CDNJS](https://img.shields.io/cdnjs/v/pulltorefreshjs.svg)](https://cdnjs.com/libraries/pulltorefreshjs)
+
 
 Install
 ---
@@ -102,8 +104,9 @@ Contribute
 Roadmap
 ---
 
-- `[ ]` More events: `onPullStart`, `onPullDown(direction, willRefresh)`, `onRelease(willRefresh)`
-- `[ ]` CSS fully customizable
-- `[ ]` Gallery of use cases
-- `[ ]` More advanced demos
-- `[ ]` Tests
+- [ ] More events: `onPullStart`, `onPullDown(direction, willRefresh)`, `onRelease(willRefresh)`
+- [ ] CSS fully customizable
+- [ ] Gallery of use cases
+- [ ] More advanced demos
+- [ ] Tests
+- [ ] Minified releases
