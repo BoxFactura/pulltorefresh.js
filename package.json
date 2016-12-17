@@ -51,9 +51,5 @@
     "rollup": "0.36.3",
     "tarima-cli": "0.2.10",
     "tarima-lr": "0.0.5"
-  },
-  "dependencies": {
-    "qunit": "0.9.1",
-    "qunit-cli": "^0.2.0"
   }
 }
