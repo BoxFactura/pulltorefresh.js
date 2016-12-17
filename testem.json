@@ -1,4 +1,5 @@
 {
+  "test_page": "tests/index.html",
   "framework": "qunit",
   "src_files": [
     "dist/**/*.js",

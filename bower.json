@@ -1,6 +1,9 @@
 {
   "name": "pulltorefreshjs",
   "version": "0.1.3",
+  "dependencies": {
+    "qunit": "2.1.0"
+  },
   "description": "Pull To Refresh",
   "main": "dist/pulltorefresh.js",
   "authors": [
