@@ -1,8 +1,9 @@
 {
+  "before_tests": "tarima -f",
   "test_page": "tests/index.html",
   "framework": "qunit",
   "src_files": [
-    "dist/**/*.js",
+    "src/**/*.js",
     "tests/tests.js"
   ],
   "serve_files": [
