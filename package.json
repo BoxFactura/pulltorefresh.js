@@ -7,7 +7,7 @@
     "dev": "tarima -ws",
     "lint": "eslint src",
     "build": "tarima -f",
-    "test": "testem"
+    "test": "dev; testem"
   },
   "author": "Rafael Soto",
   "license": "MIT",

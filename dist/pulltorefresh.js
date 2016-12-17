@@ -229,7 +229,7 @@ function _run() {
   var classPrefix = _SETTINGS.classPrefix;
   var onInit = _SETTINGS.onInit;
 
-  if (!_SETTINGS.ptrElement) {
+  if (!document.querySelector(("." + classPrefix + "ptr"))) {
     var ptr = document.createElement('div');
 
     if (mainElement !== document.body) {
@@ -245,10 +245,12 @@ function _run() {
     _SETTINGS.ptrElement = ptr;
   }
 
+  // If we call init multiple times, we don't want to create
+  // multiple style nodes
   var styleEl;
-  if (!document.querySelector('#pull-to-refresh-js-style')) {
+  if (!document.querySelector('.pull-to-refresh-js-style')) {
     styleEl = document.createElement('style');
-    styleEl.id = 'pull-to-refresh-js-style';
+    styleEl.classList = ['pull-to-refresh-js-style'];
 
     styleEl.textContent = getStyles()
       .replace(/__PREFIX__/g, classPrefix)
@@ -256,7 +258,7 @@ function _run() {
 
     document.head.appendChild(styleEl);
   } else {
-    styleEl = document.querySelector('#pull-to-refresh-js-style');
+    styleEl = document.querySelector('.pull-to-refresh-js-style');
   }
 
   if (typeof onInit === 'function') {
