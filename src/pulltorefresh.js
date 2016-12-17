@@ -232,13 +232,19 @@ function _run() {
     _SETTINGS.ptrElement = ptr;
   }
 
-  const styleEl = document.createElement('style');
+  let styleEl;
+  if (!document.querySelector('#pull-to-refresh-js-style')) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'pull-to-refresh-js-style';
 
-  styleEl.textContent = getStyles()
-    .replace(/__PREFIX__/g, classPrefix)
-    .replace(/\s+/g, ' ');
+    styleEl.textContent = getStyles()
+      .replace(/__PREFIX__/g, classPrefix)
+      .replace(/\s+/g, ' ');
 
-  document.head.appendChild(styleEl);
+    document.head.appendChild(styleEl);
+  } else {
+    styleEl = document.querySelector('#pull-to-refresh-js-style');
+  }
 
   if (typeof onInit === 'function') {
     onInit(_SETTINGS);

@@ -1,0 +1,20 @@
+{
+  "framework": "qunit",
+  "src_files": [
+    "dist/**/*.js",
+    "tests/tests.js"
+  ],
+  "serve_files": [
+    "dist/pulltorefresh.js",
+    "tests/tests.js"
+  ],
+  "growl": true,
+  "launch_in_dev": [
+    "Chrome"
+  ],
+  "browser_args": {
+    "Chrome": [
+      "--auto-open-devtools-for-tabs"
+    ]
+  }
+}
