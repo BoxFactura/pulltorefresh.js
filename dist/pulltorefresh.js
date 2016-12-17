@@ -4,17 +4,14 @@
   (global.PullToRefresh = factory());
 }(this, (function () {
 
-var _ptrMarkup = function(){return "<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>";};
-
-var _ptrStyles = function(){return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}";};
-
 /*
 */
 
 /* eslint-disable import/no-unresolved */
 
 var _SETTINGS = {};
-
+var defaultStyle;
+var defaultHTML;
 var _defaults = {
   distThreshold: 60,
   distMax: 80,
@@ -25,14 +22,14 @@ var _defaults = {
   ptrElement: '.ptr',
   classPrefix: 'ptr--',
   cssProp: 'min-height',
-  iconArrow: '&#8675;',
-  iconRefreshing: '&hellip;',
+  containerClassName: '',
+  boxClassName: '',
+  contentClassName: '',
+  textClassName: '',
   instructionsPullToRefresh: 'Pull down to refresh',
   instructionsReleaseToRefresh: 'Release to refresh',
   instructionsRefreshing: 'Refreshing',
   refreshTimeout: 500,
-  getMarkup: _ptrMarkup,
-  getStyles: _ptrStyles,
   onInit: function () {},
   onRefresh: function () { return location.reload(); },
   resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
@@ -51,20 +48,11 @@ var _timeout;
 function _update() {
   var classPrefix = _SETTINGS.classPrefix;
   var ptrElement = _SETTINGS.ptrElement;
-  var iconArrow = _SETTINGS.iconArrow;
-  var iconRefreshing = _SETTINGS.iconRefreshing;
   var instructionsRefreshing = _SETTINGS.instructionsRefreshing;
   var instructionsPullToRefresh = _SETTINGS.instructionsPullToRefresh;
   var instructionsReleaseToRefresh = _SETTINGS.instructionsReleaseToRefresh;
 
-  var iconEl = ptrElement.querySelector(("." + classPrefix + "icon"));
   var textEl = ptrElement.querySelector(("." + classPrefix + "text"));
-
-  if (_state === 'refreshing') {
-    iconEl.innerHTML = iconRefreshing;
-  } else {
-    iconEl.innerHTML = iconArrow;
-  }
 
   if (_state === 'releasing') {
     textEl.innerHTML = instructionsReleaseToRefresh;
@@ -224,14 +212,12 @@ function _setupEvents() {
 
 function _run() {
   var mainElement = _SETTINGS.mainElement;
-  var getMarkup = _SETTINGS.getMarkup;
-  var getStyles = _SETTINGS.getStyles;
   var classPrefix = _SETTINGS.classPrefix;
   var onInit = _SETTINGS.onInit;
+  var containerClassName = _SETTINGS.containerClassName;
 
   if (!_SETTINGS.ptrElement) {
     var ptr = document.createElement('div');
-
     if (mainElement !== document.body) {
       mainElement.parentNode.insertBefore(ptr, mainElement);
     } else {
@@ -239,19 +225,20 @@ function _run() {
     }
 
     ptr.classList.add((classPrefix + "ptr"));
-    ptr.innerHTML = getMarkup()
-      .replace(/__PREFIX__/g, classPrefix);
-
+    if (containerClassName !== '') {
+      ptr.classList.add(("" + containerClassName));
+    }
+    ptr.innerHTML = defaultHTML;
     _SETTINGS.ptrElement = ptr;
   }
 
   var styleEl = document.createElement('style');
 
-  styleEl.textContent = getStyles()
-    .replace(/__PREFIX__/g, classPrefix)
-    .replace(/\s+/g, ' ');
+  styleEl.textContent = defaultStyle;
 
-  document.head.appendChild(styleEl);
+  // document.head.appendChild(styleEl);
+
+  document.head.insertBefore(styleEl, document.head.firstChild);
 
   if (typeof onInit === 'function') {
     onInit(_SETTINGS);
@@ -262,6 +249,12 @@ function _run() {
     ptrElement: _SETTINGS.ptrElement,
   };
 }
+
+var updateElement = function () {
+  defaultStyle = "\n    ." + (_SETTINGS.classPrefix) + "ptr {\n      background: #E0E0E0;\n      pointer-events: none;\n      font-size: 0.85em;\n      font-weight: bold;\n      top: 0;\n      height: 0;\n      transition: height 0.3s, min-height 0.3s;\n      text-align: center;\n      width: 100%;\n      overflow: hidden;\n      display: flex;\n      align-items: flex-end;\n      align-content: stretch;\n    }\n    ." + (_SETTINGS.classPrefix) + "box {\n      padding: 10px;\n      flex-basis: 100%;\n    }\n    ." + (_SETTINGS.classPrefix) + "pull {\n      transition: none;\n    }\n    ." + (_SETTINGS.classPrefix) + "release ." + (_SETTINGS.classPrefix) + "icon {\n      transform: rotate(180deg);\n    }\n  ";
+
+  defaultHTML = "\n    <div class=\"" + (_SETTINGS.classPrefix) + "box" + (_SETTINGS.boxClassName ? (" " + (_SETTINGS.boxClassName)) : '') + "\">\n      <div class=\"" + (_SETTINGS.classPrefix) + "content" + (_SETTINGS.contentClassName ? (" " + (_SETTINGS.contentClassName)) : '') + "\">\n        <div class=\"" + (_SETTINGS.classPrefix) + "text" + (_SETTINGS.textClassName ? (" " + (_SETTINGS.textClassName)) : '') + "\"></div>\n      </div>\n    </div>\n  ";
+};
 
 var pulltorefresh = {
   init: function init(options) {
@@ -283,6 +276,8 @@ var pulltorefresh = {
     if (typeof _SETTINGS.triggerElement === 'string') {
       _SETTINGS.triggerElement = document.querySelector(_SETTINGS.triggerElement);
     }
+
+    updateElement();
 
     if (!_setup) {
       handlers = _setupEvents();
