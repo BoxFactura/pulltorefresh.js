@@ -6,11 +6,9 @@ _bundle: PullToRefresh
 
 /* eslint-disable import/no-unresolved */
 
-import _ptrMarkup from './_markup';
-import _ptrStyles from './_styles';
-
 let _SETTINGS = {};
-
+let defaultStyle;
+let defaultHTML;
 const _defaults = {
   distThreshold: 60,
   distMax: 80,
@@ -21,14 +19,14 @@ const _defaults = {
   ptrElement: '.ptr',
   classPrefix: 'ptr--',
   cssProp: 'min-height',
-  iconArrow: '&#8675;',
-  iconRefreshing: '&hellip;',
+  containerClassName: '',
+  boxClassName: '',
+  contentClassName: '',
+  textClassName: '',
   instructionsPullToRefresh: 'Pull down to refresh',
   instructionsReleaseToRefresh: 'Release to refresh',
   instructionsRefreshing: 'Refreshing',
   refreshTimeout: 500,
-  getMarkup: _ptrMarkup,
-  getStyles: _ptrStyles,
   onInit: () => {},
   onRefresh: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
@@ -48,21 +46,12 @@ function _update() {
   const {
     classPrefix,
     ptrElement,
-    iconArrow,
-    iconRefreshing,
     instructionsRefreshing,
     instructionsPullToRefresh,
     instructionsReleaseToRefresh,
   } = _SETTINGS;
 
-  const iconEl = ptrElement.querySelector(`.${classPrefix}icon`);
   const textEl = ptrElement.querySelector(`.${classPrefix}text`);
-
-  if (_state === 'refreshing') {
-    iconEl.innerHTML = iconRefreshing;
-  } else {
-    iconEl.innerHTML = iconArrow;
-  }
 
   if (_state === 'releasing') {
     textEl.innerHTML = instructionsReleaseToRefresh;
@@ -213,12 +202,11 @@ function _setupEvents() {
 
 function _run() {
   const {
-    mainElement, getMarkup, getStyles, classPrefix, onInit,
+    mainElement, classPrefix, onInit, containerClassName,
   } = _SETTINGS;
 
   if (!_SETTINGS.ptrElement) {
     const ptr = document.createElement('div');
-
     if (mainElement !== document.body) {
       mainElement.parentNode.insertBefore(ptr, mainElement);
     } else {
@@ -226,19 +214,20 @@ function _run() {
     }
 
     ptr.classList.add(`${classPrefix}ptr`);
-    ptr.innerHTML = getMarkup()
-      .replace(/__PREFIX__/g, classPrefix);
-
+    if (containerClassName !== '') {
+      ptr.classList.add(`${containerClassName}`);
+    }
+    ptr.innerHTML = defaultHTML;
     _SETTINGS.ptrElement = ptr;
   }
 
   const styleEl = document.createElement('style');
 
-  styleEl.textContent = getStyles()
-    .replace(/__PREFIX__/g, classPrefix)
-    .replace(/\s+/g, ' ');
+  styleEl.textContent = defaultStyle;
 
-  document.head.appendChild(styleEl);
+  // document.head.appendChild(styleEl);
+
+  document.head.insertBefore(styleEl, document.head.firstChild);
 
   if (typeof onInit === 'function') {
     onInit(_SETTINGS);
@@ -249,6 +238,44 @@ function _run() {
     ptrElement: _SETTINGS.ptrElement,
   };
 }
+
+const updateElement = () => {
+  defaultStyle = `
+    .${_SETTINGS.classPrefix}ptr {
+      background: #E0E0E0;
+      pointer-events: none;
+      font-size: 0.85em;
+      font-weight: bold;
+      top: 0;
+      height: 0;
+      transition: height 0.3s, min-height 0.3s;
+      text-align: center;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      align-content: stretch;
+    }
+    .${_SETTINGS.classPrefix}box {
+      padding: 10px;
+      flex-basis: 100%;
+    }
+    .${_SETTINGS.classPrefix}pull {
+      transition: none;
+    }
+    .${_SETTINGS.classPrefix}release .${_SETTINGS.classPrefix}icon {
+      transform: rotate(180deg);
+    }
+  `;
+
+  defaultHTML = `
+    <div class="${_SETTINGS.classPrefix}box${_SETTINGS.boxClassName ? ` ${_SETTINGS.boxClassName}` : ''}">
+      <div class="${_SETTINGS.classPrefix}content${_SETTINGS.contentClassName ? ` ${_SETTINGS.contentClassName}` : ''}">
+        <div class="${_SETTINGS.classPrefix}text${_SETTINGS.textClassName ? ` ${_SETTINGS.textClassName}` : ''}"></div>
+      </div>
+    </div>
+  `;
+};
 
 export default {
   init(options = {}) {
@@ -268,6 +295,8 @@ export default {
     if (typeof _SETTINGS.triggerElement === 'string') {
       _SETTINGS.triggerElement = document.querySelector(_SETTINGS.triggerElement);
     }
+
+    updateElement();
 
     if (!_setup) {
       handlers = _setupEvents();

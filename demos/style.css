@@ -48,3 +48,7 @@ pre {
   background: #eef;
   padding: 10px 0;
 }
+
+.tabs a {
+  margin-right: 10px;
+}
