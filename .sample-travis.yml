@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+- '4'
+sudo: false
+cache:
+  directories:
+  - "$HOME/.npm"
+  - "$HOME/.cache"
+before_install:
+- npm config set spin false
+- npm install -g bower
+- bower --version
+- npm install phantomjs-prebuilt
+- node_modules/phantomjs-prebuilt/bin/phantomjs --version
+install:
+- npm install
+- bower install
+script:
+- npm test
+deploy:
+  provider: heroku
+  api_key:
+    secure: K7qUaW/KkNMNEjZrEcZa1/TIpS2LKpKi1SroBpZzEs5eNtyXtoElbjUXgIbSt1evpBWbssYQC2fZLShX8K/Vio4LPrheuQuxK1yW3Iyza8EU2amK16T74RFPV6oHsWYB3XuGebUiOZioaBcnk/TNLiGeuv+RWhkXjelUu4toyMl6hZMyukcUZLIouYU3yKMUyDmSIxf/eWCvP/IT3Jffq1jdbHsFBk36p26eqHMsBfOjBzkDKpMmanvCSxhaXcB9GmEc7zXPLzawUYpNzASnCjvv+5MDWeXPUietQ/2UtvBnIlFQxkH84gV0aDPJ4fD/gy31dfMnQitmSKyAiuRzqrsuhysiQQP3r3iDz6qmBlVCs9EIn6W6a7MduWDORTr/PfdZKj5dXI2GWlhEAMiN9wdYZLxHYZMamnJXMvHRTaSJyIgA2nGrbC/gPv7fjyle1taFyrCIuWMWGac6IElu67DgRpXiR5EaWmQSVxnU+B4Y1iPT4zYShF7dnzOyln/sykRvPAsEfMj/ON2IE+w0OcdIsMyfFctyWbWIJxtMUs1xy5Mq2zrXPofdrHCtua4WOua+ys3/Q40nGyiEhH44dwrPVHsF+GOsNrUPQl9X0/HZkHZQEnmM1xW/zxmzquQjmgOHN1MZp/oeOadZLCCpLXX7ls9VhIe5UmAB7rrrfFA=
+  app: fem-commently
+  on:
+    repo: FrontendMasters/ember-commently
