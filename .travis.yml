@@ -2,3 +2,15 @@ language: node_js
 node_js:
 - '0.11'
 - '0.10'
+sudo: false
+cache:
+  directories:
+  - "$HOME/.npm"
+  - "$HOME/.cache"
+before_install:
+- npm install -g bower
+install:
+- npm install
+- bower install
+script:
+- npm test
