@@ -4,7 +4,7 @@
   "framework": "qunit",
   "src_files": [
     "src/**/*.js",
-    "tests/tests.js"
+    "src/**/*.index.html"
   ],
   "serve_files": [
     "dist/pulltorefresh.js",
@@ -12,10 +12,11 @@
   ],
   "growl": true,
   "launch_in_dev": [
-    "Chrome"
+    "Chrome",
+    "PhantomJs"
   ],
   "launch_in_ci": [
-    "Chrome"
+    "PhantomJs"
   ],
   "browser_args": {
     "Chrome": [

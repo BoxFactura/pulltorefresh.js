@@ -7,7 +7,8 @@
     "dev": "tarima -ws",
     "lint": "eslint src",
     "build": "tarima -f",
-    "test": "testem ci"
+    "test": "testem ci",
+    "dev_test": "testem"
   },
   "author": "Rafael Soto",
   "license": "MIT",
@@ -18,7 +19,9 @@
     "rename": [
       "**/*.css:{filepath/1}/{filename}.css",
       "**/*.html:{filepath/1}/{filename}.html",
-      "**/src/*.js:{filepath/1}/dist/{filename}.js"
+      "**/src/*.js:{filepath/1}/dist/{filename}.js",
+      "**/tests/tests.js:/tests/{filename}.js",
+      "**/tests/index.html:/tests/{filename}.html"
     ],
     "filter": [
       "!_*",

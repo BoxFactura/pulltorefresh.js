@@ -248,9 +248,9 @@ function _run() {
   // If we call init multiple times, we don't want to create
   // multiple style nodes
   var styleEl;
-  if (!document.querySelector('.pull-to-refresh-js-style')) {
+  if (!document.querySelector('#pull-to-refresh-js-style')) {
     styleEl = document.createElement('style');
-    styleEl.classList = ['pull-to-refresh-js-style'];
+    styleEl.setAttribute('id', 'pull-to-refresh-js-style');
 
     styleEl.textContent = getStyles()
       .replace(/__PREFIX__/g, classPrefix)
@@ -258,7 +258,7 @@ function _run() {
 
     document.head.appendChild(styleEl);
   } else {
-    styleEl = document.querySelector('.pull-to-refresh-js-style');
+    styleEl = document.querySelector('#pull-to-refresh-js-style');
   }
 
   if (typeof onInit === 'function') {
