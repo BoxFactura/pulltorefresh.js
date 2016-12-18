@@ -1,7 +1,6 @@
-const { test } = QUnit;
+const { test, module } = QUnit;
 
-QUnit.module('Setup & Teardown');
-
+module('Setup & Teardown');
 test('init()', (assert) => {
   assert.equal(typeof PullToRefresh.init, 'function', 'Init is a function');
 

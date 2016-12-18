@@ -14,6 +14,9 @@
   "launch_in_dev": [
     "Chrome"
   ],
+  "launch_in_ci": [
+    "Chrome"
+  ],
   "browser_args": {
     "Chrome": [
       "--auto-open-devtools-for-tabs"
