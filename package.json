@@ -14,11 +14,9 @@
     "src": "src",
     "public": ".",
     "dest": ".",
-    "cacheFile": "dist/build.json",
     "rename": [
-      "**/*.css:{filepath/1}/{filename}.css",
-      "**/*.html:{filepath/1}/{filename}.html",
-      "**/src/*.js:{filepath/1}/dist/{filename}.js"
+      "**/*.js:dist/{fullpath/1}",
+      "**/demos/**:{fullpath/1}"
     ],
     "filter": [
       "!_*",

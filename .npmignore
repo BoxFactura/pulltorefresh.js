@@ -1,6 +1,7 @@
 *.md
 *.txt
 *.json
+.tarima
 img
 src
 demos
