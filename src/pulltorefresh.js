@@ -38,6 +38,16 @@ let _setup = false;
 let _enable = false;
 let _timeout;
 
+let supportsPassive = false;
+
+try {
+  window.addEventListener('test', null, {
+    get passive() {
+      supportsPassive = true;
+    },
+  });
+} catch(e) {}
+
 function _update() {
   const {
     classPrefix,
@@ -199,7 +209,7 @@ function _setupEvents() {
 
   window.addEventListener('touchend', _onTouchEnd);
   window.addEventListener('touchstart', _onTouchStart);
-  window.addEventListener('touchmove', _onTouchMove);
+  window.addEventListener('touchmove', _onTouchMove, supportsPassive ? { passive: false } : undefined);
   window.addEventListener('scroll', _onScroll);
 
   // Store event handlers to use for teardown later
@@ -285,7 +295,7 @@ export default {
         // Teardown event listeners
         window.removeEventListener('touchstart', handlers.onTouchStart);
         window.removeEventListener('touchend', handlers.onTouchEnd);
-        window.removeEventListener('touchmove', handlers.onTouchMove);
+        window.removeEventListener('touchmove', handlers.onTouchMove, supportsPassive ? { passive: false } : undefined);
         window.removeEventListener('scroll', handlers.onScroll);
 
         // Remove ptr element and style tag
