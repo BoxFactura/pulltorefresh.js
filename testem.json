@@ -1,5 +1,5 @@
 {
-  "before_tests": "tarima -fqe test",
+  "before_tests": "tarima -fqe test -x demos",
   "test_page": "tests/index.html",
   "framework": "qunit",
   "src_files": [
