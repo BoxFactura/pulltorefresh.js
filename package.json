@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tarima -des",
     "lint": "eslint src",
-    "build": "tarima -fqe dist",
+    "build": "tarima -Ufqe dist -x tests",
     "test": "testem ci",
     "dev_test": "testem"
   },
@@ -18,7 +18,8 @@
     "dest": ".",
     "rename": [
       "**/*.js:dist/{fullpath/1}",
-      "**/demos/**:{fullpath/1}"
+      "**/demos/**:{fullpath/1}",
+      "**/tests/**:{fullpath/1}"
     ],
     "bundle": [
       "**/*.js"
@@ -39,7 +40,6 @@
         "js": "es6"
       },
       "rollup": {
-        "format": "umd",
         "bundle": "PullToRefresh"
       }
     }
