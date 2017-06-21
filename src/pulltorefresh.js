@@ -198,7 +198,7 @@ function _setupEvents() {
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
   }
-  
+
   function _onScroll() {
     mainElement.classList.toggle(`${classPrefix}top`, !window.scrollY);
   }
