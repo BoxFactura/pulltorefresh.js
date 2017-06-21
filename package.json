@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tarima -des",
     "lint": "eslint src",
-    "build": "tarima -f",
+    "build": "tarima -fqe dist",
     "test": "testem ci",
     "dev_test": "testem"
   },
