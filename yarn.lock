@@ -2094,9 +2094,9 @@ tarima-lr@^0.3.2:
     serve-static "^1.11.1"
     tiny-lr "^0.2.1"
 
-tarima@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/tarima/-/tarima-3.5.0.tgz#5205ca6a377ca45c3d651d34a1302f53cfec3a04"
+tarima@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/tarima/-/tarima-3.6.1.tgz#085e1fe336fe3637e10039079171d296481fbc5c"
   dependencies:
     debug ">=2.2.0"
     deindent "^0.1.0"
