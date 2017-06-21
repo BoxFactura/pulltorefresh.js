@@ -1,10 +1,10 @@
 {
-  "before_tests": "tarima -f",
+  "before_tests": "tarima -fqe test",
   "test_page": "tests/index.html",
   "framework": "qunit",
   "src_files": [
     "src/**/*.js",
-    "src/**/*.index.html"
+    "tests/**/*.index.html"
   ],
   "serve_files": [
     "dist/pulltorefresh.js",
