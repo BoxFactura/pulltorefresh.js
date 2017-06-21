@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '0.11'
+- latest 
 sudo: false
 
 cache:
@@ -16,3 +16,6 @@ install:
   - bower install
 script:
   - npm test
+
+notifications:
+  email: false
