@@ -20,6 +20,9 @@
       "**/*.js:dist/{fullpath/1}",
       "**/demos/**:{fullpath/1}"
     ],
+    "bundle": [
+      "**/*.js"
+    ],
     "filter": [
       "!_*",
       "!**/_*",
@@ -36,7 +39,8 @@
         "js": "es6"
       },
       "rollup": {
-        "format": "umd"
+        "format": "umd",
+        "bundle": "PullToRefresh"
       }
     }
   },

@@ -1,13 +1,7 @@
-/**
----
-_bundle: PullToRefresh
----
-*/
-
 /* eslint-disable import/no-unresolved */
 
-import _ptrMarkup from './_markup';
-import _ptrStyles from './_styles';
+import _ptrMarkup from './_markup.pug';
+import _ptrStyles from './_styles.less';
 
 let _SETTINGS = {};
 
