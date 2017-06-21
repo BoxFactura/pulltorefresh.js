@@ -4,13 +4,14 @@
   "description": "Pull To Refresh",
   "main": "dist/pulltorefresh.js",
   "scripts": {
-    "dev": "tarima -ws",
+    "dev": "tarima -des",
     "lint": "eslint src",
     "build": "tarima -f"
   },
   "author": "Rafael Soto",
   "license": "MIT",
   "tarima": {
+    "src": "src",
     "public": ".",
     "dest": ".",
     "cacheFile": "dist/build.json",
@@ -48,7 +49,7 @@
     "less": "2.7.1",
     "pug": "2.0.0-beta6",
     "rollup": "0.36.3",
-    "tarima-cli": "0.2.10",
-    "tarima-lr": "0.0.5"
+    "tarima": "^3.5.0",
+    "tarima-lr": "^0.3.2"
   }
 }
