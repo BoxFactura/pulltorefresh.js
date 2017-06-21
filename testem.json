@@ -1,0 +1,26 @@
+{
+  "before_tests": "tarima -f",
+  "test_page": "tests/index.html",
+  "framework": "qunit",
+  "src_files": [
+    "src/**/*.js",
+    "src/**/*.index.html"
+  ],
+  "serve_files": [
+    "dist/pulltorefresh.js",
+    "tests/tests.js"
+  ],
+  "growl": true,
+  "launch_in_dev": [
+    "Chrome",
+    "PhantomJs"
+  ],
+  "launch_in_ci": [
+    "PhantomJs"
+  ],
+  "browser_args": {
+    "Chrome": [
+      "--auto-open-devtools-for-tabs"
+    ]
+  }
+}

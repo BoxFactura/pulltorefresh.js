@@ -229,7 +229,7 @@ function _run() {
   var classPrefix = _SETTINGS.classPrefix;
   var onInit = _SETTINGS.onInit;
 
-  if (!_SETTINGS.ptrElement) {
+  if (!document.querySelector(("." + classPrefix + "ptr"))) {
     var ptr = document.createElement('div');
 
     if (mainElement !== document.body) {
@@ -245,13 +245,22 @@ function _run() {
     _SETTINGS.ptrElement = ptr;
   }
 
-  var styleEl = document.createElement('style');
+  // Add the css styles to the style node, and then
+  // insert it into the dom
+  // ========================================================
+  var styleEl;
+  if (!document.querySelector('#pull-to-refresh-js-style')) {
+    styleEl = document.createElement('style');
+    styleEl.setAttribute('id', 'pull-to-refresh-js-style');
+
+    document.head.appendChild(styleEl);
+  } else {
+    styleEl = document.querySelector('#pull-to-refresh-js-style');
+  }
 
   styleEl.textContent = getStyles()
     .replace(/__PREFIX__/g, classPrefix)
     .replace(/\s+/g, ' ');
-
-  document.head.appendChild(styleEl);
 
   if (typeof onInit === 'function') {
     onInit(_SETTINGS);
@@ -272,16 +281,11 @@ var pulltorefresh = {
       _SETTINGS[key] = options[key] || _defaults[key];
     });
 
-    if (typeof _SETTINGS.mainElement === 'string') {
-      _SETTINGS.mainElement = document.querySelector(_SETTINGS.mainElement);
-    }
-
-    if (typeof _SETTINGS.ptrElement === 'string') {
-      _SETTINGS.ptrElement = document.querySelector(_SETTINGS.ptrElement);
-    }
-
-    if (typeof _SETTINGS.triggerElement === 'string') {
-      _SETTINGS.triggerElement = document.querySelector(_SETTINGS.triggerElement);
+    var methods = ['mainElement', 'ptrElement', 'triggerElement'];
+    for (var i = methods.length - 1; i >= 0; i--) {
+      if (typeof _SETTINGS[methods[i]] === 'string') {
+        _SETTINGS[methods[i]] = document.querySelector(_SETTINGS[methods[i]]);
+      }
     }
 
     if (!_setup) {

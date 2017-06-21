@@ -1,3 +1,7 @@
 .tarima
 node_modules
 dist/build.json
+bower_components
+
+tests/tests.js
+tests/index.html

@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "tarima -des",
     "lint": "eslint src",
-    "build": "tarima -f"
+    "build": "tarima -f",
+    "test": "testem ci",
+    "dev_test": "testem"
   },
   "author": "Rafael Soto",
   "license": "MIT",
