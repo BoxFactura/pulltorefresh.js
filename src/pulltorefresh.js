@@ -198,16 +198,22 @@ function _setupEvents() {
     pullStartY = pullMoveY = null;
     dist = distResisted = 0;
   }
+  
+  function _onScroll() {
+    mainElement.classList.toggle(`${classPrefix}top`, !window.scrollY);
+  }
 
   window.addEventListener('touchend', _onTouchEnd);
   window.addEventListener('touchstart', _onTouchStart);
-  window.addEventListener('touchmove', _onTouchMove, { passive: false });
+  window.addEventListener('touchmove', _onTouchMove);
+  window.addEventListener('scroll', _onScroll);
 
   // Store event handlers to use for teardown later
   return {
     onTouchStart: _onTouchStart,
     onTouchMove: _onTouchMove,
     onTouchEnd: _onTouchEnd,
+    onScroll: _onScroll
   };
 }
 
@@ -282,6 +288,7 @@ export default {
         window.removeEventListener('touchstart', handlers.onTouchStart);
         window.removeEventListener('touchend', handlers.onTouchEnd);
         window.removeEventListener('touchmove', handlers.onTouchMove);
+        window.removeEventListener('scroll', handlers.onScroll);
 
         // Remove ptr element and style tag
         styleNode.parentNode.removeChild(styleNode);
