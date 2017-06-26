@@ -46,7 +46,9 @@ try {
       supportsPassive = true;
     },
   });
-} catch(e) {}
+} catch (e) {
+  // do nothing
+}
 
 function _update() {
   const {
@@ -204,6 +206,10 @@ function _setupEvents() {
   }
 
   function _onScroll() {
+    const {
+      mainElement, classPrefix,
+    } = _SETTINGS;
+
     mainElement.classList.toggle(`${classPrefix}top`, !window.scrollY);
   }
 
@@ -217,7 +223,7 @@ function _setupEvents() {
     onTouchStart: _onTouchStart,
     onTouchMove: _onTouchMove,
     onTouchEnd: _onTouchEnd,
-    onScroll: _onScroll
+    onScroll: _onScroll,
   };
 }
 
@@ -277,11 +283,11 @@ export default {
     });
 
     const methods = ['mainElement', 'ptrElement', 'triggerElement'];
-    for (let i = methods.length - 1; i >= 0; i--) {
-      if (typeof _SETTINGS[methods[i]] === 'string') {
-        _SETTINGS[methods[i]] = document.querySelector(_SETTINGS[methods[i]]);
+    methods.forEach((method) => {
+      if (typeof _SETTINGS[method] === 'string') {
+        _SETTINGS[method] = document.querySelector(_SETTINGS[method]);
       }
-    }
+    });
 
     if (!_setup) {
       handlers = _setupEvents();
