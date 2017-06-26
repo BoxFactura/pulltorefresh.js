@@ -7,6 +7,7 @@
     "dev": "tarima -des",
     "lint": "eslint src",
     "build": "tarima -Ufqe dist -x tests",
+    "build_min": "yarn build -- -OR '**/*.js:{basedir}/{name}.min.{ext}'",
     "test": "testem ci",
     "dev_test": "testem"
   },
@@ -47,9 +48,11 @@
   "devDependencies": {
     "buble": "0.14.2",
     "chokidar": "1.6.0",
+    "csso": "^3.1.1",
     "eslint": "3.5.0",
     "eslint-config-airbnb-base": "7.1.0",
     "eslint-plugin-import": "1.15.0",
+    "google-closure-compiler-js": "^20170521.0.0",
     "less": "2.7.1",
     "pug": "2.0.0-beta6",
     "rollup": "0.36.3",
