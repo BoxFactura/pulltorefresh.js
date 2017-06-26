@@ -108,5 +108,5 @@ Roadmap
 - [ ] CSS fully customizable
 - [ ] Gallery of use cases
 - [ ] More advanced demos
-- [ ] Tests
-- [ ] Minified releases
+- [ ] Tests - WIP
+- [x] Minified releases
