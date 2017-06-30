@@ -1,6 +1,6 @@
 {
   "name": "pulltorefreshjs",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Pull To Refresh",
   "main": "dist/pulltorefresh.js",
   "scripts": {
