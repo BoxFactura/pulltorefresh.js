@@ -92,6 +92,9 @@ What will the pull to refresh trigger? You can return a promise. Defaults to `wi
 
 The resistance function, accepts one parameter, must return a number, capping at 1. Defaults to `t => Math.min(1, t / 2.5)`
 
+➡ `passive` (boolean)
+
+This value will be passed as `{ passive: true|false }` to `touchmove` listeners if passive-handlers are supported. Defaults to `false`
 
 Contribute
 ---
