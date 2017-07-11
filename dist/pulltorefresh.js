@@ -33,6 +33,7 @@ var _defaults = {
   onInit: function () {},
   onRefresh: function () { return location.reload(); },
   resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
+  shouldPullToRefresh: function () { return !window.scrollY; },
 };
 
 var pullStartY = null;
@@ -101,9 +102,10 @@ function _setupEvents() {
   }
 
   function _onTouchStart(e) {
+    var shouldPullToRefresh = _SETTINGS.shouldPullToRefresh;
     var triggerElement = _SETTINGS.triggerElement;
 
-    if (!window.scrollY) {
+    if (shouldPullToRefresh()) {
       pullStartY = e.touches[0].screenY;
     }
 
@@ -119,15 +121,16 @@ function _setupEvents() {
   }
 
   function _onTouchMove(e) {
-    var ptrElement = _SETTINGS.ptrElement;
-    var resistanceFunction = _SETTINGS.resistanceFunction;
-    var distMax = _SETTINGS.distMax;
-    var distThreshold = _SETTINGS.distThreshold;
     var cssProp = _SETTINGS.cssProp;
     var classPrefix = _SETTINGS.classPrefix;
+    var distMax = _SETTINGS.distMax;
+    var distThreshold = _SETTINGS.distThreshold;
+    var ptrElement = _SETTINGS.ptrElement;
+    var resistanceFunction = _SETTINGS.resistanceFunction;
+    var shouldPullToRefresh = _SETTINGS.shouldPullToRefresh;
 
     if (!pullStartY) {
-      if (!window.scrollY) {
+      if (shouldPullToRefresh()) {
         pullStartY = e.touches[0].screenY;
       }
     } else {
@@ -135,7 +138,7 @@ function _setupEvents() {
     }
 
     if (!_enable || _state === 'refreshing') {
-      if (!window.scrollY && pullStartY < pullMoveY) {
+      if (shouldPullToRefresh() && pullStartY < pullMoveY) {
         e.preventDefault();
       }
 
@@ -222,8 +225,9 @@ function _setupEvents() {
   function _onScroll() {
     var mainElement = _SETTINGS.mainElement;
     var classPrefix = _SETTINGS.classPrefix;
+    var shouldPullToRefresh = _SETTINGS.shouldPullToRefresh;
 
-    mainElement.classList.toggle((classPrefix + "top"), !window.scrollY);
+    mainElement.classList.toggle((classPrefix + "top"), shouldPullToRefresh());
   }
 
   window.addEventListener('touchend', _onTouchEnd);
