@@ -26,6 +26,7 @@ const _defaults = {
   onInit: () => {},
   onRefresh: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
+  shouldPullToRefresh: () => !window.scrollY,
 };
 
 let pullStartY = null;
@@ -94,9 +95,9 @@ function _setupEvents() {
   }
 
   function _onTouchStart(e) {
-    const { triggerElement } = _SETTINGS;
+    const { shouldPullToRefresh, triggerElement } = _SETTINGS;
 
-    if (!window.scrollY) {
+    if (shouldPullToRefresh()) {
       pullStartY = e.touches[0].screenY;
     }
 
@@ -113,11 +114,12 @@ function _setupEvents() {
 
   function _onTouchMove(e) {
     const {
-      ptrElement, resistanceFunction, distMax, distThreshold, cssProp, classPrefix,
+      cssProp, classPrefix, distMax, distThreshold, ptrElement, resistanceFunction,
+      shouldPullToRefresh,
     } = _SETTINGS;
 
     if (!pullStartY) {
-      if (!window.scrollY) {
+      if (shouldPullToRefresh()) {
         pullStartY = e.touches[0].screenY;
       }
     } else {
@@ -125,7 +127,7 @@ function _setupEvents() {
     }
 
     if (!_enable || _state === 'refreshing') {
-      if (!window.scrollY && pullStartY < pullMoveY) {
+      if (shouldPullToRefresh() && pullStartY < pullMoveY) {
         e.preventDefault();
       }
 
@@ -207,10 +209,10 @@ function _setupEvents() {
 
   function _onScroll() {
     const {
-      mainElement, classPrefix,
+      mainElement, classPrefix, shouldPullToRefresh,
     } = _SETTINGS;
 
-    mainElement.classList.toggle(`${classPrefix}top`, !window.scrollY);
+    mainElement.classList.toggle(`${classPrefix}top`, shouldPullToRefresh());
   }
 
   window.addEventListener('touchend', _onTouchEnd);
