@@ -55,8 +55,8 @@
     "google-closure-compiler-js": "^20170521.0.0",
     "less": "2.7.1",
     "pug": "2.0.0-beta6",
-    "rollup": "0.36.3",
-    "tarima": "^3.6.1",
+    "rollup": "^0.48.2",
+    "tarima": "^3.7.3",
     "tarima-lr": "^0.3.2"
   }
 }

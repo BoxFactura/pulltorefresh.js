@@ -529,7 +529,7 @@ encodeurl@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.1.tgz#79e3d58655346909fe6f0f45a5de68103b294d20"
 
-errno@^0.1.1:
+errno@^0.1.1, errno@^0.1.3:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/errno/-/errno-0.1.4.tgz#b896e23a9e5e8ba33871fc996abd3635fc9a1c7d"
   dependencies:
@@ -1375,6 +1375,13 @@ media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
 
+memory-fs@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/memory-fs/-/memory-fs-0.4.1.tgz#3a9a20b8462523e447cfbc7e8bb80ed667bfc552"
+  dependencies:
+    errno "^0.1.3"
+    readable-stream "^2.0.1"
+
 micromatch@^2.1.5, micromatch@^2.3.11:
   version "2.3.11"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-2.3.11.tgz#86677c97d1720b363431d04d0d15293bd38c1565"
@@ -1803,7 +1810,7 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-readable-stream@^2.0.2, readable-stream@^2.0.6, readable-stream@^2.1.4, readable-stream@^2.1.5, readable-stream@^2.2.2:
+readable-stream@^2.0.1, readable-stream@^2.0.2, readable-stream@^2.0.6, readable-stream@^2.1.4, readable-stream@^2.1.5, readable-stream@^2.2.2:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.1.tgz#84e26965bb9e785535ed256e8d38e92c69f09d10"
   dependencies:
@@ -1925,11 +1932,9 @@ rimraf@2, rimraf@^2.2.8, rimraf@^2.5.1, rimraf@^2.6.1:
   dependencies:
     glob "^7.0.5"
 
-rollup@0.36.3:
-  version "0.36.3"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.36.3.tgz#c89ac479828924ff8f69c1d44541cb4ea2fc11fc"
-  dependencies:
-    source-map-support "^0.4.0"
+rollup@^0.48.2:
+  version "0.48.2"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.48.2.tgz#dd9214eaf78d98a7771bf5583123cc80a0b5d6dc"
 
 run-async@^0.1.0:
   version "0.1.0"
@@ -2014,19 +2019,13 @@ source-list-map@~0.1.7:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-0.1.8.tgz#c550b2ab5427f6b3f21f5afead88c4f5587b2106"
 
-source-map-support@^0.4.0:
-  version "0.4.15"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.15.tgz#03202df65c06d2bd8c7ec2362a193056fef8d3b1"
-  dependencies:
-    source-map "^0.5.6"
-
 source-map@0.4.x, source-map@~0.4.1:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.4.4.tgz#eba4f5da9c0dc999de68032d8b4f76173652036b"
   dependencies:
     amdefine ">=0.0.4"
 
-source-map@^0.5.3, source-map@^0.5.6, source-map@~0.5.1:
+source-map@^0.5.3, source-map@~0.5.1:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.6.tgz#75ce38f52bf0733c5a7f0c118d81334a2bb5f412"
 
@@ -2146,9 +2145,9 @@ tarima-lr@^0.3.2:
     serve-static "^1.11.1"
     tiny-lr "^0.2.1"
 
-tarima@^3.6.1:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/tarima/-/tarima-3.6.1.tgz#085e1fe336fe3637e10039079171d296481fbc5c"
+tarima@^3.7.3:
+  version "3.7.3"
+  resolved "https://registry.yarnpkg.com/tarima/-/tarima-3.7.3.tgz#4e9faea2a545a188954898e30846d58271695e35"
   dependencies:
     debug ">=2.2.0"
     deindent "^0.1.0"
@@ -2158,10 +2157,11 @@ tarima@^3.6.1:
     glob "^7.1.1"
     js-yaml "^3.7.0"
     log-pose "^0.2.4"
+    memory-fs "^0.4.1"
     micromatch "^2.3.11"
     redent "^2.0.0"
     tosource ">=1.0.0"
-    wargs "^0.7.0"
+    wargs "^0.7.1"
 
 text-table@~0.2.0:
   version "0.2.0"
@@ -2299,9 +2299,9 @@ void-elements@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
-wargs@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/wargs/-/wargs-0.7.0.tgz#5a7835d12fc0e756a278406c0a50e79a541c20e1"
+wargs@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/wargs/-/wargs-0.7.1.tgz#1be35ff7e4294da0c239d0cac7449f90670cc0f9"
 
 webpack-core@^0.6.8:
   version "0.6.9"
