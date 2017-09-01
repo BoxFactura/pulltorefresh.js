@@ -58,4 +58,23 @@ pre {
 #footer {
   background: #eef;
   padding: 10px 0;
+  a{
+    color: lighten(#33c, 10%);
+  }
+  ul.footer-links{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    > li{
+      display: inline;
+      & + li{
+        &:before{
+          color: #33c;
+          content: '•';
+          opacity: 0.52;
+          margin: 0 0.4em;
+        }
+      }
+    }
+  }
 }

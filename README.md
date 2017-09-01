@@ -112,8 +112,8 @@ Roadmap
 ---
 
 - [ ] More events: `onPullStart`, `onPullDown(direction, willRefresh)`, `onRelease(willRefresh)`
-- [ ] CSS fully customizable
+- [ ] Fully customizable CSS
 - [ ] Gallery of use cases
-- [ ] More advanced demos
+- [ ] Advanced demos
 - [ ] Tests - WIP
 - [x] Minified releases
