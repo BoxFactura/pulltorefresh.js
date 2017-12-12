@@ -1,5 +1,6 @@
 ![PulltoRefresh.js](img/pulltorefresh.gif)
 
+[![Build Status](https://travis-ci.org/BoxFactura/pulltorefreshjs.png)](https://travis-ci.org/BoxFactura/pulltorefreshjs)
 [![NPM version](https://badge.fury.io/js/pulltorefreshjs.png)](http://badge.fury.io/js/pulltorefreshjs)
 [![CDNJS](https://img.shields.io/cdnjs/v/pulltorefreshjs.svg)](https://cdnjs.com/libraries/pulltorefreshjs)
 
