@@ -1,15 +1,49 @@
-<!DOCTYPE html><html class="no-js" lang="en"><head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><title>Pull To Refresh Demo</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/demos/style.css"></head><body><header><div class="wrap"><h1>Demo</h1></div></header><div id="main"><div class="wrap">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<p class="links"><a href="/demos/raw.html">Raw</a><a href="/demos/basic.html">Basic</a><a href="/demos/shouldptr.html">Should pull to refresh?</a><a href="/demos/trigger.html">Trigger</a><a href="/demos/promise.html">Promise</a><a href="/demos/callback.html">Callback</a></p></div></div><div id="footer"><div class="wrap"><ul class="footer-links"><li><a href="https://www.boxfactura.com/pulltorefresh.js/">PullToRefresh.js</a></li><li><a href="https://github.com/BoxFactura/pulltorefresh.js">Contribute on Github</a></li></ul></div></div><script src="/dist/pulltorefresh.min.js"></script><script>/* global PullToRefresh */
-PullToRefresh.init({
-  mainElement: '#main', // above which element?
-  onRefresh: function (cb) {
-    setTimeout(function () {
-      cb();
-      alert('refresh');
-    }, 1500);
-  }
-});</script></body></html>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Pull To Refresh Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/demos/style.css">
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <h1>Demo</h1>
+      </div>
+    </header>
+    <div id="main">
+      <div class="wrap">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <p class="links"><a href="/demos/raw.html">Raw</a><a href="/demos/basic.html">Basic</a><a href="/demos/shouldptr.html">Should pull to refresh?</a><a href="/demos/trigger.html">Trigger</a><a href="/demos/promise.html">Promise</a><a href="/demos/callback.html">Callback</a></p>
+      </div>
+    </div>
+    <div id="footer">
+      <div class="wrap">
+        <ul class="footer-links">
+          <li><a href="https://www.boxfactura.com/pulltorefresh.js/">PullToRefresh.js</a></li>
+          <li><a href="https://github.com/BoxFactura/pulltorefresh.js">Contribute on Github</a></li>
+        </ul>
+      </div>
+    </div>
+    <script src="/dist/pulltorefresh.min.js"></script>
+    <script>
+      /* global PullToRefresh */
+      PullToRefresh.init({
+        mainElement: '#main', // above which element?
+        onRefresh: function (cb) {
+          setTimeout(function () {
+            cb();
+            alert('refresh');
+          }, 1500);
+        }
+      });
+    </script>
+  </body>
+</html>
