@@ -1,5 +1,6 @@
 ![PulltoRefresh.js](img/pulltorefresh.gif)
 
+[![NPM version](https://badge.fury.io/js/pulltorefreshjs.png)](http://badge.fury.io/js/pulltorefreshjs)
 [![CDNJS](https://img.shields.io/cdnjs/v/pulltorefreshjs.svg)](https://cdnjs.com/libraries/pulltorefreshjs)
 
 [**PulltoRefresh.js**](http://www.boxfactura.com/pulltorefresh.js/) • [Demos](http://www.boxfactura.com/pulltorefresh.js/demos/basic.html)
