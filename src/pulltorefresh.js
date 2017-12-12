@@ -43,7 +43,7 @@ let supportsPassive = false;
 
 try {
   window.addEventListener('test', null, {
-    get passive() {
+    get passive() { // eslint-disable-line getter-return
       supportsPassive = true;
     },
   });
