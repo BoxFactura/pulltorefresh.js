@@ -130,7 +130,7 @@ function _setupEvents() {
       pullMoveY = e.touches[0].screenY;
     }
 
-    if (!_enable || _state === 'refreshing') {
+    if (_state === 'refreshing') {
       if (shouldPullToRefresh() && pullStartY < pullMoveY) {
         e.preventDefault();
       }
