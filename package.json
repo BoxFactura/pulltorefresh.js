@@ -8,7 +8,7 @@
     "lint": "eslint src",
     "build": "tarima -Ufqe dist -x tests",
     "build_min": "npm run build -- -OR '**/*.js:{basedir}/{name}.min.js'",
-    "pre_test": "npm run lint",
+    "pretest": "npm run lint",
     "test": "testem ci",
     "dev_test": "testem"
   },
