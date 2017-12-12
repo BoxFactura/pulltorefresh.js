@@ -118,6 +118,10 @@ function _setupEvents() {
       shouldPullToRefresh,
     } = _SETTINGS;
 
+    if (!_enable) {
+      return;
+    }
+
     if (!pullStartY) {
       if (shouldPullToRefresh()) {
         pullStartY = e.touches[0].screenY;
