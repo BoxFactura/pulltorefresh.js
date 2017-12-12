@@ -6,3 +6,4 @@ bower_components
 tests/tests.js
 tests/index.html
 build
+dist
