@@ -307,6 +307,8 @@ export default {
 
     return {
       destroy() {
+        clearTimeout(_timeout);
+
         // Teardown event listeners
         window.removeEventListener('touchstart', handlers.onTouchStart);
         window.removeEventListener('touchend', handlers.onTouchEnd);
