@@ -105,10 +105,9 @@ This value will be passed as `{ passive: true|false }` to `touchmove` listeners 
 Contribute
 ---
 
-1. Install [yarn](https://yarnpkg.com/)
-2. Run `yarn`
-3. Then `yarn dev`
-
+1. Install NodeJS ([NVM](https://github.com/creationix/nvm/blob/master/nvm.sh))
+2. Run `nvm use 4 && npm install`
+3. Then `npm run dev`
 
 Roadmap
 ---
