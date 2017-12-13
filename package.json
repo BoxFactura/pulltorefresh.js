@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "tarima -des",
     "lint": "eslint src",
-    "build": "tarima -Ufqe dist -x tests",
+    "build_full": "tarima -Ufqe dist -x tests",
     "build_min": "npm run build -- -OR '**/*.js:{basedir}/{name}.min.js'",
+    "build": "npm run build && npm run build_min",
     "pretest": "npm run lint",
     "test": "testem ci",
     "dev_test": "testem"
