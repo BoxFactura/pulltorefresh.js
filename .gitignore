@@ -1,7 +1,7 @@
 .tarima
 node_modules
 bower_components
-
+build
 tests/tests.js
 tests/index.html
-dist
+package-lock.json
