@@ -290,6 +290,9 @@ export default {
     Object.keys(_defaults).forEach((key) => {
       _SETTINGS[key] = options[key] || _defaults[key];
     });
+    _SETTINGS.refreshTimeout = typeof options.refreshTimeout === 'number'
+      ? options.refreshTimeout
+      : _defaults.refreshTimeout;
 
     const methods = ['mainElement', 'ptrElement', 'triggerElement'];
     methods.forEach((method) => {
