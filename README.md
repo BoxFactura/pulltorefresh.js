@@ -17,11 +17,16 @@ Install
 Include the JS file in your webapp and initialize it:
 
 ```
-PullToRefresh.init({
+var ptr = PullToRefresh.init({
   mainElement: 'body',
   onRefresh: function(){ window.location.reload(); }
 });
+
 ```
+
+Each call to `init()` will return a unique ptr-instance with a `destroy()` method.
+
+Also there is a `PullToRefresh.destroyAll()` method for removing all ptr-instances on the page.
 
 API
 ---
