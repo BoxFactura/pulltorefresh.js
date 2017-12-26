@@ -1,6 +1,6 @@
 {
   "name": "pulltorefreshjs",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "devDependencies": {
     "qunit": "2.1.0"
   },
