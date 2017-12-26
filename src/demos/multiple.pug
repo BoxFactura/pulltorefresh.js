@@ -1,0 +1,41 @@
+extend _layout
+
+block main
+  .buttons
+    button(onclick='a.destroy()') Destroy 1st PTR
+    button(onclick='b.destroy()') Destroy 2nd PTR
+    button(onclick='PullToRefresh.destroyAll()') Destroy All PTRs
+
+  .flex
+    div
+      #area1
+        each x in Array(30)
+          p Item
+    div
+      #area2
+        each x in Array(30)
+          p Item
+
+block run
+  script.
+    /* global PullToRefresh */
+    var a = PullToRefresh.init({
+      mainElement: '#area1',
+      triggerElement: '#area1',
+      onRefresh: function (cb) {
+        setTimeout(function () {
+          cb();
+          alert('refresh 1');
+        }, 1500);
+      }
+    });
+    var b = PullToRefresh.init({
+      mainElement: '#area2',
+      triggerElement: '#area2',
+      onRefresh: function (cb) {
+        setTimeout(function () {
+          cb();
+          alert('refresh 2');
+        }, 1500);
+      }
+    });

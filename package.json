@@ -20,13 +20,11 @@
     "public": ".",
     "output": ".",
     "rename": [
-      "**/*.js:dist/{fullpath/1}",
       "**/demos/**:{fullpath/1}",
-      "**/tests/**:{fullpath/1}"
+      "**/tests/**:{fullpath/1}",
+      "**/index.js:dist/pulltorefresh.js"
     ],
-    "bundle": [
-      "**/*.js"
-    ],
+    "bundle": true,
     "filter": [
       "!_*",
       "!**/_*",
