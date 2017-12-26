@@ -41,8 +41,25 @@ pre {
   display: block;
   border: 1px solid white;
 }
+.buttons {
+  border-bottom: 1px solid silver;
+  padding-bottom: 20px;
+  text-align: center;
+}
+.buttons > * {
+  border: 1px solid silver;
+  background: silver;
+  color: black;
+  padding: 5px;
+}
 .links a ~ a {
   margin-left: 1em;
+}
+.flex {
+  display: flex;
+}
+.flex > * {
+  width: 50%;
 }
 #footer {
   background: #eef;

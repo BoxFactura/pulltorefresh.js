@@ -1,16 +1,7 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.PullToRefresh = factory());
-}(this, (function () {
-
+var PullToRefresh = (function () {
 function _ptrMarkup () { return "\n<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>"; }
 
 function _ptrStyles () { return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n.__PREFIX__top {\n  touch-action: pan-x pan-down pinch-zoom;\n}\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}\n"; }
-
-/* eslint-disable import/no-unresolved */
-
-var _SETTINGS = {};
 
 var _defaults = {
   distThreshold: 60,
@@ -36,328 +27,316 @@ var _defaults = {
   shouldPullToRefresh: function () { return !window.scrollY; },
 };
 
-var pullStartY = null;
-var pullMoveY = null;
-var dist = 0;
-var distResisted = 0;
+var _methods = ['mainElement', 'ptrElement', 'triggerElement'];
 
-var _state = 'pending';
-var _setup = false;
-var _enable = false;
-var _timeout;
-
-var supportsPassive = false;
+var _shared = {
+  pullStartY: null,
+  pullMoveY: null,
+  handlers: [],
+  styleEl: null,
+  events: null,
+  dist: 0,
+  state: 'pending',
+  timeout: null,
+  distResisted: 0,
+  supportsPassive: false,
+};
 
 try {
   window.addEventListener('test', null, {
     get passive() { // eslint-disable-line getter-return
-      supportsPassive = true;
+      _shared.supportsPassive = true;
     },
   });
 } catch (e) {
   // do nothing
 }
 
-function _update() {
-  var classPrefix = _SETTINGS.classPrefix;
-  var ptrElement = _SETTINGS.ptrElement;
-  var iconArrow = _SETTINGS.iconArrow;
-  var iconRefreshing = _SETTINGS.iconRefreshing;
-  var instructionsRefreshing = _SETTINGS.instructionsRefreshing;
-  var instructionsPullToRefresh = _SETTINGS.instructionsPullToRefresh;
-  var instructionsReleaseToRefresh = _SETTINGS.instructionsReleaseToRefresh;
+var _ptr = {
+  createDOM: function createDOM(handler) {
+    if (!handler.ptrElement) {
+      var ptr = document.createElement('div');
 
-  var iconEl = ptrElement.querySelector(("." + classPrefix + "icon"));
-  var textEl = ptrElement.querySelector(("." + classPrefix + "text"));
+      if (handler.mainElement !== document.body) {
+        handler.mainElement.parentNode.insertBefore(ptr, handler.mainElement);
+      } else {
+        document.body.insertBefore(ptr, document.body.firstChild);
+      }
 
-  if (_state === 'refreshing') {
-    iconEl.innerHTML = iconRefreshing;
-  } else {
-    iconEl.innerHTML = iconArrow;
-  }
+      ptr.classList.add(((handler.classPrefix) + "ptr"));
+      ptr.innerHTML = handler.getMarkup()
+        .replace(/__PREFIX__/g, handler.classPrefix);
 
-  if (_state === 'releasing') {
-    textEl.innerHTML = instructionsReleaseToRefresh;
-  }
+      handler.ptrElement = ptr;
 
-  if (_state === 'pulling' || _state === 'pending') {
-    textEl.innerHTML = instructionsPullToRefresh;
-  }
+      if (typeof handler.onInit === 'function') {
+        handler.onInit(handler);
+      }
 
-  if (_state === 'refreshing') {
-    textEl.innerHTML = instructionsRefreshing;
-  }
-}
+      // Add the css styles to the style node, and then
+      // insert it into the dom
+      if (!_shared.styleEl) {
+        _shared.styleEl = document.createElement('style');
+        _shared.styleEl.setAttribute('id', 'pull-to-refresh-js-style');
+
+        document.head.appendChild(_shared.styleEl);
+      }
+
+      _shared.styleEl.textContent = handler.getStyles()
+        .replace(/__PREFIX__/g, handler.classPrefix)
+        .replace(/\s+/g, ' ');
+    }
+
+    return handler;
+  },
+  onReset: function onReset(handler) {
+    handler.ptrElement.classList.remove(((handler.classPrefix) + "refresh"));
+    handler.ptrElement.style[handler.cssProp] = '0px';
+
+    setTimeout(function () {
+      // remove previous ptr-element from DOM
+      if (handler.ptrElement && handler.ptrElement.parentNode) {
+        handler.ptrElement.parentNode.removeChild(handler.ptrElement);
+        handler.ptrElement = null;
+      }
+
+      // reset state
+      _shared.state = 'pending';
+    }, handler.refreshTimeout);
+  },
+  update: function update(handler) {
+    var iconEl = handler.ptrElement.querySelector(("." + (handler.classPrefix) + "icon"));
+    var textEl = handler.ptrElement.querySelector(("." + (handler.classPrefix) + "text"));
+
+    if (_shared.state === 'refreshing') {
+      iconEl.innerHTML = handler.iconRefreshing;
+    } else {
+      iconEl.innerHTML = handler.iconArrow;
+    }
+
+    if (_shared.state === 'releasing') {
+      textEl.innerHTML = handler.instructionsReleaseToRefresh;
+    }
+
+    if (_shared.state === 'pulling' || _shared.state === 'pending') {
+      textEl.innerHTML = handler.instructionsPullToRefresh;
+    }
+
+    if (_shared.state === 'refreshing') {
+      textEl.innerHTML = handler.instructionsRefreshing;
+    }
+  },
+};
 
 function _setupEvents() {
-  function onReset() {
-    var cssProp = _SETTINGS.cssProp;
-    var ptrElement = _SETTINGS.ptrElement;
-    var classPrefix = _SETTINGS.classPrefix;
-
-    ptrElement.classList.remove((classPrefix + "refresh"));
-    ptrElement.style[cssProp] = '0px';
-
-    _state = 'pending';
-  }
+  var _el;
 
   function _onTouchStart(e) {
-    var shouldPullToRefresh = _SETTINGS.shouldPullToRefresh;
-    var triggerElement = _SETTINGS.triggerElement;
+    // here, we must pick a handler first, and then append their html/css on the DOM
+    var target = _shared.handlers.filter(function (h) { return h.contains(e.target); })[0];
 
-    if (shouldPullToRefresh()) {
-      pullStartY = e.touches[0].screenY;
+    _shared.enable = !!target;
+
+    if (target && _shared.state === 'pending') {
+      _el = _ptr.createDOM(target);
+
+      if (target.shouldPullToRefresh()) {
+        _shared.pullStartY = e.touches[0].screenY;
+      }
+
+      clearTimeout(_shared.timeout);
+
+      _ptr.update(target);
     }
-
-    if (_state !== 'pending') {
-      return;
-    }
-
-    clearTimeout(_timeout);
-
-    _enable = triggerElement.contains(e.target);
-    _state = 'pending';
-    _update();
   }
 
   function _onTouchMove(e) {
-    var cssProp = _SETTINGS.cssProp;
-    var classPrefix = _SETTINGS.classPrefix;
-    var distMax = _SETTINGS.distMax;
-    var distThreshold = _SETTINGS.distThreshold;
-    var ptrElement = _SETTINGS.ptrElement;
-    var resistanceFunction = _SETTINGS.resistanceFunction;
-    var shouldPullToRefresh = _SETTINGS.shouldPullToRefresh;
-
-    if (!_enable) {
+    if (!_shared.enable) {
       return;
     }
 
-    if (!pullStartY) {
-      if (shouldPullToRefresh()) {
-        pullStartY = e.touches[0].screenY;
+    if (!_shared.pullStartY) {
+      if (_el.shouldPullToRefresh()) {
+        _shared.pullStartY = e.touches[0].screenY;
       }
     } else {
-      pullMoveY = e.touches[0].screenY;
+      _shared.pullMoveY = e.touches[0].screenY;
     }
 
-    if (_state === 'refreshing') {
-      if (shouldPullToRefresh() && pullStartY < pullMoveY) {
+    if (_shared.state === 'refreshing') {
+      if (_el.shouldPullToRefresh() && _shared.pullStartY < _shared.pullMoveY) {
         e.preventDefault();
       }
 
       return;
     }
 
-    if (_state === 'pending') {
-      ptrElement.classList.add((classPrefix + "pull"));
-      _state = 'pulling';
-      _update();
+    if (_shared.state === 'pending') {
+      _el.ptrElement.classList.add(((_el.classPrefix) + "pull"));
+      _shared.state = 'pulling';
+      _ptr.update(_el);
     }
 
-    if (pullStartY && pullMoveY) {
-      dist = pullMoveY - pullStartY;
+    if (_shared.pullStartY && _shared.pullMoveY) {
+      _shared.dist = _shared.pullMoveY - _shared.pullStartY;
     }
 
-    if (dist > 0) {
+    if (_shared.dist > 0) {
       e.preventDefault();
 
-      ptrElement.style[cssProp] = distResisted + "px";
+      _el.ptrElement.style[_el.cssProp] = (_shared.distResisted) + "px";
 
-      distResisted = resistanceFunction(dist / distThreshold)
-        * Math.min(distMax, dist);
+      _shared.distResisted = _el.resistanceFunction(_shared.dist / _el.distThreshold)
+        * Math.min(_el.distMax, _shared.dist);
 
-      if (_state === 'pulling' && distResisted > distThreshold) {
-        ptrElement.classList.add((classPrefix + "release"));
-        _state = 'releasing';
-        _update();
+      if (_shared.state === 'pulling' && _shared.distResisted > _el.distThreshold) {
+        _el.ptrElement.classList.add(((_el.classPrefix) + "release"));
+        _shared.state = 'releasing';
+        _ptr.update(_el);
       }
 
-      if (_state === 'releasing' && distResisted < distThreshold) {
-        ptrElement.classList.remove((classPrefix + "release"));
-        _state = 'pulling';
-        _update();
+      if (_shared.state === 'releasing' && _shared.distResisted < _el.distThreshold) {
+        _el.ptrElement.classList.remove(((_el.classPrefix) + "release"));
+        _shared.state = 'pulling';
+        _ptr.update(_el);
       }
     }
   }
 
   function _onTouchEnd() {
-    var ptrElement = _SETTINGS.ptrElement;
-    var onRefresh = _SETTINGS.onRefresh;
-    var refreshTimeout = _SETTINGS.refreshTimeout;
-    var distThreshold = _SETTINGS.distThreshold;
-    var distReload = _SETTINGS.distReload;
-    var cssProp = _SETTINGS.cssProp;
-    var classPrefix = _SETTINGS.classPrefix;
+    if (!_shared.enable) {
+      return;
+    }
 
-    if (_state === 'releasing' && distResisted > distThreshold) {
-      _state = 'refreshing';
+    if (_shared.state === 'releasing' && _shared.distResisted > _el.distThreshold) {
+      _shared.state = 'refreshing';
 
-      ptrElement.style[cssProp] = distReload + "px";
-      ptrElement.classList.add((classPrefix + "refresh"));
+      _el.ptrElement.style[_el.cssProp] = (_el.distReload) + "px";
+      _el.ptrElement.classList.add(((_el.classPrefix) + "refresh"));
 
-      _timeout = setTimeout(function () {
-        var retval = onRefresh(onReset);
+      _shared.timeout = setTimeout(function () {
+        var retval = _el.onRefresh(function () { return _ptr.onReset(_el); });
 
         if (retval && typeof retval.then === 'function') {
-          retval.then(function () { return onReset(); });
+          retval.then(function () { return _ptr.onReset(_el); });
         }
 
-        if (!retval && !onRefresh.length) {
-          onReset();
+        if (!retval && !_el.onRefresh.length) {
+          _ptr.onReset(_el);
         }
-      }, refreshTimeout);
+      }, _el.refreshTimeout);
     } else {
-      if (_state === 'refreshing') {
+      if (_shared.state === 'refreshing') {
         return;
       }
 
-      ptrElement.style[cssProp] = '0px';
+      _el.ptrElement.style[_el.cssProp] = '0px';
 
-      _state = 'pending';
+      _shared.state = 'pending';
     }
 
-    _update();
+    _ptr.update(_el);
 
-    ptrElement.classList.remove((classPrefix + "release"));
-    ptrElement.classList.remove((classPrefix + "pull"));
+    _el.ptrElement.classList.remove(((_el.classPrefix) + "release"));
+    _el.ptrElement.classList.remove(((_el.classPrefix) + "pull"));
 
-    pullStartY = pullMoveY = null;
-    dist = distResisted = 0;
+    _shared.pullStartY = _shared.pullMoveY = null;
+    _shared.dist = _shared.distResisted = 0;
   }
 
   function _onScroll() {
-    var mainElement = _SETTINGS.mainElement;
-    var classPrefix = _SETTINGS.classPrefix;
-    var shouldPullToRefresh = _SETTINGS.shouldPullToRefresh;
-
-    mainElement.classList.toggle((classPrefix + "top"), shouldPullToRefresh());
+    if (_el) {
+      _el.mainElement.classList.toggle(((_el.classPrefix) + "top"), _el.shouldPullToRefresh());
+    }
   }
+
+  var _passiveSettings = _shared.supportsPassive
+    ? { passive: _shared.passive || false }
+    : undefined;
 
   window.addEventListener('touchend', _onTouchEnd);
   window.addEventListener('touchstart', _onTouchStart);
-  window.addEventListener('touchmove', _onTouchMove, supportsPassive
-    ? { passive: _SETTINGS.passive || false }
-    : undefined);
-
+  window.addEventListener('touchmove', _onTouchMove, _passiveSettings);
   window.addEventListener('scroll', _onScroll);
 
-  // Store event handlers to use for teardown later
   return {
-    onTouchStart: _onTouchStart,
-    onTouchMove: _onTouchMove,
-    onTouchEnd: _onTouchEnd,
-    onScroll: _onScroll,
+    destroy: function destroy() {
+      // Teardown event listeners
+      window.removeEventListener('touchstart', _onTouchStart);
+      window.removeEventListener('touchend', _onTouchEnd);
+      window.removeEventListener('touchmove', _onTouchMove, _passiveSettings);
+      window.removeEventListener('scroll', _onScroll);
+    },
   };
 }
 
-function _run() {
-  var mainElement = _SETTINGS.mainElement;
-  var getMarkup = _SETTINGS.getMarkup;
-  var getStyles = _SETTINGS.getStyles;
-  var classPrefix = _SETTINGS.classPrefix;
-  var onInit = _SETTINGS.onInit;
+function createHandler(options) {
+  var _handler = {};
 
-  if (!document.querySelector(("." + classPrefix + "ptr"))) {
-    var ptr = document.createElement('div');
+  // merge options with defaults
+  Object.keys(_defaults).forEach(function (key) {
+    _handler[key] = options[key] || _defaults[key];
+  });
 
-    if (mainElement !== document.body) {
-      mainElement.parentNode.insertBefore(ptr, mainElement);
-    } else {
-      document.body.insertBefore(ptr, document.body.firstChild);
+  // normalize timeout value, even if it is zero
+  _handler.refreshTimeout = typeof options.refreshTimeout === 'number'
+    ? options.refreshTimeout
+    : _defaults.refreshTimeout;
+
+  // normalize elements
+  _methods.forEach(function (method) {
+    if (typeof _handler[method] === 'string') {
+      _handler[method] = document.querySelector(_handler[method]);
+    }
+  });
+
+  // attach events lazily
+  if (!_shared.events) {
+    _shared.events = _setupEvents();
+  }
+
+  _handler.contains = function (target) {
+    return _handler.triggerElement.contains(target);
+  };
+
+  _handler.destroy = function () {
+    // stop pending any pending callbacks
+    clearTimeout(_shared.timeout);
+
+    // remove handler from shared state
+    _shared.handlers.splice(_handler.offset, 1);
+  };
+
+  return _handler;
+}
+
+// public API
+var index = {
+  setPassiveMode: function setPassiveMode(isPassive) {
+    _shared.passive = isPassive;
+  },
+  destroyAll: function destroyAll() {
+    if (_shared.events) {
+      _shared.events.destroy();
+      _shared.events = null;
     }
 
-    ptr.classList.add((classPrefix + "ptr"));
-    ptr.innerHTML = getMarkup()
-      .replace(/__PREFIX__/g, classPrefix);
-
-    _SETTINGS.ptrElement = ptr;
-  }
-
-  // Add the css styles to the style node, and then
-  // insert it into the dom
-  // ========================================================
-  var styleEl;
-  if (!document.querySelector('#pull-to-refresh-js-style')) {
-    styleEl = document.createElement('style');
-    styleEl.setAttribute('id', 'pull-to-refresh-js-style');
-
-    document.head.appendChild(styleEl);
-  } else {
-    styleEl = document.querySelector('#pull-to-refresh-js-style');
-  }
-
-  styleEl.textContent = getStyles()
-    .replace(/__PREFIX__/g, classPrefix)
-    .replace(/\s+/g, ' ');
-
-  if (typeof onInit === 'function') {
-    onInit(_SETTINGS);
-  }
-
-  return {
-    styleNode: styleEl,
-    ptrElement: _SETTINGS.ptrElement,
-  };
-}
-
-var pulltorefresh = {
+    _shared.handlers.forEach(function (h) {
+      h.destroy();
+    });
+  },
   init: function init(options) {
     if ( options === void 0 ) options = {};
 
-    var handlers;
-    Object.keys(_defaults).forEach(function (key) {
-      _SETTINGS[key] = options[key] || _defaults[key];
-    });
-    _SETTINGS.refreshTimeout = typeof options.refreshTimeout === 'number'
-      ? options.refreshTimeout
-      : _defaults.refreshTimeout;
+    var handler = createHandler(options);
 
-    var methods = ['mainElement', 'ptrElement', 'triggerElement'];
-    methods.forEach(function (method) {
-      if (typeof _SETTINGS[method] === 'string') {
-        _SETTINGS[method] = document.querySelector(_SETTINGS[method]);
-      }
-    });
+    // store offset for later unsubscription
+    handler.offset = _shared.handlers.push(handler) - 1;
 
-    if (!_setup) {
-      handlers = _setupEvents();
-      _setup = true;
-    }
-
-    var ref = _run();
-    var styleNode = ref.styleNode;
-    var ptrElement = ref.ptrElement;
-
-    return {
-      destroy: function destroy() {
-        clearTimeout(_timeout);
-
-        // Teardown event listeners
-        window.removeEventListener('touchstart', handlers.onTouchStart);
-        window.removeEventListener('touchend', handlers.onTouchEnd);
-        window.removeEventListener('touchmove', handlers.onTouchMove, supportsPassive
-          ? { passive: _SETTINGS.passive || false }
-          : undefined);
-        window.removeEventListener('scroll', handlers.onScroll);
-
-        // Remove ptr element and style tag
-        styleNode.parentNode.removeChild(styleNode);
-        ptrElement.parentNode.removeChild(ptrElement);
-
-        // Enable setupEvents to run again
-        _setup = false;
-
-        // null object references
-        handlers = null;
-        styleNode = null;
-        ptrElement = null;
-        _SETTINGS = {};
-      },
-    };
+    return handler;
   },
 };
 
-return pulltorefresh;
+return index;
 
-})));
+}());
