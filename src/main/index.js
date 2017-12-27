@@ -274,7 +274,7 @@ function createHandler(options) {
   const _handler = {};
 
   // merge options with defaults
-  Object.keys(_defaults).forEach((key) => {
+  Object.keys(_defaults).forEach(key => {
     _handler[key] = options[key] || _defaults[key];
   });
 
@@ -284,7 +284,7 @@ function createHandler(options) {
     : _defaults.refreshTimeout;
 
   // normalize elements
-  _methods.forEach((method) => {
+  _methods.forEach(method => {
     if (typeof _handler[method] === 'string') {
       _handler[method] = document.querySelector(_handler[method]);
     }
@@ -295,7 +295,7 @@ function createHandler(options) {
     _shared.events = _setupEvents();
   }
 
-  _handler.contains = (target) => {
+  _handler.contains = target => {
     return _handler.triggerElement.contains(target);
   };
 
@@ -321,7 +321,7 @@ export default {
       _shared.events = null;
     }
 
-    _shared.handlers.forEach((h) => {
+    _shared.handlers.forEach(h => {
       h.destroy();
     });
   },
