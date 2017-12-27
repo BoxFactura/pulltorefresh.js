@@ -53,7 +53,7 @@ try {
 }
 
 const _ptr = {
-  createDOM(handler) {
+  setupDOM(handler) {
     if (!handler.ptrElement) {
       const ptr = document.createElement('div');
 
@@ -100,7 +100,13 @@ const _ptr = {
         handler.ptrElement = null;
       }
 
+      // remove used stylesheet from DOM
+      if (_shared.styleEl) {
+        document.head.removeChild(_shared.styleEl);
+      }
+
       // reset state
+      _shared.styleEl = null;
       _shared.state = 'pending';
     }, handler.refreshTimeout);
   },
@@ -138,7 +144,7 @@ function _setupEvents() {
     _shared.enable = !!target;
 
     if (target && _shared.state === 'pending') {
-      _el = _ptr.createDOM(target);
+      _el = _ptr.setupDOM(target);
 
       if (target.shouldPullToRefresh()) {
         _shared.pullStartY = e.touches[0].screenY;
@@ -260,6 +266,11 @@ function _setupEvents() {
   window.addEventListener('scroll', _onScroll);
 
   return {
+    onTouchEnd: _onTouchEnd,
+    onTouchStart: _onTouchStart,
+    onTouchMove: _onTouchMove,
+    onScroll: _onScroll,
+
     destroy() {
       // Teardown event listeners
       window.removeEventListener('touchstart', _onTouchStart);
@@ -270,7 +281,7 @@ function _setupEvents() {
   };
 }
 
-function createHandler(options) {
+function _setupHandler(options) {
   const _handler = {};
 
   // merge options with defaults
@@ -326,11 +337,20 @@ export default {
     });
   },
   init(options = {}) {
-    const handler = createHandler(options);
+    const handler = _setupHandler(options);
 
     // store offset for later unsubscription
     handler.offset = _shared.handlers.push(handler) - 1;
 
     return handler;
+  },
+
+  // export utils for testing
+  _: {
+    setupHandler: _setupHandler,
+    setupEvents: _setupEvents,
+    setupDOM: _ptr.setupDOM,
+    onReset: _ptr.onReset,
+    update: _ptr.update,
   },
 };
