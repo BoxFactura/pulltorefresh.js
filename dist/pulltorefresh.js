@@ -1,4 +1,9 @@
-var PullToRefresh = (function () {
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.PullToRefresh = factory());
+}(this, (function () {
+
 function _ptrMarkup () { return "\n<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>"; }
 
 function _ptrStyles () { return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n.__PREFIX__top {\n  touch-action: pan-x pan-down pinch-zoom;\n}\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}\n"; }
@@ -53,7 +58,7 @@ try {
 }
 
 var _ptr = {
-  createDOM: function createDOM(handler) {
+  setupDOM: function setupDOM(handler) {
     if (!handler.ptrElement) {
       var ptr = document.createElement('div');
 
@@ -100,7 +105,13 @@ var _ptr = {
         handler.ptrElement = null;
       }
 
+      // remove used stylesheet from DOM
+      if (_shared.styleEl) {
+        document.head.removeChild(_shared.styleEl);
+      }
+
       // reset state
+      _shared.styleEl = null;
       _shared.state = 'pending';
     }, handler.refreshTimeout);
   },
@@ -138,7 +149,7 @@ function _setupEvents() {
     _shared.enable = !!target;
 
     if (target && _shared.state === 'pending') {
-      _el = _ptr.createDOM(target);
+      _el = _ptr.setupDOM(target);
 
       if (target.shouldPullToRefresh()) {
         _shared.pullStartY = e.touches[0].screenY;
@@ -260,6 +271,11 @@ function _setupEvents() {
   window.addEventListener('scroll', _onScroll);
 
   return {
+    onTouchEnd: _onTouchEnd,
+    onTouchStart: _onTouchStart,
+    onTouchMove: _onTouchMove,
+    onScroll: _onScroll,
+
     destroy: function destroy() {
       // Teardown event listeners
       window.removeEventListener('touchstart', _onTouchStart);
@@ -270,7 +286,7 @@ function _setupEvents() {
   };
 }
 
-function createHandler(options) {
+function _setupHandler(options) {
   var _handler = {};
 
   // merge options with defaults
@@ -328,15 +344,24 @@ var index = {
   init: function init(options) {
     if ( options === void 0 ) options = {};
 
-    var handler = createHandler(options);
+    var handler = _setupHandler(options);
 
     // store offset for later unsubscription
     handler.offset = _shared.handlers.push(handler) - 1;
 
     return handler;
   },
+
+  // export utils for testing
+  _: {
+    setupHandler: _setupHandler,
+    setupEvents: _setupEvents,
+    setupDOM: _ptr.setupDOM,
+    onReset: _ptr.onReset,
+    update: _ptr.update,
+  },
 };
 
 return index;
 
-}());
+})));
