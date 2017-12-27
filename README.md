@@ -24,11 +24,22 @@ var ptr = PullToRefresh.init({
 
 ```
 
-Each call to `init()` will return a unique ptr-instance with a `destroy()` method.
-
-Also there is a `PullToRefresh.destroyAll()` method for removing all ptr-instances on the page.
-
 API
+---
+
+**➡ `init(options)`**
+
+Will return a unique ptr-instance with a `destroy()` method.
+
+**➡ `destroyAll()`**
+
+Stop and remove all registered ptr-instances.
+
+**➡ `setPassiveMode(isPassive)`**
+
+Enable or disable passive mode for event handlers (new instances only).
+
+Options
 ---
 
 **➡ `distThreshold`** (integer, default: `60`)
