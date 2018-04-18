@@ -1,9 +1,0 @@
-*.md
-*.txt
-*.json
-.tarima
-img
-src
-demos
-tests
-node_modules

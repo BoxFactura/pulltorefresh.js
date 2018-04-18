@@ -114,22 +114,26 @@ const _ptr = {
     const iconEl = handler.ptrElement.querySelector(`.${handler.classPrefix}icon`);
     const textEl = handler.ptrElement.querySelector(`.${handler.classPrefix}text`);
 
-    if (_shared.state === 'refreshing') {
-      iconEl.innerHTML = handler.iconRefreshing;
-    } else {
-      iconEl.innerHTML = handler.iconArrow;
+    if (iconEl) {
+      if (_shared.state === 'refreshing') {
+        iconEl.innerHTML = handler.iconRefreshing;
+      } else {
+        iconEl.innerHTML = handler.iconArrow;
+      }
     }
 
-    if (_shared.state === 'releasing') {
-      textEl.innerHTML = handler.instructionsReleaseToRefresh;
-    }
+    if (textEl) {
+      if (_shared.state === 'releasing') {
+        textEl.innerHTML = handler.instructionsReleaseToRefresh;
+      }
 
-    if (_shared.state === 'pulling' || _shared.state === 'pending') {
-      textEl.innerHTML = handler.instructionsPullToRefresh;
-    }
+      if (_shared.state === 'pulling' || _shared.state === 'pending') {
+        textEl.innerHTML = handler.instructionsPullToRefresh;
+      }
 
-    if (_shared.state === 'refreshing') {
-      textEl.innerHTML = handler.instructionsRefreshing;
+      if (_shared.state === 'refreshing') {
+        textEl.innerHTML = handler.instructionsRefreshing;
+      }
     }
   },
 };
@@ -157,7 +161,7 @@ function _setupEvents() {
   }
 
   function _onTouchMove(e) {
-    if (!_shared.enable) {
+    if (!(_el && _shared.enable)) {
       return;
     }
 
@@ -210,7 +214,7 @@ function _setupEvents() {
   }
 
   function _onTouchEnd() {
-    if (!_shared.enable) {
+    if (!(_el && _shared.enable)) {
       return;
     }
 
