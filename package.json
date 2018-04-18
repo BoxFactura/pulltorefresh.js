@@ -10,7 +10,7 @@
     "build_min": "npm run build_full -- -y js -mR '**/*.js:dist/pulltorefresh.min.js'",
     "build": "npm run build_full && npm run build_min",
     "pretest": "npm run lint",
-    "test": "testem ci && testcafe chrome:headless src/tests/e2e/cases",
+    "test": "testem ci && testcafe 'chrome:headless:emulation:device=iphone 6' src/tests/e2e/cases",
     "dev_test": "testem"
   },
   "files": [
