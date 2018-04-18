@@ -11,7 +11,9 @@ cache:
     - "$HOME/.npm"
     - "$HOME/.cache"
 before_install:
-  - npm install -g bower testem
+  - npm install -g bower
+  - npm install -g testem
+  - npm install -g testcafe
 
 install:
   - npm install

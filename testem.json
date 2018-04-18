@@ -1,14 +1,14 @@
 {
   "before_tests": "tarima -fqe test -x demos",
-  "test_page": "tests/index.html",
+  "test_page": "tests/unit/index.html",
   "framework": "qunit",
   "src_files": [
     "src/**/*.js",
-    "tests/**/*.index.html"
+    "tests/unit/**/*.index.html"
   ],
   "serve_files": [
     "dist/pulltorefresh.js",
-    "tests/tests.js"
+    "tests/unit/tests.js"
   ],
   "growl": true,
   "launch_in_dev": [
