@@ -46,15 +46,15 @@
     }
   },
   "devDependencies": {
-    "buble": "^0.18.0",
+    "buble": "^0.19.3",
     "csso": "^3.1.1",
     "eslint": "^4.13.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "google-closure-compiler-js": "^20171203.0.0",
-    "less": "^2.7.1",
+    "google-closure-compiler-js": "^20180402.0.0",
+    "less": "^3.0.1",
     "pug": "^2.0.0-beta6",
-    "rollup": "^0.53.0",
+    "rollup": "^0.58.0",
     "tarima": "^4.0.1",
     "tarima-lr": "^0.4.0"
   }
