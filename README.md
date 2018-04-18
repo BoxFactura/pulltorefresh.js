@@ -125,6 +125,13 @@ Contribute
 2. Run `nvm use 4 && npm install`
 3. Then `npm run dev`
 
+Donations
+---
+
+If you find this project helpful, please consider supporting the maintenance team!
+
+[![](https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYS5CSZWWLNN4)
+
 Roadmap
 ---
 
