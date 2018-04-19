@@ -100,13 +100,7 @@ const _ptr = {
         handler.ptrElement = null;
       }
 
-      // remove used stylesheet from DOM
-      if (_shared.styleEl) {
-        document.head.removeChild(_shared.styleEl);
-      }
-
       // reset state
-      _shared.styleEl = null;
       _shared.state = 'pending';
     }, handler.refreshTimeout);
   },
@@ -161,7 +155,7 @@ function _setupEvents() {
   }
 
   function _onTouchMove(e) {
-    if (!(_el && _shared.enable)) {
+    if (!(_el && _el.ptrElement && _shared.enable)) {
       return;
     }
 
@@ -214,7 +208,7 @@ function _setupEvents() {
   }
 
   function _onTouchEnd() {
-    if (!(_el && _shared.enable)) {
+    if (!(_el && _el.ptrElement && _shared.enable)) {
       return;
     }
 
