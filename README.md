@@ -16,12 +16,11 @@ Install
 
 Include the JS file in your webapp and initialize it:
 
-```
+```js
 var ptr = PullToRefresh.init({
   mainElement: 'body',
   onRefresh: function(){ window.location.reload(); }
 });
-
 ```
 
 API
