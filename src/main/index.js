@@ -64,6 +64,7 @@ const _ptr = {
       }
 
       ptr.classList.add(`${handler.classPrefix}ptr`);
+      ptr.setAttribute('data-pull-to-refresh', '1');
       ptr.innerHTML = handler.getMarkup()
         .replace(/__PREFIX__/g, handler.classPrefix);
 
@@ -332,6 +333,11 @@ export default {
 
     _shared.handlers.forEach(h => {
       h.destroy();
+    });
+
+    // remove all appended dom
+    Array.prototype.forEach.call(document.querySelectorAll('[data-pull-to-refresh="1"]'), function (li) {
+      li.parentNode.removeChild(li);
     });
   },
   init(options = {}) {
