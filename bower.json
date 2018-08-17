@@ -2,7 +2,7 @@
   "name": "pulltorefreshjs",
   "version": "0.1.14",
   "devDependencies": {
-    "qunit": "2.1.0"
+    "qunit": "2.6.1"
   },
   "description": "Pull To Refresh",
   "main": "dist/pulltorefresh.js",

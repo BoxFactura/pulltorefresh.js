@@ -27,8 +27,7 @@ test('init() & destroy()', assert => {
   const done = assert.async();
 
   setTimeout(() => {
-    assert.equal($$('.ptr--ptr').length, 0, 'destroy removes the ptr element');
-    assert.equal($$('#pull-to-refresh-js-style').length, 0, 'destroy removes the style element');
+    assert.equal(document.querySelectorAll('.ptr--ptr').length, 0, 'destroy removes the ptr element');
 
     done();
   }, x.refreshTimeout + 1);
@@ -50,8 +49,7 @@ test('Ensure Init is idempotent', assert => {
   _.onReset(y);
 
   setTimeout(() => {
-    assert.equal($$('.ptr--ptr').length, 0, 'remove added ptr elements');
-    assert.equal($$('#pull-to-refresh-js-style').length, 0, 'remove style element');
+    assert.equal(document.querySelectorAll('.ptr--ptr').length, 0, 'remove added ptr elements');
 
     done();
   }, x.refreshTimeout + 2);
