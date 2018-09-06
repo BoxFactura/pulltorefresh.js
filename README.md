@@ -53,6 +53,10 @@ Maximum distance possible for the element.
 
 After the `distThreshold` is reached and released, the element will have this height.
 
+**➡ `distIgnore`** (integer, default: `0`)
+
+After which distance should we start pulling?
+
 **➡ `mainElement`** (string, default: `body`)
 
 Before which element the pull to refresh elements will be?
