@@ -6,12 +6,13 @@
 
   function _ptrMarkup () { return "\n<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>"; }
 
-  function _ptrStyles () { return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n.__PREFIX__top {\n  touch-action: pan-x pan-down pinch-zoom;\n}\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}\n"; }
+  function _ptrStyles () { return ".__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n.__PREFIX__pull {\n  transition: none;\n}\n.__PREFIX__text {\n  margin-top: 0.33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform 0.3s;\n}\n.__PREFIX__top {\n  touch-action: pan-x pan-down pinch-zoom;\n}\n.__PREFIX__release .__PREFIX__icon {\n  transform: rotate(180deg);\n}\n"; }
 
   var _defaults = {
     distThreshold: 60,
     distMax: 80,
     distReload: 50,
+    distIgnore: 0,
     bodyOffset: 20,
     mainElement: 'body',
     triggerElement: 'body',
@@ -190,13 +191,15 @@
         _shared.dist = _shared.pullMoveY - _shared.pullStartY;
       }
 
-      if (_shared.dist > 0) {
+      _shared.distExtra = _shared.dist - _el.distIgnore;
+
+      if (_shared.distExtra > 0) {
         e.preventDefault();
 
         _el.ptrElement.style[_el.cssProp] = (_shared.distResisted) + "px";
 
-        _shared.distResisted = _el.resistanceFunction(_shared.dist / _el.distThreshold)
-          * Math.min(_el.distMax, _shared.dist);
+        _shared.distResisted = _el.resistanceFunction(_shared.distExtra / _el.distThreshold)
+          * Math.min(_el.distMax, _shared.distExtra);
 
         if (_shared.state === 'pulling' && _shared.distResisted > _el.distThreshold) {
           _el.ptrElement.classList.add(((_el.classPrefix) + "release"));

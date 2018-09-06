@@ -30,7 +30,7 @@ pre {
 #main {
   flex: 1;
   padding-top: 20px;
-  transition: transform .3s;
+  transition: transform 0.3s;
 }
 .trigger {
   width: 35px;
