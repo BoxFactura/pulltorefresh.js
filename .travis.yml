@@ -1,7 +1,10 @@
 language: node_js
 node_js:
-- 4
-sudo: required
+- 6
+- 8
+- 10
+
+sudo: false
 
 cache:
   directories:
