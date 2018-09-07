@@ -12,15 +12,21 @@
   ],
   "growl": true,
   "launch_in_dev": [
-    "Chrome",
-    "PhantomJs"
+    "Chrome"
   ],
   "launch_in_ci": [
-    "PhantomJs"
+    "Chrome"
   ],
   "browser_args": {
-    "Chrome": [
-      "--auto-open-devtools-for-tabs"
-    ]
+    "Chrome": {
+      "dev": [
+        "--auto-open-devtools-for-tabs"
+      ],
+      "ci": [
+        "--headless",
+        "--disable-gpu",
+        "--remote-debugging-port=9222"
+      ]
+    }
   }
 }
