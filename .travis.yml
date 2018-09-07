@@ -8,8 +8,7 @@ cache:
     - "$HOME/.npm"
     - "$HOME/.cache"
 before_install:
-  - npm install -g bower
-  - npm install -g testem
+  - npm install -g bower testem
 
 install:
   - npm install
