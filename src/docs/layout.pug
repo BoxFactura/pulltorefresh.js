@@ -1,3 +1,16 @@
+mixin demos(root)
+  a(href=`${root}/raw.html`) Raw
+  a(href=`${root}/basic.html`) Basic
+  a(href=`${root}/shouldptr.html`) Should pull to refresh?
+  a(href=`${root}/trigger.html`) Trigger
+  a(href=`${root}/promise.html`) Promise
+  a(href=`${root}/callback.html`) Callback
+  a(href=`${root}/multiple.html`) Multiple Instances
+  a(href=`${root}/tolerance.html`) With tolerance
+
+block setup
+  - basedir = '.'
+
 doctype html
 html.no-js(lang='en')
   head
@@ -5,7 +18,8 @@ html.no-js(lang='en')
     meta(http-equiv='x-ua-compatible' content='ie=edge')
     title Pull To Refresh Demo
     meta(name='viewport' content='width=device-width, initial-scale=1')
-    link(rel='stylesheet' href='style.css')
+    script(src='//unpkg.com/hammer-touchemulator@0.0.2/touch-emulator.js')
+    link(rel='stylesheet' href=`${basedir}/style.css`)
 
   body
     header
@@ -26,14 +40,7 @@ html.no-js(lang='en')
           | proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
         p.links
-          a(href='/demos/raw.html') Raw
-          a(href='/demos/basic.html') Basic
-          a(href='/demos/shouldptr.html') Should pull to refresh?
-          a(href='/demos/trigger.html') Trigger
-          a(href='/demos/promise.html') Promise
-          a(href='/demos/callback.html') Callback
-          a(href='/demos/multiple.html') Multiple Instances
-          a(href='/demos/tolerance.html') With tolerance
+          +demos(`${basedir != '.' ? '..' : '.'}/demos`)
 
     #footer
       .wrap
@@ -43,6 +50,7 @@ html.no-js(lang='en')
           li
             a(href='https://github.com/BoxFactura/pulltorefresh.js') Contribute on Github
 
-    script(src='../dist/pulltorefresh.js')
+    script(src=`${basedir}/pulltorefresh.min.js`)
+    script TouchEmulator()
 
     block run
