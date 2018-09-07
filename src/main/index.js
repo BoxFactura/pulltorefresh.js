@@ -7,6 +7,7 @@ const _defaults = {
   distThreshold: 60,
   distMax: 80,
   distReload: 50,
+  distIgnore: 0,
   bodyOffset: 20,
   mainElement: 'body',
   triggerElement: 'body',
@@ -185,13 +186,15 @@ function _setupEvents() {
       _shared.dist = _shared.pullMoveY - _shared.pullStartY;
     }
 
-    if (_shared.dist > 0) {
+    _shared.distExtra = _shared.dist - _el.distIgnore;
+
+    if (_shared.distExtra > 0) {
       e.preventDefault();
 
       _el.ptrElement.style[_el.cssProp] = `${_shared.distResisted}px`;
 
-      _shared.distResisted = _el.resistanceFunction(_shared.dist / _el.distThreshold)
-        * Math.min(_el.distMax, _shared.dist);
+      _shared.distResisted = _el.resistanceFunction(_shared.distExtra / _el.distThreshold)
+        * Math.min(_el.distMax, _shared.distExtra);
 
       if (_shared.state === 'pulling' && _shared.distResisted > _el.distThreshold) {
         _el.ptrElement.classList.add(`${_el.classPrefix}release`);

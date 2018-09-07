@@ -1,0 +1,10 @@
+extend _layout
+
+block run
+  script.
+    /* global PullToRefresh */
+    PullToRefresh.init({
+      mainElement: '#main',
+      distIgnore: 50,
+      onRefresh: function() { alert('refresh') }
+    });
