@@ -4,7 +4,6 @@
   "description": "Pull To Refresh",
   "main": "dist/pulltorefresh.js",
   "scripts": {
-    "dev": "tarima watch -s",
     "lint": "eslint src",
     "build:browser": "bili src/lib/index.js --target browser --format umd-min --name pulltorefresh --moduleName PullToRefresh --js buble",
     "build:nodejs": "bili src/lib/index.js --target node --js buble --format es,cjs",

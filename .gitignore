@@ -1,6 +1,4 @@
-.tarima
+*.log
+.DS_Store
 node_modules
 bower_components
-build
-tests/tests.js
-tests/index.html
