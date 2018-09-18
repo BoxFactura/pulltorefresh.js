@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <div class="wrap">
+      <div class="wrap"><span class="trigger">&darr;</span>
         <h1>Demo</h1>
       </div>
     </header>
@@ -37,7 +37,7 @@
       /* global PullToRefresh */
       PullToRefresh.init({
         mainElement: '#main',
-        distIgnore: 50,
+        triggerElement: '.trigger',
         onRefresh: function() { alert('refresh') }
       });
     </script>

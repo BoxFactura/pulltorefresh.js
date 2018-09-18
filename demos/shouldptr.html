@@ -15,6 +15,7 @@
     </header>
     <div id="main">
       <div class="wrap">
+        <label><input type="checkbox" id="shouldptr"> Should PullToRefresh be triggered?</label><br>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
         quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -37,7 +38,9 @@
       /* global PullToRefresh */
       PullToRefresh.init({
         mainElement: '#main',
-        distIgnore: 50,
+        shouldPullToRefresh: function(){
+          return document.querySelector('#shouldptr').checked;
+        },
         onRefresh: function() { alert('refresh') }
       });
     </script>

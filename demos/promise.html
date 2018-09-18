@@ -36,9 +36,15 @@
     <script>
       /* global PullToRefresh */
       PullToRefresh.init({
-        mainElement: '#main',
-        distIgnore: 50,
-        onRefresh: function() { alert('refresh') }
+        mainElement: '#main', // above which element?
+        onRefresh: function () {
+          return new Promise(function (resolve) {
+            setTimeout(function () {
+              resolve();
+              alert('refresh');
+            }, 1500);
+          });
+        }
       });
     </script>
   </body>
