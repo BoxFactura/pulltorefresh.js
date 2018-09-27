@@ -5,7 +5,7 @@
   "main": "dist/pulltorefresh.js",
   "scripts": {
     "lint": "eslint src",
-    "build:browser": "bili src/lib/index.js --target browser --format umd-min --name pulltorefresh --moduleName PullToRefresh --js buble",
+    "build:browser": "bili src/lib/index.js --target browser --format umd,umd-min --name pulltorefresh --moduleName PullToRefresh --js buble",
     "build:nodejs": "bili src/lib/index.js --target node --js buble --format es,cjs",
     "build:styles": "lessc src/style.less demos/style.css -x --source-map-inline",
     "build:demos": "pug src/demos --pretty --out demos && pug src/index.pug --pretty --out demos",
