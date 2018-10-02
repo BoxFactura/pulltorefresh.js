@@ -3,8 +3,8 @@
   "test_page": "tests/index.html",
   "framework": "qunit",
   "src_files": [
-    "src/**/*.js",
-    "tests/unit/**/*.index.html"
+    "dist/*.js",
+    "tests/index.html"
   ],
   "serve_files": [
     "dist/pulltorefresh.js",

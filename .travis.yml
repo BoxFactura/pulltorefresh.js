@@ -20,8 +20,11 @@ install:
   - npm install
   - bower install
 
+before_script:
+  - npm run serve &
+
 script:
-  - npm test
+  - npm test:ci
 
 notifications:
   email: false

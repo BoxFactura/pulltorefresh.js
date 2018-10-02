@@ -16,7 +16,8 @@
     "watch": "npm run build:browser -- -w",
     "dev": "npm run serve & npm run watch",
     "pretest": "npm run lint",
-    "test": "testem ci && testcafe 'chrome:headless:emulation:device=iphone 6' src/tests/e2e/cases",
+    "test:e2e": "testcafe 'chrome:headless:emulation:device=iphone 6' tests/e2e/cases",
+    "test:ci": "testem ci && npm run test:e2e",
     "dev_test": "testem"
   },
   "files": [
@@ -31,8 +32,7 @@
     "eslint-plugin-import": "^2.8.0",
     "less": "^3.8.1",
     "live-server": "^1.2.0",
-    "pug": "^2.0.0-beta6",
     "pug-cli": "^1.0.0-alpha6",
-    "rollup": "^0.58.0"
+    "testcafe": "^0.22.0"
   }
 }
