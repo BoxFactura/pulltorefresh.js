@@ -17,7 +17,7 @@
     "dev": "npm run serve & npm run watch",
     "pretest": "npm run lint",
     "test:e2e": "testcafe 'chrome:headless:emulation:device=iphone 6' tests/e2e/cases",
-    "test:ci": "testem ci && npm run test:e2e",
+    "test:ci": "testem ci && (npm run serve & npm run test:e2e)",
     "dev_test": "testem"
   },
   "files": [
