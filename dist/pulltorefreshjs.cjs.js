@@ -1,9 +1,8 @@
 'use strict';
 
-import _ptrMarkup from './_markup.pug';
-import _ptrStyles from './_styles.less';
-
-const _defaults = {
+var _ptrMarkup = "\n<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>\n";
+var _ptrStyles = "\n.__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n\n.__PREFIX__pull {\n  transition: none;\n}\n\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n\n/*\nWhen at the top of the page, disable vertical overscroll so passive touch\nlisteners can take over.\n*/\n.__PREFIX__top {\n  touch-action: pan-x pan-down pinch-zoom;\n}\n\n.__PREFIX__release {\n  .__PREFIX__icon {\n    transform: rotate(180deg);\n  }\n}\n";
+var _defaults = {
   distThreshold: 60,
   distMax: 80,
   distReload: 50,
@@ -20,17 +19,15 @@ const _defaults = {
   instructionsReleaseToRefresh: 'Release to refresh',
   instructionsRefreshing: 'Refreshing',
   refreshTimeout: 500,
-  getMarkup: _ptrMarkup,
-  getStyles: _ptrStyles,
-  onInit: () => {},
-  onRefresh: () => location.reload(),
-  resistanceFunction: t => Math.min(1, t / 2.5),
-  shouldPullToRefresh: () => !window.scrollY,
+  getMarkup: function () { return _ptrMarkup; },
+  getStyles: function () { return _ptrStyles; },
+  onInit: function () {},
+  onRefresh: function () { return location.reload(); },
+  resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
+  shouldPullToRefresh: function () { return !window.scrollY; }
 };
-
-const _methods = ['mainElement', 'ptrElement', 'triggerElement'];
-
-const _shared = {
+var _methods = ['mainElement', 'ptrElement', 'triggerElement'];
+var _shared = {
   pullStartY: null,
   pullMoveY: null,
   handlers: [],
@@ -40,23 +37,24 @@ const _shared = {
   state: 'pending',
   timeout: null,
   distResisted: 0,
-  supportsPassive: false,
+  supportsPassive: false
 };
 
 try {
   window.addEventListener('test', null, {
-    get passive() { // eslint-disable-line getter-return
+    get passive() {
+      // eslint-disable-line getter-return
       _shared.supportsPassive = true;
-    },
+    }
+
   });
-} catch (e) {
-  // do nothing
+} catch (e) {// do nothing
 }
 
-const _ptr = {
-  setupDOM(handler) {
+var _ptr = {
+  setupDOM: function setupDOM(handler) {
     if (!handler.ptrElement) {
-      const ptr = document.createElement('div');
+      var ptr = document.createElement('div');
 
       if (handler.mainElement !== document.body) {
         handler.mainElement.parentNode.insertBefore(ptr, handler.mainElement);
@@ -64,50 +62,48 @@ const _ptr = {
         document.body.insertBefore(ptr, document.body.firstChild);
       }
 
-      ptr.classList.add(`${handler.classPrefix}ptr`);
-      ptr.innerHTML = handler.getMarkup()
-        .replace(/__PREFIX__/g, handler.classPrefix);
-
+      ptr.classList.add(((handler.classPrefix) + "ptr"));
+      ptr.innerHTML = handler.getMarkup().replace(/__PREFIX__/g, handler.classPrefix);
       handler.ptrElement = ptr;
 
       if (typeof handler.onInit === 'function') {
         handler.onInit(handler);
-      }
-
-      // Add the css styles to the style node, and then
+      } // Add the css styles to the style node, and then
       // insert it into the dom
+
+
       if (!_shared.styleEl) {
         _shared.styleEl = document.createElement('style');
+
         _shared.styleEl.setAttribute('id', 'pull-to-refresh-js-style');
 
         document.head.appendChild(_shared.styleEl);
       }
 
-      _shared.styleEl.textContent = handler.getStyles()
-        .replace(/__PREFIX__/g, handler.classPrefix)
-        .replace(/\s+/g, ' ');
+      _shared.styleEl.textContent = handler.getStyles().replace(/__PREFIX__/g, handler.classPrefix).replace(/\s+/g, ' ');
     }
 
     return handler;
   },
-  onReset(handler) {
-    handler.ptrElement.classList.remove(`${handler.classPrefix}refresh`);
-    handler.ptrElement.style[handler.cssProp] = '0px';
 
-    setTimeout(() => {
+  onReset: function onReset(handler) {
+    handler.ptrElement.classList.remove(((handler.classPrefix) + "refresh"));
+    handler.ptrElement.style[handler.cssProp] = '0px';
+    setTimeout(function () {
       // remove previous ptr-element from DOM
       if (handler.ptrElement && handler.ptrElement.parentNode) {
         handler.ptrElement.parentNode.removeChild(handler.ptrElement);
         handler.ptrElement = null;
-      }
+      } // reset state
 
-      // reset state
+
       _shared.state = 'pending';
     }, handler.refreshTimeout);
   },
-  update(handler) {
-    const iconEl = handler.ptrElement.querySelector(`.${handler.classPrefix}icon`);
-    const textEl = handler.ptrElement.querySelector(`.${handler.classPrefix}text`);
+
+  update: function update(handler) {
+    var iconEl = handler.ptrElement.querySelector(("." + (handler.classPrefix) + "icon"));
+    var textEl = handler.ptrElement.querySelector(("." + (handler.classPrefix) + "text"));
 
     if (iconEl) {
       if (_shared.state === 'refreshing') {
@@ -130,15 +126,16 @@ const _ptr = {
         textEl.innerHTML = handler.instructionsRefreshing;
       }
     }
-  },
+  }
+
 };
 
 function _setupEvents() {
-  let _el;
+  var _el;
 
   function _onTouchStart(e) {
     // here, we must pick a handler first, and then append their html/css on the DOM
-    const target = _shared.handlers.filter(h => h.contains(e.target))[0];
+    var target = _shared.handlers.filter(function (h) { return h.contains(e.target); })[0];
 
     _shared.enable = !!target;
 
@@ -177,8 +174,10 @@ function _setupEvents() {
     }
 
     if (_shared.state === 'pending') {
-      _el.ptrElement.classList.add(`${_el.classPrefix}pull`);
+      _el.ptrElement.classList.add(((_el.classPrefix) + "pull"));
+
       _shared.state = 'pulling';
+
       _ptr.update(_el);
     }
 
@@ -190,21 +189,22 @@ function _setupEvents() {
 
     if (_shared.distExtra > 0) {
       e.preventDefault();
-
-      _el.ptrElement.style[_el.cssProp] = `${_shared.distResisted}px`;
-
-      _shared.distResisted = _el.resistanceFunction(_shared.distExtra / _el.distThreshold)
-        * Math.min(_el.distMax, _shared.distExtra);
+      _el.ptrElement.style[_el.cssProp] = (_shared.distResisted) + "px";
+      _shared.distResisted = _el.resistanceFunction(_shared.distExtra / _el.distThreshold) * Math.min(_el.distMax, _shared.distExtra);
 
       if (_shared.state === 'pulling' && _shared.distResisted > _el.distThreshold) {
-        _el.ptrElement.classList.add(`${_el.classPrefix}release`);
+        _el.ptrElement.classList.add(((_el.classPrefix) + "release"));
+
         _shared.state = 'releasing';
+
         _ptr.update(_el);
       }
 
       if (_shared.state === 'releasing' && _shared.distResisted < _el.distThreshold) {
-        _el.ptrElement.classList.remove(`${_el.classPrefix}release`);
+        _el.ptrElement.classList.remove(((_el.classPrefix) + "release"));
+
         _shared.state = 'pulling';
+
         _ptr.update(_el);
       }
     }
@@ -217,15 +217,15 @@ function _setupEvents() {
 
     if (_shared.state === 'releasing' && _shared.distResisted > _el.distThreshold) {
       _shared.state = 'refreshing';
+      _el.ptrElement.style[_el.cssProp] = (_el.distReload) + "px";
 
-      _el.ptrElement.style[_el.cssProp] = `${_el.distReload}px`;
-      _el.ptrElement.classList.add(`${_el.classPrefix}refresh`);
+      _el.ptrElement.classList.add(((_el.classPrefix) + "refresh"));
 
-      _shared.timeout = setTimeout(() => {
-        const retval = _el.onRefresh(() => _ptr.onReset(_el));
+      _shared.timeout = setTimeout(function () {
+        var retval = _el.onRefresh(function () { return _ptr.onReset(_el); });
 
         if (retval && typeof retval.then === 'function') {
-          retval.then(() => _ptr.onReset(_el));
+          retval.then(function () { return _ptr.onReset(_el); });
         }
 
         if (!retval && !_el.onRefresh.length) {
@@ -238,14 +238,14 @@ function _setupEvents() {
       }
 
       _el.ptrElement.style[_el.cssProp] = '0px';
-
       _shared.state = 'pending';
     }
 
     _ptr.update(_el);
 
-    _el.ptrElement.classList.remove(`${_el.classPrefix}release`);
-    _el.ptrElement.classList.remove(`${_el.classPrefix}pull`);
+    _el.ptrElement.classList.remove(((_el.classPrefix) + "release"));
+
+    _el.ptrElement.classList.remove(((_el.classPrefix) + "pull"));
 
     _shared.pullStartY = _shared.pullMoveY = null;
     _shared.dist = _shared.distResisted = 0;
@@ -253,96 +253,94 @@ function _setupEvents() {
 
   function _onScroll() {
     if (_el) {
-      _el.mainElement.classList.toggle(`${_el.classPrefix}top`, _el.shouldPullToRefresh());
+      _el.mainElement.classList.toggle(((_el.classPrefix) + "top"), _el.shouldPullToRefresh());
     }
   }
 
-  const _passiveSettings = _shared.supportsPassive
-    ? { passive: _shared.passive || false }
-    : undefined;
+  var _passiveSettings = _shared.supportsPassive ? {
+    passive: _shared.passive || false
+  } : undefined;
 
   window.addEventListener('touchend', _onTouchEnd);
   window.addEventListener('touchstart', _onTouchStart);
   window.addEventListener('touchmove', _onTouchMove, _passiveSettings);
   window.addEventListener('scroll', _onScroll);
-
   return {
     onTouchEnd: _onTouchEnd,
     onTouchStart: _onTouchStart,
     onTouchMove: _onTouchMove,
     onScroll: _onScroll,
 
-    destroy() {
+    destroy: function destroy() {
       // Teardown event listeners
       window.removeEventListener('touchstart', _onTouchStart);
       window.removeEventListener('touchend', _onTouchEnd);
       window.removeEventListener('touchmove', _onTouchMove, _passiveSettings);
       window.removeEventListener('scroll', _onScroll);
-    },
+    }
+
   };
 }
 
 function _setupHandler(options) {
-  const _handler = {};
+  var _handler = {}; // merge options with defaults
 
-  // merge options with defaults
-  Object.keys(_defaults).forEach(key => {
+  Object.keys(_defaults).forEach(function (key) {
     _handler[key] = options[key] || _defaults[key];
-  });
+  }); // normalize timeout value, even if it is zero
 
-  // normalize timeout value, even if it is zero
-  _handler.refreshTimeout = typeof options.refreshTimeout === 'number'
-    ? options.refreshTimeout
-    : _defaults.refreshTimeout;
+  _handler.refreshTimeout = typeof options.refreshTimeout === 'number' ? options.refreshTimeout : _defaults.refreshTimeout; // normalize elements
 
-  // normalize elements
-  _methods.forEach(method => {
+  _methods.forEach(function (method) {
     if (typeof _handler[method] === 'string') {
       _handler[method] = document.querySelector(_handler[method]);
     }
-  });
+  }); // attach events lazily
 
-  // attach events lazily
+
   if (!_shared.events) {
     _shared.events = _setupEvents();
   }
 
-  _handler.contains = target => {
+  _handler.contains = function (target) {
     return _handler.triggerElement.contains(target);
   };
 
-  _handler.destroy = () => {
+  _handler.destroy = function () {
     // stop pending any pending callbacks
-    clearTimeout(_shared.timeout);
+    clearTimeout(_shared.timeout); // remove handler from shared state
 
-    // remove handler from shared state
     _shared.handlers.splice(_handler.offset, 1);
   };
 
   return _handler;
-}
+} // public API
 
-// public API
-export default {
-  setPassiveMode(isPassive) {
+
+var index = {
+  setPassiveMode: function setPassiveMode(isPassive) {
     _shared.passive = isPassive;
   },
-  destroyAll() {
+
+  destroyAll: function destroyAll() {
     if (_shared.events) {
       _shared.events.destroy();
+
       _shared.events = null;
     }
 
-    _shared.handlers.forEach(h => {
+    _shared.handlers.forEach(function (h) {
       h.destroy();
     });
   },
-  init(options = {}) {
-    const handler = _setupHandler(options);
 
-    // store offset for later unsubscription
+  init: function init(options) {
+    if ( options === void 0 ) options = {};
+
+    var handler = _setupHandler(options); // store offset for later unsubscription
+
+
     handler.offset = _shared.handlers.push(handler) - 1;
-
     return handler;
   },
 
@@ -352,6 +350,8 @@ export default {
     setupEvents: _setupEvents,
     setupDOM: _ptr.setupDOM,
     onReset: _ptr.onReset,
-    update: _ptr.update,
-  },
+    update: _ptr.update
+  }
 };
+
+module.exports = index;

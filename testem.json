@@ -1,6 +1,6 @@
 {
-  "before_tests": "tarima -fqe test -x demos",
-  "test_page": "tests/unit/index.html",
+  "before_tests": "npm run build",
+  "test_page": "tests/index.html",
   "framework": "qunit",
   "src_files": [
     "src/**/*.js",
