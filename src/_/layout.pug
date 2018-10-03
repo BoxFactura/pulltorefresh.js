@@ -3,7 +3,7 @@ html.no-js(lang='en')
   head
     meta(charset='utf-8')
     meta(http-equiv='x-ua-compatible' content='ie=edge')
-    title Pull To Refresh Demo
+    title Pull To Refresh Demo (#{process.env.NODE_ENV || 'development'})
     meta(name='viewport' content='width=device-width, initial-scale=1')
     link(rel='stylesheet' href='style.css')
 
@@ -42,6 +42,14 @@ html.no-js(lang='en')
             a(href='https://www.boxfactura.com/pulltorefresh.js/') PullToRefresh.js
           li
             a(href='https://github.com/BoxFactura/pulltorefresh.js') Contribute on Github
+
+    if process.env.NODE_ENV === 'test'
+      //- this will enable TouchEmulator() for e2e-testing
+      script.
+        var s = document.createElement('script');
+        s.src = '//unpkg.com/hammer-touchemulator@0.0.2/touch-emulator.js';
+        s.onload = function () { window.TouchEmulator(); };
+        document.getElementsByTagName('head')[0].appendChild(s);
 
     script(src='pulltorefresh.min.js')
 

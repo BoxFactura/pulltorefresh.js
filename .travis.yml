@@ -15,8 +15,12 @@ cache:
 install:
   - npm ci
 
+before_script:
+  - npm run pretest
+  - npm run serve -- --no-browser &
+
 script:
-  - npm run serve & npm run test:ci
+  - npm run test:ci
 
 notifications:
   email: false
