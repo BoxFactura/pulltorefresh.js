@@ -1,8 +1,9 @@
 language: node_js
+
 node_js:
-- 6
-- 8
-- 10
+  - 6
+  - 8
+  - 10
 
 sudo: required
 
@@ -11,17 +12,11 @@ cache:
     - "$HOME/.npm"
     - "$HOME/.cache"
 
-before_install:
-  - npm install -g bower
-  - npm install -g testem
-  - npm install -g testcafe
-
 install:
-  - npm install
-  - bower install
+  - npm ci
 
 script:
-  - npm run test:ci
+  - npm run serve & npm run test:ci
 
 notifications:
   email: false
