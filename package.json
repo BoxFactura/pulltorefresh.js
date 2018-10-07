@@ -20,6 +20,10 @@
     "test": "testcafe chrome tests/e2e/cases -a 'npm run serve -- --no-browser'",
     "test:ci": "testcafe 'chrome:headless' tests/e2e/cases -a 'npm run serve -- --no-browser'"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BoxFactura/pulltorefresh.js.git"
+  },
   "files": [
     "dist/*.js"
   ],
