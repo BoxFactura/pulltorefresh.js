@@ -1,3 +1,5 @@
 package-lock.json -diff
+*.min.js -diff
+*.map -diff
 dist -diff
 demos -diff

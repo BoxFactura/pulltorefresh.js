@@ -281,7 +281,11 @@ var _defaults = {
   onInit: function () {},
   onRefresh: function () { return location.reload(); },
   resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
-  shouldPullToRefresh: function () { return !window.scrollY; }
+
+  shouldPullToRefresh: function shouldPullToRefresh() {
+    return typeof this.mainElement === 'string' ? !document.querySelector(this.mainElement).scrollTop : this.mainElement && !this.mainElement.scrollTop;
+  }
+
 };
 
 var _methods = ['mainElement', 'ptrElement', 'triggerElement'];
