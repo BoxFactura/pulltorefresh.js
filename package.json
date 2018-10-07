@@ -13,6 +13,10 @@
     "test": "testem ci",
     "dev_test": "testem"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BoxFactura/pulltorefresh.js.git"
+  },
   "files": [
     "dist/*.js"
   ],
