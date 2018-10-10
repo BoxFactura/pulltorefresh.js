@@ -1,32 +1,5 @@
 'use strict';
 
-var _ptrMarkup = "\n<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>\n";
-var _ptrStyles = "\n.__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n\n.__PREFIX__pull {\n  transition: none;\n}\n\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n\n/*\nWhen at the top of the page, disable vertical overscroll so passive touch\nlisteners can take over.\n*/\n.__PREFIX__top {\n  touch-action: pan-x pan-down pinch-zoom;\n}\n\n.__PREFIX__release {\n  .__PREFIX__icon {\n    transform: rotate(180deg);\n  }\n}\n";
-var _defaults = {
-  distThreshold: 60,
-  distMax: 80,
-  distReload: 50,
-  distIgnore: 0,
-  bodyOffset: 20,
-  mainElement: 'body',
-  triggerElement: 'body',
-  ptrElement: '.ptr',
-  classPrefix: 'ptr--',
-  cssProp: 'min-height',
-  iconArrow: '&#8675;',
-  iconRefreshing: '&hellip;',
-  instructionsPullToRefresh: 'Pull down to refresh',
-  instructionsReleaseToRefresh: 'Release to refresh',
-  instructionsRefreshing: 'Refreshing',
-  refreshTimeout: 500,
-  getMarkup: function () { return _ptrMarkup; },
-  getStyles: function () { return _ptrStyles; },
-  onInit: function () {},
-  onRefresh: function () { return location.reload(); },
-  resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
-  shouldPullToRefresh: function () { return !window.scrollY; }
-};
-var _methods = ['mainElement', 'ptrElement', 'triggerElement'];
 var _shared = {
   pullStartY: null,
   pullMoveY: null,
@@ -51,86 +24,89 @@ try {
 } catch (e) {// do nothing
 }
 
-var _ptr = {
-  setupDOM: function setupDOM(handler) {
-    if (!handler.ptrElement) {
-      var ptr = document.createElement('div');
+function setupDOM(handler) {
+  if (!handler.ptrElement) {
+    var ptr = document.createElement('div');
 
-      if (handler.mainElement !== document.body) {
-        handler.mainElement.parentNode.insertBefore(ptr, handler.mainElement);
-      } else {
-        document.body.insertBefore(ptr, document.body.firstChild);
-      }
-
-      ptr.classList.add(((handler.classPrefix) + "ptr"));
-      ptr.innerHTML = handler.getMarkup().replace(/__PREFIX__/g, handler.classPrefix);
-      handler.ptrElement = ptr;
-
-      if (typeof handler.onInit === 'function') {
-        handler.onInit(handler);
-      } // Add the css styles to the style node, and then
-      // insert it into the dom
-
-
-      if (!_shared.styleEl) {
-        _shared.styleEl = document.createElement('style');
-
-        _shared.styleEl.setAttribute('id', 'pull-to-refresh-js-style');
-
-        document.head.appendChild(_shared.styleEl);
-      }
-
-      _shared.styleEl.textContent = handler.getStyles().replace(/__PREFIX__/g, handler.classPrefix).replace(/\s+/g, ' ');
+    if (handler.mainElement !== document.body) {
+      handler.mainElement.parentNode.insertBefore(ptr, handler.mainElement);
+    } else {
+      document.body.insertBefore(ptr, document.body.firstChild);
     }
 
-    return handler;
-  },
+    ptr.classList.add(((handler.classPrefix) + "ptr"));
+    ptr.innerHTML = handler.getMarkup().replace(/__PREFIX__/g, handler.classPrefix);
+    handler.ptrElement = ptr;
 
-  onReset: function onReset(handler) {
-    handler.ptrElement.classList.remove(((handler.classPrefix) + "refresh"));
-    handler.ptrElement.style[handler.cssProp] = '0px';
-    setTimeout(function () {
-      // remove previous ptr-element from DOM
-      if (handler.ptrElement && handler.ptrElement.parentNode) {
-        handler.ptrElement.parentNode.removeChild(handler.ptrElement);
-        handler.ptrElement = null;
-      } // reset state
+    if (typeof handler.onInit === 'function') {
+      handler.onInit(handler);
+    } // Add the css styles to the style node, and then
+    // insert it into the dom
 
 
-      _shared.state = 'pending';
-    }, handler.refreshTimeout);
-  },
+    if (!_shared.styleEl) {
+      _shared.styleEl = document.createElement('style');
 
-  update: function update(handler) {
-    var iconEl = handler.ptrElement.querySelector(("." + (handler.classPrefix) + "icon"));
-    var textEl = handler.ptrElement.querySelector(("." + (handler.classPrefix) + "text"));
+      _shared.styleEl.setAttribute('id', 'pull-to-refresh-js-style');
 
-    if (iconEl) {
-      if (_shared.state === 'refreshing') {
-        iconEl.innerHTML = handler.iconRefreshing;
-      } else {
-        iconEl.innerHTML = handler.iconArrow;
-      }
+      document.head.appendChild(_shared.styleEl);
     }
 
-    if (textEl) {
-      if (_shared.state === 'releasing') {
-        textEl.innerHTML = handler.instructionsReleaseToRefresh;
-      }
+    _shared.styleEl.textContent = handler.getStyles().replace(/__PREFIX__/g, handler.classPrefix).replace(/\s+/g, ' ');
+  }
 
-      if (_shared.state === 'pulling' || _shared.state === 'pending') {
-        textEl.innerHTML = handler.instructionsPullToRefresh;
-      }
+  return handler;
+}
 
-      if (_shared.state === 'refreshing') {
-        textEl.innerHTML = handler.instructionsRefreshing;
-      }
+function onReset(handler) {
+  handler.ptrElement.classList.remove(((handler.classPrefix) + "refresh"));
+  handler.ptrElement.style[handler.cssProp] = '0px';
+  setTimeout(function () {
+    // remove previous ptr-element from DOM
+    if (handler.ptrElement && handler.ptrElement.parentNode) {
+      handler.ptrElement.parentNode.removeChild(handler.ptrElement);
+      handler.ptrElement = null;
+    } // reset state
+
+
+    _shared.state = 'pending';
+  }, handler.refreshTimeout);
+}
+
+function update(handler) {
+  var iconEl = handler.ptrElement.querySelector(("." + (handler.classPrefix) + "icon"));
+  var textEl = handler.ptrElement.querySelector(("." + (handler.classPrefix) + "text"));
+
+  if (iconEl) {
+    if (_shared.state === 'refreshing') {
+      iconEl.innerHTML = handler.iconRefreshing;
+    } else {
+      iconEl.innerHTML = handler.iconArrow;
     }
   }
 
+  if (textEl) {
+    if (_shared.state === 'releasing') {
+      textEl.innerHTML = handler.instructionsReleaseToRefresh;
+    }
+
+    if (_shared.state === 'pulling' || _shared.state === 'pending') {
+      textEl.innerHTML = handler.instructionsPullToRefresh;
+    }
+
+    if (_shared.state === 'refreshing') {
+      textEl.innerHTML = handler.instructionsRefreshing;
+    }
+  }
+}
+
+var _ptr = {
+  setupDOM: setupDOM,
+  onReset: onReset,
+  update: update
 };
 
-function _setupEvents() {
+var _setupEvents = (function () {
   var _el;
 
   function _onTouchStart(e) {
@@ -280,9 +256,38 @@ function _setupEvents() {
     }
 
   };
-}
+});
 
-function _setupHandler(options) {
+var _ptrMarkup = "\n<div class=\"__PREFIX__box\">\n  <div class=\"__PREFIX__content\">\n    <div class=\"__PREFIX__icon\"></div>\n    <div class=\"__PREFIX__text\"></div>\n  </div>\n</div>\n";
+
+var _ptrStyles = "\n.__PREFIX__ptr {\n  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.12);\n  pointer-events: none;\n  font-size: 0.85em;\n  font-weight: bold;\n  top: 0;\n  height: 0;\n  transition: height 0.3s, min-height 0.3s;\n  text-align: center;\n  width: 100%;\n  overflow: hidden;\n  display: flex;\n  align-items: flex-end;\n  align-content: stretch;\n}\n\n.__PREFIX__box {\n  padding: 10px;\n  flex-basis: 100%;\n}\n\n.__PREFIX__pull {\n  transition: none;\n}\n\n.__PREFIX__text {\n  margin-top: .33em;\n  color: rgba(0, 0, 0, 0.3);\n}\n\n.__PREFIX__icon {\n  color: rgba(0, 0, 0, 0.3);\n  transition: transform .3s;\n}\n\n/*\nWhen at the top of the page, disable vertical overscroll so passive touch\nlisteners can take over.\n*/\n.__PREFIX__top {\n  touch-action: pan-x pan-down pinch-zoom;\n}\n\n.__PREFIX__release {\n  .__PREFIX__icon {\n    transform: rotate(180deg);\n  }\n}\n";
+
+var _defaults = {
+  distThreshold: 60,
+  distMax: 80,
+  distReload: 50,
+  distIgnore: 0,
+  mainElement: 'body',
+  triggerElement: 'body',
+  ptrElement: '.ptr',
+  classPrefix: 'ptr--',
+  cssProp: 'min-height',
+  iconArrow: '&#8675;',
+  iconRefreshing: '&hellip;',
+  instructionsPullToRefresh: 'Pull down to refresh',
+  instructionsReleaseToRefresh: 'Release to refresh',
+  instructionsRefreshing: 'Refreshing',
+  refreshTimeout: 500,
+  getMarkup: function () { return _ptrMarkup; },
+  getStyles: function () { return _ptrStyles; },
+  onInit: function () {},
+  onRefresh: function () { return location.reload(); },
+  resistanceFunction: function (t) { return Math.min(1, t / 2.5); },
+  shouldPullToRefresh: function () { return !window.scrollY; }
+};
+
+var _methods = ['mainElement', 'ptrElement', 'triggerElement'];
+var _setupHandler = (function (options) {
   var _handler = {}; // merge options with defaults
 
   Object.keys(_defaults).forEach(function (key) {
@@ -314,8 +319,7 @@ function _setupHandler(options) {
   };
 
   return _handler;
-} // public API
-
+});
 
 var index = {
   setPassiveMode: function setPassiveMode(isPassive) {
