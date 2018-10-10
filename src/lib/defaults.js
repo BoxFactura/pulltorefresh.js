@@ -6,7 +6,6 @@ export default {
   distMax: 80,
   distReload: 50,
   distIgnore: 0,
-  bodyOffset: 20,
   mainElement: 'body',
   triggerElement: 'body',
   ptrElement: '.ptr',
