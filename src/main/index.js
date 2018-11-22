@@ -25,7 +25,9 @@ const _defaults = {
   onInit: () => {},
   onRefresh: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
-  shouldPullToRefresh: () => !window.scrollY,
+  shouldPullToRefresh: () => typeof this.mainElement === 'string'
+  ? !document.querySelector(this.mainElement).scrollTop
+  : this.mainElement && !this.mainElement.scrollTop,
 };
 
 const _methods = ['mainElement', 'ptrElement', 'triggerElement'];
