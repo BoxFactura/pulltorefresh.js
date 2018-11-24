@@ -3,7 +3,7 @@ html.no-js(lang='en')
   head
     meta(charset='utf-8')
     meta(http-equiv='x-ua-compatible' content='ie=edge')
-    title Pull To Refresh Demo
+    title Pull To Refresh Demo (#{process.env.NODE_ENV || 'development'})
     meta(name='viewport' content='width=device-width, initial-scale=1')
     link(rel='stylesheet' href='style.css')
 
@@ -26,14 +26,14 @@ html.no-js(lang='en')
           | proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
         p.links
-          a(href='/demos/raw.html') Raw
-          a(href='/demos/basic.html') Basic
-          a(href='/demos/shouldptr.html') Should pull to refresh?
-          a(href='/demos/trigger.html') Trigger
-          a(href='/demos/promise.html') Promise
-          a(href='/demos/callback.html') Callback
-          a(href='/demos/multiple.html') Multiple Instances
-          a(href='/demos/tolerance.html') With tolerance
+          a(href='raw.html') Raw
+          a(href='basic.html') Basic
+          a(href='shouldptr.html') Should pull to refresh?
+          a(href='trigger.html') Trigger
+          a(href='promise.html') Promise
+          a(href='callback.html') Callback
+          a(href='multiple.html') Multiple Instances
+          a(href='tolerance.html') With tolerance
 
     #footer
       .wrap
@@ -43,6 +43,14 @@ html.no-js(lang='en')
           li
             a(href='https://github.com/BoxFactura/pulltorefresh.js') Contribute on Github
 
-    script(src='../dist/pulltorefresh.js')
+    if process.env.NODE_ENV === 'test'
+      //- this will enable TouchEmulator() for e2e-testing
+      script.
+        var s = document.createElement('script');
+        s.src = '//unpkg.com/hammer-touchemulator@0.0.2/touch-emulator.js';
+        s.onload = function () { window.TouchEmulator(); };
+        document.getElementsByTagName('head')[0].appendChild(s);
+
+    script(src='pulltorefresh.min.js')
 
     block run

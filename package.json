@@ -1,17 +1,24 @@
 {
   "name": "pulltorefreshjs",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Pull To Refresh",
   "main": "dist/pulltorefresh.js",
   "scripts": {
-    "dev": "tarima watch -s",
     "lint": "eslint src",
-    "build_full": "tarima -Ufx tests",
-    "build_min": "npm run build_full -- -y js -mR '**/*.js:dist/pulltorefresh.min.js'",
-    "build": "npm run build_full && npm run build_min",
-    "pretest": "npm run lint",
-    "test": "testem ci",
-    "dev_test": "testem"
+    "build:browser": "bili src/lib/index.js --target browser --format umd,umd-min --name pulltorefresh --moduleName PullToRefresh --js buble",
+    "build:nodejs": "bili src/lib/index.js --target node --js buble --format es,cjs",
+    "build:styles": "lessc src/style.less demos/style.css -x --source-map-inline",
+    "build:demos": "pug src/demos --pretty --out demos && pug src/index.pug --pretty --out demos",
+    "build:all": "npm run build:styles && npm run build:demos && cp dist/*.min* demos",
+    "build:lib": "npm run build:browser && npm run build:nodejs",
+    "build": "npm run build:lib && npm run build:all",
+    "serve": "live-server demos",
+    "watch": "npm run build:browser -- -w",
+    "dev": "npm run serve & npm run watch",
+    "prepublish": "npm run build",
+    "pretest": "npm run lint && NODE_ENV=test npm run build:demos --",
+    "test": "testcafe chrome tests/e2e/cases -a 'npm run serve -- --no-browser'",
+    "test:ci": "testcafe 'chrome:headless' tests/e2e/cases -a 'npm run serve -- --no-browser'"
   },
   "repository": {
     "type": "git",
@@ -22,47 +29,14 @@
   ],
   "author": "Rafael Soto",
   "license": "MIT",
-  "tarima": {
-    "from": "src",
-    "public": ".",
-    "output": ".",
-    "rename": [
-      "**/demos/**:{fullpath/1}",
-      "**/tests/**:{fullpath/1}",
-      "**/index.js:dist/pulltorefresh.js"
-    ],
-    "bundle": true,
-    "filter": [
-      "!_*",
-      "!**/_*",
-      "!**/_*/**"
-    ],
-    "ignoreFiles": [
-      ".gitignore"
-    ],
-    "devPlugins": [
-      "tarima-lr"
-    ],
-    "bundleOptions": {
-      "extensions": {
-        "js": "es6"
-      },
-      "rollup": {
-        "bundle": "PullToRefresh"
-      }
-    }
-  },
   "devDependencies": {
-    "buble": "^0.19.3",
-    "csso": "^3.1.1",
+    "bili": "^3.1.2",
     "eslint": "^4.13.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "google-closure-compiler-js": "^20180402.0.0",
-    "less": "^3.0.1",
-    "pug": "^2.0.0-beta6",
-    "rollup": "^0.58.0",
-    "tarima": "^4.0.1",
-    "tarima-lr": "^0.4.0"
+    "less": "^3.8.1",
+    "live-server": "^1.2.0",
+    "pug-cli": "^1.0.0-alpha6",
+    "testcafe": "^0.22.0"
   }
 }

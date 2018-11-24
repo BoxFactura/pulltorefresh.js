@@ -62,8 +62,15 @@ pre {
 }
 
 .links {
-  a ~ a {
-    margin-left: 1em;
+  display: flex;
+  flex-wrap: wrap;
+
+  a {
+    margin-right: 1em;
+
+    &:last-child  {
+      margin: 0;
+    }
   }
 }
 

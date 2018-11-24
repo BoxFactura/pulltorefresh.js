@@ -1,23 +1,23 @@
 language: node_js
-node_js:
-- 6
-- 8
-- 10
 
-sudo: false
+node_js:
+  - 10
+
+sudo: required
 
 cache:
   directories:
     - "$HOME/.npm"
     - "$HOME/.cache"
-before_install:
-  - npm install -g bower testem
 
 install:
-  - npm install
-  - bower install
+  - npm ci
+
+before_script:
+  - npm run pretest
+
 script:
-  - npm test
+  - npm run test:ci
 
 notifications:
   email: false
