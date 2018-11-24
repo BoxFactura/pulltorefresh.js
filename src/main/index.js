@@ -25,13 +25,10 @@ const _defaults = {
   onInit: () => {},
   onRefresh: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
-<<<<<<< HEAD
-  shouldPullToRefresh: () => typeof this.mainElement === 'string'
-  ? !document.querySelector(this.mainElement).scrollTop
-  : this.mainElement && !this.mainElement.scrollTop,
-=======
-  shouldPullToRefresh: () => !document.querySelector(this.mainElement).scrollTop,
->>>>>>> 739df2f... Set !mainElement.scrollTop as default shouldPullToRefresh condition
+  shouldPullToRefresh: () => (typeof this.mainElement === 'string'
+    ? !document.querySelector(this.mainElement).scrollTop
+    : this.mainElement && !this.mainElement.scrollTop)
+  ,
 };
 
 const _methods = ['mainElement', 'ptrElement', 'triggerElement'];
