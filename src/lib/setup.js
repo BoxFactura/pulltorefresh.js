@@ -39,6 +39,9 @@ export default options => {
 
     // remove handler from shared state
     _shared.handlers.splice(_handler.offset, 1);
+
+    // reset state
+    _shared.state = 'pending';
   };
 
   return _handler;
