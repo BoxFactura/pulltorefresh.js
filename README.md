@@ -13,11 +13,11 @@ A small, but powerful Javascript library crafted to power your webapp's pull to 
 
 ## Install
 
-Download PulltoRefresh either from the [NPM Registry](https://www.npmjs.com/package/pulltorefreshjs), [CDNJS](https://cdnjs.com/libraries/pulltorefreshjs) or [UNPKG](https://unpkg.com/pulltorefreshjs@0.1.15/dist/):
+Download PulltoRefresh either from the [NPM Registry](https://www.npmjs.com/package/pulltorefreshjs), [CDNJS](https://cdnjs.com/libraries/pulltorefreshjs) or [UNPKG](https://unpkg.com/pulltorefreshjs):
 
 ```bash
 $ npm install pulltorefreshjs --save-dev
-$ cat https://unpkg.com/pulltorefreshjs@0.1.15/dist/pulltorefresh.js
+$ cat https://unpkg.com/pulltorefreshjs@0.1.16/dist/pulltorefresh.js
 ```
 
 Include the JS file in your webapp and initialize it:
