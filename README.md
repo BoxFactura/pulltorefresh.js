@@ -17,7 +17,7 @@ Download PulltoRefresh either from the [NPM Registry](https://www.npmjs.com/pack
 
 ```bash
 $ npm install pulltorefreshjs --save-dev
-$ wget -O ptr.js https://unpkg.com/pulltorefreshjs@0.1.16/dist/pulltorefresh.js
+$ wget -O pulltorefresh.js https://unpkg.com/pulltorefreshjs/dist/pulltorefresh.js
 ```
 
 Include the JS file in your webapp and initialize it:
