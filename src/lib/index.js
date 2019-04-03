@@ -21,8 +21,7 @@ export default {
   init(options = {}) {
     const handler = _setupHandler(options);
 
-    // store offset for later unsubscription
-    handler.offset = _shared.handlers.push(handler) - 1;
+    _shared.handlers.push(handler);
 
     return handler;
   },
