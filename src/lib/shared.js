@@ -9,6 +9,7 @@ const _shared = {
   timeout: null,
   distResisted: 0,
   supportsPassive: false,
+  supportsPointerEvents: !!window.PointerEvent,
 };
 
 try {

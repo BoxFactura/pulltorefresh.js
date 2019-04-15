@@ -1,6 +1,13 @@
 import _ptr from './api';
 import _shared from './shared';
 
+const screenY = function screenY(event) {
+  if (_shared.supportsPointerEvents) {
+    return event.screenY;
+  }
+  return event.touches[0].screenY;
+};
+
 export default () => {
   let _el;
 
@@ -14,7 +21,7 @@ export default () => {
       _el = _ptr.setupDOM(target);
 
       if (target.shouldPullToRefresh()) {
-        _shared.pullStartY = e.touches[0].screenY;
+        _shared.pullStartY = screenY(e);
       }
 
       clearTimeout(_shared.timeout);
@@ -30,10 +37,10 @@ export default () => {
 
     if (!_shared.pullStartY) {
       if (_el.shouldPullToRefresh()) {
-        _shared.pullStartY = e.touches[0].screenY;
+        _shared.pullStartY = screenY(e);
       }
     } else {
-      _shared.pullMoveY = e.touches[0].screenY;
+      _shared.pullMoveY = screenY(e);
     }
 
     if (_shared.state === 'refreshing') {
@@ -129,9 +136,17 @@ export default () => {
     ? { passive: _shared.passive || false }
     : undefined;
 
-  window.addEventListener('touchend', _onTouchEnd);
-  window.addEventListener('touchstart', _onTouchStart);
-  window.addEventListener('touchmove', _onTouchMove, _passiveSettings);
+
+  if (_shared.supportsPointerEvents) {
+    window.addEventListener('pointerup', _onTouchEnd);
+    window.addEventListener('pointerdown', _onTouchStart);
+    window.addEventListener('pointermove', _onTouchMove, _passiveSettings);
+  } else {
+    window.addEventListener('touchend', _onTouchEnd);
+    window.addEventListener('touchstart', _onTouchStart);
+    window.addEventListener('touchmove', _onTouchMove, _passiveSettings);
+  }
+
   window.addEventListener('scroll', _onScroll);
 
   return {
@@ -142,9 +157,15 @@ export default () => {
 
     destroy() {
       // Teardown event listeners
-      window.removeEventListener('touchstart', _onTouchStart);
-      window.removeEventListener('touchend', _onTouchEnd);
-      window.removeEventListener('touchmove', _onTouchMove, _passiveSettings);
+      if (_shared.supportsPointerEvents) {
+        window.removeEventListener('pointerdown', _onTouchStart);
+        window.removeEventListener('pointerup', _onTouchEnd);
+        window.removeEventListener('pointermove', _onTouchMove, _passiveSettings);
+      } else {
+        window.removeEventListener('touchstart', _onTouchStart);
+        window.removeEventListener('touchend', _onTouchEnd);
+        window.removeEventListener('touchmove', _onTouchMove, _passiveSettings);
+      }
       window.removeEventListener('scroll', _onScroll);
     },
   };
