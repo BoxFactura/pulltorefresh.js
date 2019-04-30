@@ -5,8 +5,8 @@
   "main": "dist/pulltorefresh.js",
   "scripts": {
     "lint": "eslint src",
-    "build:browser": "bili src/lib/index.js --target browser --format umd,umd-min --name pulltorefresh --moduleName PullToRefresh --js buble",
-    "build:nodejs": "bili src/lib/index.js --target node --js buble --format es,cjs",
+    "build:browser": "bili src/lib/index.js --banner --minimal --format umd --format umd-min --module-name PullToRefresh",
+    "build:nodejs": "bili src/lib/index.js --minimal --format es --format cjs",
     "build:styles": "lessc src/style.less demos/style.css -x --source-map-inline",
     "build:demos": "pug src/demos --pretty --out demos && pug src/index.pug --pretty --out demos",
     "build:all": "npm run build:styles && npm run build:demos && cp dist/*.min* demos",
@@ -26,13 +26,13 @@
   "author": "Rafael Soto",
   "license": "MIT",
   "devDependencies": {
-    "bili": "^3.1.2",
-    "eslint": "^4.13.1",
-    "eslint-config-airbnb-base": "^12.1.0",
+    "bili": "^4.7.3",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.8.0",
     "less": "^3.8.1",
     "live-server": "^1.2.1",
     "pug-cli": "^1.0.0-alpha6",
-    "testcafe": "^0.22.0"
+    "testcafe": "^1.1.3"
   }
 }
