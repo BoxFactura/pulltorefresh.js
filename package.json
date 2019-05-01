@@ -3,7 +3,7 @@
   "version": "0.1.16",
   "description": "Pull To Refresh",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
   "scripts": {
     "lint": "eslint src",
