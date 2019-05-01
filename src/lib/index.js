@@ -8,6 +8,9 @@ export default {
   setPassiveMode(isPassive) {
     _shared.passive = isPassive;
   },
+  setPointerEventsMode(isEnabled) {
+    _shared.pointerEventsEnabled = isEnabled;
+  },
   destroyAll() {
     if (_shared.events) {
       _shared.events.destroy();

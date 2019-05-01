@@ -1,0 +1,24 @@
+extend ../_/layout
+
+block run
+  script.
+    /* global PullToRefresh */
+    PullToRefresh.init({
+      mainElement: 'body',
+      distThreshold: 100,
+      distMax: 120,
+      distReload: 1,
+      iconArrow: '<i class="fa fa-arrow-down"></i>',
+      iconRefreshing: '<i class="fa fa-spin fa-refresh"></i>',
+      instructionsPullToRefresh: 'System.Pull',
+      instructionsReleaseToRefresh: 'System.Release',
+      instructionsRefreshing: ' ',
+      refreshTimeout: 250,
+      onRefresh: function () {
+        if (typeof $ !== 'undefined') $(document).trigger('vm.load');
+      },
+      onInit: function () {
+        //- document.addEventListener('touchstart', onTouchListener);
+        //- document.addEventListener('touchmove', onTouchListener);
+      }
+    });

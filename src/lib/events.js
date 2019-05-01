@@ -2,7 +2,7 @@ import _ptr from './api';
 import _shared from './shared';
 
 const screenY = function screenY(event) {
-  if (_shared.supportsPointerEvents) {
+  if (_shared.pointerEventsEnabled && _shared.supportsPointerEvents) {
     return event.screenY;
   }
   return event.touches[0].screenY;
@@ -136,8 +136,7 @@ export default () => {
     ? { passive: _shared.passive || false }
     : undefined;
 
-
-  if (_shared.supportsPointerEvents) {
+  if (_shared.pointerEventsEnabled && _shared.supportsPointerEvents) {
     window.addEventListener('pointerup', _onTouchEnd);
     window.addEventListener('pointerdown', _onTouchStart);
     window.addEventListener('pointermove', _onTouchMove, _passiveSettings);
@@ -156,8 +155,7 @@ export default () => {
     onScroll: _onScroll,
 
     destroy() {
-      // Teardown event listeners
-      if (_shared.supportsPointerEvents) {
+      if (_shared.pointerEventsEnabled && _shared.supportsPointerEvents) {
         window.removeEventListener('pointerdown', _onTouchStart);
         window.removeEventListener('pointerup', _onTouchEnd);
         window.removeEventListener('pointermove', _onTouchMove, _passiveSettings);
@@ -166,6 +164,7 @@ export default () => {
         window.removeEventListener('touchend', _onTouchEnd);
         window.removeEventListener('touchmove', _onTouchMove, _passiveSettings);
       }
+
       window.removeEventListener('scroll', _onScroll);
     },
   };

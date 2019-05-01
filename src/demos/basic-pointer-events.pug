@@ -1,0 +1,10 @@
+extend ../_/layout
+
+block run
+  script.
+    /* global PullToRefresh */
+    PullToRefresh.setPointerEventsMode(true);
+    PullToRefresh.init({
+      mainElement: '#main',
+      onRefresh: function() { alert('refresh') }
+    });
