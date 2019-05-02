@@ -10,7 +10,8 @@ var _shared = {
   state: 'pending',
   timeout: null,
   distResisted: 0,
-  supportsPassive: false
+  supportsPassive: false,
+  supportsPointerEvents: !!window.PointerEvent
 };
 
 try {
@@ -106,6 +107,14 @@ var _ptr = {
   update: update
 };
 
+var screenY = function screenY(event) {
+  if (_shared.pointerEventsEnabled && _shared.supportsPointerEvents) {
+    return event.screenY;
+  }
+
+  return event.touches[0].screenY;
+};
+
 var _setupEvents = (function () {
   var _el;
 
@@ -119,7 +128,7 @@ var _setupEvents = (function () {
       _el = _ptr.setupDOM(target);
 
       if (target.shouldPullToRefresh()) {
-        _shared.pullStartY = e.touches[0].screenY;
+        _shared.pullStartY = screenY(e);
       }
 
       clearTimeout(_shared.timeout);
@@ -135,10 +144,10 @@ var _setupEvents = (function () {
 
     if (!_shared.pullStartY) {
       if (_el.shouldPullToRefresh()) {
-        _shared.pullStartY = e.touches[0].screenY;
+        _shared.pullStartY = screenY(e);
       }
     } else {
-      _shared.pullMoveY = e.touches[0].screenY;
+      _shared.pullMoveY = screenY(e);
     }
 
     if (_shared.state === 'refreshing') {
@@ -237,9 +246,16 @@ var _setupEvents = (function () {
     passive: _shared.passive || false
   } : undefined;
 
-  window.addEventListener('touchend', _onTouchEnd);
-  window.addEventListener('touchstart', _onTouchStart);
-  window.addEventListener('touchmove', _onTouchMove, _passiveSettings);
+  if (_shared.pointerEventsEnabled && _shared.supportsPointerEvents) {
+    window.addEventListener('pointerup', _onTouchEnd);
+    window.addEventListener('pointerdown', _onTouchStart);
+    window.addEventListener('pointermove', _onTouchMove, _passiveSettings);
+  } else {
+    window.addEventListener('touchend', _onTouchEnd);
+    window.addEventListener('touchstart', _onTouchStart);
+    window.addEventListener('touchmove', _onTouchMove, _passiveSettings);
+  }
+
   window.addEventListener('scroll', _onScroll);
   return {
     onTouchEnd: _onTouchEnd,
@@ -248,10 +264,16 @@ var _setupEvents = (function () {
     onScroll: _onScroll,
 
     destroy: function destroy() {
-      // Teardown event listeners
-      window.removeEventListener('touchstart', _onTouchStart);
-      window.removeEventListener('touchend', _onTouchEnd);
-      window.removeEventListener('touchmove', _onTouchMove, _passiveSettings);
+      if (_shared.pointerEventsEnabled && _shared.supportsPointerEvents) {
+        window.removeEventListener('pointerdown', _onTouchStart);
+        window.removeEventListener('pointerup', _onTouchEnd);
+        window.removeEventListener('pointermove', _onTouchMove, _passiveSettings);
+      } else {
+        window.removeEventListener('touchstart', _onTouchStart);
+        window.removeEventListener('touchend', _onTouchEnd);
+        window.removeEventListener('touchmove', _onTouchMove, _passiveSettings);
+      }
+
       window.removeEventListener('scroll', _onScroll);
     }
 
@@ -319,7 +341,9 @@ var _setupHandler = (function (options) {
     // stop pending any pending callbacks
     clearTimeout(_shared.timeout); // remove handler from shared state
 
-    _shared.handlers.splice(_handler.offset, 1);
+    var offset = _shared.handlers.indexOf(_handler);
+
+    _shared.handlers.splice(offset, 1);
   };
 
   return _handler;
@@ -328,6 +352,10 @@ var _setupHandler = (function (options) {
 var index = {
   setPassiveMode: function setPassiveMode(isPassive) {
     _shared.passive = isPassive;
+  },
+
+  setPointerEventsMode: function setPointerEventsMode(isEnabled) {
+    _shared.pointerEventsEnabled = isEnabled;
   },
 
   destroyAll: function destroyAll() {
@@ -345,10 +373,10 @@ var index = {
   init: function init(options) {
     if ( options === void 0 ) options = {};
 
-    var handler = _setupHandler(options); // store offset for later unsubscription
+    var handler = _setupHandler(options);
 
+    _shared.handlers.push(handler);
 
-    handler.offset = _shared.handlers.push(handler) - 1;
     return handler;
   },
 
