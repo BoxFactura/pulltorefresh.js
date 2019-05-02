@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <div class="wrap"><span class="trigger">&darr;</span>
+      <div class="wrap">
         <h1>Demo</h1>
       </div>
     </header>
@@ -35,9 +35,9 @@
     <script src="index.umd.min.js"></script>
     <script>
       /* global PullToRefresh */
+      PullToRefresh.setPointerEventsMode(true);
       PullToRefresh.init({
         mainElement: '#main',
-        triggerElement: '.trigger',
         onRefresh: function() { alert('refresh') }
       });
     </script>
