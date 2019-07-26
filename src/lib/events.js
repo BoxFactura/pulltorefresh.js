@@ -44,7 +44,7 @@ export default () => {
     }
 
     if (_shared.state === 'refreshing') {
-      if (_el.shouldPullToRefresh() && _shared.pullStartY < _shared.pullMoveY && e.cancelable) {
+      if (e.cancelable && _el.shouldPullToRefresh() && _shared.pullStartY < _shared.pullMoveY) {
         e.preventDefault();
       }
 
@@ -64,7 +64,7 @@ export default () => {
     _shared.distExtra = _shared.dist - _el.distIgnore;
 
     if (_shared.distExtra > 0) {
-      if(e.cancelable) {
+      if (e.cancelable) {
         e.preventDefault();
       }
 
