@@ -31,7 +31,7 @@
     "bili": "^4.7.3",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-import": "^2.18.2",
     "less": "^3.8.1",
     "live-server": "^1.2.1",
     "lodash": "^4.17.14",
