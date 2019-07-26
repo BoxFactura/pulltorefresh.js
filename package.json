@@ -29,7 +29,7 @@
   "license": "MIT",
   "devDependencies": {
     "bili": "^4.7.3",
-    "eslint": "^5.16.0",
+    "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.8.0",
     "less": "^3.8.1",
