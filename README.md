@@ -112,7 +112,7 @@ API
   <br />&mdash; Defaults to `t => Math.min(1, t / 2.5)`
 - **`shouldPullToRefresh`** (function)
   Which condition should be met for pullToRefresh to trigger?
-  <br />&mdash; Defaults to `!window.scrollY`
+  <br />&mdash; Defaults to `!mainElement.scrollTop`
 
 ## Use with React
 
