@@ -1,5 +1,5 @@
 /*!
- * pulltorefreshjs v0.1.16
+ * pulltorefreshjs v0.1.18
  * (c) Rafael Soto
  * Released under the MIT License.
  */
@@ -160,7 +160,7 @@
       }
 
       if (_shared.state === 'refreshing') {
-        if (_el.shouldPullToRefresh() && _shared.pullStartY < _shared.pullMoveY) {
+        if (e.cancelable && _el.shouldPullToRefresh() && _shared.pullStartY < _shared.pullMoveY) {
           e.preventDefault();
         }
 
@@ -182,7 +182,10 @@
       _shared.distExtra = _shared.dist - _el.distIgnore;
 
       if (_shared.distExtra > 0) {
-        e.preventDefault();
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+
         _el.ptrElement.style[_el.cssProp] = (_shared.distResisted) + "px";
         _shared.distResisted = _el.resistanceFunction(_shared.distExtra / _el.distThreshold) * Math.min(_el.distMax, _shared.distExtra);
 

@@ -151,7 +151,7 @@ var _setupEvents = (function () {
     }
 
     if (_shared.state === 'refreshing') {
-      if (_el.shouldPullToRefresh() && _shared.pullStartY < _shared.pullMoveY) {
+      if (e.cancelable && _el.shouldPullToRefresh() && _shared.pullStartY < _shared.pullMoveY) {
         e.preventDefault();
       }
 
@@ -173,7 +173,10 @@ var _setupEvents = (function () {
     _shared.distExtra = _shared.dist - _el.distIgnore;
 
     if (_shared.distExtra > 0) {
-      e.preventDefault();
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+
       _el.ptrElement.style[_el.cssProp] = (_shared.distResisted) + "px";
       _shared.distResisted = _el.resistanceFunction(_shared.distExtra / _el.distThreshold) * Math.min(_el.distMax, _shared.distExtra);
 
