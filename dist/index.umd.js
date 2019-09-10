@@ -1,5 +1,5 @@
 /*!
- * pulltorefreshjs v0.1.18
+ * pulltorefreshjs v0.1.19
  * (c) Rafael Soto
  * Released under the MIT License.
  */
@@ -116,6 +116,8 @@
     update: update
   };
 
+  var _timeout;
+
   var screenY = function screenY(event) {
     if (_shared.pointerEventsEnabled && _shared.supportsPointerEvents) {
       return event.screenY;
@@ -210,7 +212,15 @@
     function _onTouchEnd() {
       if (!(_el && _el.ptrElement && _shared.enable)) {
         return;
-      }
+      } // wait 1/2 sec before unmounting...
+
+
+      clearTimeout(_timeout);
+      _timeout = setTimeout(function () {
+        if (_el && _el.ptrElement && _shared.state === 'pending') {
+          _ptr.onReset(_el);
+        }
+      }, 500);
 
       if (_shared.state === 'releasing' && _shared.distResisted > _el.distThreshold) {
         _shared.state = 'refreshing';

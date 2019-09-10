@@ -107,6 +107,8 @@ var _ptr = {
   update: update
 };
 
+var _timeout;
+
 var screenY = function screenY(event) {
   if (_shared.pointerEventsEnabled && _shared.supportsPointerEvents) {
     return event.screenY;
@@ -201,7 +203,15 @@ var _setupEvents = (function () {
   function _onTouchEnd() {
     if (!(_el && _el.ptrElement && _shared.enable)) {
       return;
-    }
+    } // wait 1/2 sec before unmounting...
+
+
+    clearTimeout(_timeout);
+    _timeout = setTimeout(function () {
+      if (_el && _el.ptrElement && _shared.state === 'pending') {
+        _ptr.onReset(_el);
+      }
+    }, 500);
 
     if (_shared.state === 'releasing' && _shared.distResisted > _el.distThreshold) {
       _shared.state = 'refreshing';
