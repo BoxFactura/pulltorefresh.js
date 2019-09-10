@@ -97,7 +97,7 @@ export default () => {
     // wait 1/2 sec before unmounting...
     clearTimeout(_timeout);
     _timeout = setTimeout(() => {
-      if (_shared.state === 'pending') {
+      if (_el && _el.ptrElement && _shared.state === 'pending') {
         _ptr.onReset(_el);
       }
     }, 500);
