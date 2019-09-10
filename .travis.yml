@@ -17,7 +17,7 @@ before_script:
   - npm run pretest
 
 script:
-  - npm run test:ci
+  - npm run test:ci tests/e2e/cases/
 
 notifications:
   email: false
