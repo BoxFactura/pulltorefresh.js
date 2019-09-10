@@ -1,6 +1,8 @@
 import _ptr from './api';
 import _shared from './shared';
 
+let _timeout;
+
 const screenY = function screenY(event) {
   if (_shared.pointerEventsEnabled && _shared.supportsPointerEvents) {
     return event.screenY;
@@ -91,6 +93,14 @@ export default () => {
     if (!(_el && _el.ptrElement && _shared.enable)) {
       return;
     }
+
+    // wait 1/2 sec before unmounting...
+    clearTimeout(_timeout);
+    _timeout = setTimeout(() => {
+      if (_shared.state === 'pending') {
+        _ptr.onReset(_el);
+      }
+    }, 500);
 
     if (_shared.state === 'releasing' && _shared.distResisted > _el.distThreshold) {
       _shared.state = 'refreshing';
