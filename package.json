@@ -20,8 +20,8 @@
     "prepublish": "npm run build:lib",
     "pretest": "npm run lint && NODE_ENV=test npm run build --",
     "posttest": "git checkout -- demos dist",
-    "test": "testcafe 'chrome:emulation:device=iphone 6;touch=true' -a 'npm run serve -- --no-browser'",
-    "test:ci": "testcafe 'chrome:headless:emulation:device=iphone 6;touch=true' -a 'npm run serve -- --no-browser'"
+    "test": "testcafe 'chrome' -a 'npm run serve -- --no-browser'",
+    "test:ci": "testcafe 'chrome:headless' -a 'npm run serve -- --no-browser'"
   },
   "files": [
     "dist/*.js"

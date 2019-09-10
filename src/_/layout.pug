@@ -43,6 +43,14 @@ html.no-js(lang='en')
           li
             a(href='https://github.com/BoxFactura/pulltorefresh.js') Contribute on Github
 
+    if process.env.NODE_ENV === 'test'
+      //- this will enable TouchEmulator() for e2e-testing
+      script.
+        var s = document.createElement('script');
+        s.src = '//unpkg.com/hammer-touchemulator@0.0.2/touch-emulator.js';
+        s.onload = function () { window.TouchEmulator(); };
+        document.getElementsByTagName('head')[0].appendChild(s);
+
     script(src='index.umd.min.js')
 
     block run
