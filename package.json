@@ -29,14 +29,17 @@
   "author": "Rafael Soto",
   "license": "MIT",
   "devDependencies": {
-    "bili": "^4.7.3",
+    "bili": "^4.8.1",
     "eslint": "^6.1.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
+    "eslint-utils": ">=1.4.1",
     "less": "^3.8.1",
     "live-server": "^1.2.1",
     "lodash": "^4.17.14",
+    "mixin-deep": ">=1.3.2",
     "pug-cli": "^1.0.0-alpha6",
-    "testcafe": "^1.1.3"
+    "set-value": ">=2.0.1",
+    "testcafe": "^15.1.317922"
   }
 }
