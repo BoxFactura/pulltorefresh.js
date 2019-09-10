@@ -22,9 +22,5 @@ export default {
   onInit: () => {},
   onRefresh: () => location.reload(),
   resistanceFunction: t => Math.min(1, t / 2.5),
-  shouldPullToRefresh() {
-    return typeof this.mainElement === 'string'
-      ? !document.querySelector(this.mainElement).scrollTop
-      : this.mainElement && !this.mainElement.scrollTop;
-  },
+  shouldPullToRefresh: () => !window.scrollY,
 };

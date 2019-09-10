@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Pull To Refresh Demo (development)</title>
+    <title>Pull To Refresh Demo (test)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
   </head>
@@ -78,6 +78,9 @@
             cb();
             alert('refresh 1');
           }, 1500);
+        },
+        shouldPullToRefresh: function(){
+          return !this.mainElement.scrollTop;
         }
       });
       var b = PullToRefresh.init({
@@ -88,6 +91,9 @@
             cb();
             alert('refresh 2');
           }, 1500);
+        },
+        shouldPullToRefresh: function(){
+          return !this.mainElement.scrollTop;
         }
       });
     </script>

@@ -10,8 +10,14 @@ A small, but powerful Javascript library crafted to power your webapp's pull to 
 
 ---
 
+## Donations
 
-## Install
+If you found this project helpful, please consider a donation.
+
+[![](https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYS5CSZWWLNN4)
+
+
+## Installation
 
 Download PulltoRefresh either from the [NPM Registry](https://www.npmjs.com/package/pulltorefreshjs), [CDNJS](https://cdnjs.com/libraries/pulltorefreshjs) or [UNPKG](https://unpkg.com/pulltorefreshjs):
 
@@ -27,7 +33,7 @@ const ptr = PullToRefresh.init({
   mainElement: 'body',
   onRefresh() {
     window.location.reload();
-  },
+  }
 });
 ```
 
@@ -112,12 +118,12 @@ API
   <br />&mdash; Defaults to `t => Math.min(1, t / 2.5)`
 - **`shouldPullToRefresh`** (function)
   Which condition should be met for pullToRefresh to trigger?
-  <br />&mdash; Defaults to `!mainElement.scrollTop`
+  <br />&mdash; Defaults to `!window.scrollY` • Please note that this default is useful whenever you're setting mainElement as the body of the document, if you need it in another element with overflow, use `!this.mainElement.scrollTop`. Refer to the [multiple instances demo](https://www.boxfactura.com/pulltorefresh.js/demos/multiple.html) for reference.
 
 ## Use with React
 
-With [ReactDOMServer](https://reactjs.org/docs/react-dom-server.html) and `renderToString()` you can use components as 
-icons instead of just strings. 
+With [ReactDOMServer](https://reactjs.org/docs/react-dom-server.html) and `renderToString()` you can use components as
+icons instead of just strings.
 In this example we also use [Font Awesome](https://fontawesome.com/how-to-use/on-the-web/using-with/react) to get nice icons with animation, but you can
 use any React component you like.
 
@@ -148,8 +154,8 @@ class App extends Component
             ),
         });
     }
-    
-    componentWillUnmount() 
+
+    componentWillUnmount()
     {
         // Don't forget to destroy all instances on unmout
         // or you will get some glitches.
@@ -181,20 +187,14 @@ To quickly start the development workflow:
 
 E2E tests are executed with Testcafé.
 
-- Run `npm test` to use standard chrome
-- Run `npm run test:ci` to run chrome in headless mode
+- Run `npm test` to use standard Chrome
+- Run `npm pretest && npm run test:ci` to run Chrome in headless mode
 
 Advanced debug can be achieved with `testcafe-live`, e.g.
 
 ```bash
-$ npx testcafe-live chrome tests/e2e/cases --debug-on-fail
+$ npm test --live chrome tests/e2e/cases --debug-on-fail
 ```
-
-## Donations
-
-If you find this project helpful, please consider supporting the maintenance team!
-
-[![](https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYS5CSZWWLNN4)
 
 ## Roadmap
 
