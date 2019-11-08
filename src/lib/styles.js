@@ -42,9 +42,7 @@ listeners can take over.
   touch-action: pan-x pan-down pinch-zoom;
 }
 
-.__PREFIX__release {
-  .__PREFIX__icon {
-    transform: rotate(180deg);
-  }
+.__PREFIX__release .__PREFIX__icon {
+  transform: rotate(180deg);
 }
 `;
