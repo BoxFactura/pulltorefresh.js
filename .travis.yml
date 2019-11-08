@@ -13,11 +13,8 @@ cache:
 install:
   - npm ci
 
-before_script:
-  - npm run pretest
-
 script:
-  - npm run test:ci tests/e2e/cases/
+  - npm run test
 
 notifications:
   email: false
