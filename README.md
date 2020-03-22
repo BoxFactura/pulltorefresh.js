@@ -82,7 +82,7 @@ API
   Which class prefix for the elements?
   <br />&mdash; Defaults to `ptr--`
 - **`cssProp`** (string)
-  Which property will be usedto calculate the element's proportions?
+  Which property will be used to calculate the element's proportions?
   <br />&mdash; Defaults to `min-height`
 - **`iconArrow`** (string)
   The icon for both `instructionsPullToRefresh` and `instructionsReleaseToRefresh`
