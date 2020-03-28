@@ -12,7 +12,7 @@ A small, but powerful Javascript library crafted to power your webapp's pull to 
 
 ## Donations
 
-If you found this project helpful, please consider a donation.
+If you found this project useful, please consider making a donation.
 
 [![](https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WYS5CSZWWLNN4)
 
