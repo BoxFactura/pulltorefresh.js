@@ -9,7 +9,7 @@ const _shared = {
   timeout: null,
   distResisted: 0,
   supportsPassive: false,
-  supportsPointerEvents: typeof window !== "undefined" && !!window.PointerEvent,
+  supportsPointerEvents: typeof window !== 'undefined' && !!window.PointerEvent,
 };
 
 try {
