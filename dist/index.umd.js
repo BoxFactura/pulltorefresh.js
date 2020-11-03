@@ -1,5 +1,5 @@
 /*!
- * pulltorefreshjs v0.1.19
+ * pulltorefreshjs v0.1.21
  * (c) Rafael Soto
  * Released under the MIT License.
  */
@@ -20,7 +20,7 @@
     timeout: null,
     distResisted: 0,
     supportsPassive: false,
-    supportsPointerEvents: !!window.PointerEvent
+    supportsPointerEvents: typeof window !== 'undefined' && !!window.PointerEvent
   };
 
   try {

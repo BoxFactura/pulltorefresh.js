@@ -11,7 +11,7 @@ var _shared = {
   timeout: null,
   distResisted: 0,
   supportsPassive: false,
-  supportsPointerEvents: !!window.PointerEvent
+  supportsPointerEvents: typeof window !== 'undefined' && !!window.PointerEvent
 };
 
 try {
