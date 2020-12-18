@@ -38,19 +38,21 @@ function setupDOM(handler) {
 }
 
 function onReset(handler) {
-  handler.ptrElement.classList.remove(`${handler.classPrefix}refresh`);
-  handler.ptrElement.style[handler.cssProp] = '0px';
+  if(handler.ptrElement) {
+    handler.ptrElement.classList.remove(`${handler.classPrefix}refresh`);
+    handler.ptrElement.style[handler.cssProp] = '0px';
 
-  setTimeout(() => {
-    // remove previous ptr-element from DOM
-    if (handler.ptrElement && handler.ptrElement.parentNode) {
-      handler.ptrElement.parentNode.removeChild(handler.ptrElement);
-      handler.ptrElement = null;
-    }
+    setTimeout(() => {
+      // remove previous ptr-element from DOM
+      if (handler.ptrElement && handler.ptrElement.parentNode) {
+        handler.ptrElement.parentNode.removeChild(handler.ptrElement);
+        handler.ptrElement = null;
+      }
 
-    // reset state
-    _shared.state = 'pending';
-  }, handler.refreshTimeout);
+      // reset state
+      _shared.state = 'pending';
+    }, handler.refreshTimeout);
+  }
 }
 
 function update(handler) {
