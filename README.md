@@ -187,8 +187,8 @@ To quickly start the development workflow:
 
 E2E tests are executed with Testcafé.
 
-- Run `npm test` to use standard Chrome
-- Run `npm pretest && npm run test:ci` to run Chrome in headless mode
+- Run `npm test` to fire tests in the default browser, use `BROWSER` to change this
+- ...or just run `make` to setup the dependencies and run tests only (e.g. CI)
 
 Advanced debug can be achieved with `testcafe-live`, e.g.
 
