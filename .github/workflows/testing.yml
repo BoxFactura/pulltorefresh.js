@@ -1,12 +1,18 @@
 name: build
-on: [push]
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: tacoss/nodejs@master
-        env:
-          BROWSER: chromium:headless
         with:
-          args: test
+          args: make test
