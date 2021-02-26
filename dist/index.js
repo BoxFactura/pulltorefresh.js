@@ -60,6 +60,7 @@ function setupDOM(handler) {
 }
 
 function onReset(handler) {
+  if (!handler.ptrElement) { return; }
   handler.ptrElement.classList.remove(((handler.classPrefix) + "refresh"));
   handler.ptrElement.style[handler.cssProp] = '0px';
   setTimeout(function () {

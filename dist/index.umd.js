@@ -1,5 +1,5 @@
 /*!
- * pulltorefreshjs v0.1.21
+ * pulltorefreshjs v0.1.22
  * (c) Rafael Soto
  * Released under the MIT License.
  */
@@ -69,6 +69,7 @@
   }
 
   function onReset(handler) {
+    if (!handler.ptrElement) { return; }
     handler.ptrElement.classList.remove(((handler.classPrefix) + "refresh"));
     handler.ptrElement.style[handler.cssProp] = '0px';
     setTimeout(function () {
