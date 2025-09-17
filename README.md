@@ -120,67 +120,12 @@ API
   Which condition should be met for pullToRefresh to trigger?
   <br />&mdash; Defaults to `!window.scrollY` • Please note that this default is useful whenever you're setting mainElement as the body of the document, if you need it in another element with overflow, use `!this.mainElement.scrollTop`. Refer to the [multiple instances demo](https://www.boxfactura.com/pulltorefresh.js/demos/multiple.html) for reference.
 
-## Use with React
-
-With [ReactDOMServer](https://reactjs.org/docs/react-dom-server.html) and `renderToString()` you can use components as
-icons instead of just strings.
-In this example we also use [Font Awesome](https://fontawesome.com/how-to-use/on-the-web/using-with/react) to get nice icons with animation, but you can
-use any React component you like.
-
-[Demo on codesandbox.io](https://codesandbox.io/s/21o9z8rrzy)
-
-```jsx harmony
-
-import React, { Component } from 'react';
-import ReactDOMServer from 'react-dom/server';
-import PullToRefresh from 'pulltorefreshjs';
-import { faSyncAlt} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-class App extends Component
-{
-    componentDidMount()
-    {
-        PullToRefresh.init({
-            mainElement: 'body',
-            onRefresh() {
-                window.location.reload();
-            },
-            iconArrow: ReactDOMServer.renderToString(
-                <FontAwesomeIcon icon={faSyncAlt} />
-            ),
-            iconRefreshing: ReactDOMServer.renderToString(
-                <FontAwesomeIcon icon={faSyncAlt} spin={true} />
-            ),
-        });
-    }
-
-    componentWillUnmount()
-    {
-        // Don't forget to destroy all instances on unmout
-        // or you will get some glitches.
-        PullToRefresh.destroyAll();
-    }
-
-    render()
-    {
-        return (
-            <div>
-                <h1>App</h1>
-            </div>
-        );
-    }
-}
-
-export default App;
-```
-
 ## Contribute
 
 To quickly start the development workflow:
 
-1. Install NodeJS ([NVM](https://github.com/creationix/nvm/blob/master/nvm.sh))
-2. Run `nvm use 10 && npm install`
+1. Install NodeJS ([asdf](https://asdf-vm.com/) recommended)
+2. Run `asdf install nodejs 24.8.0 && npm install`
 3. Then `npm run dev`
 
 > This will watch and compile the bundle for browser usage.

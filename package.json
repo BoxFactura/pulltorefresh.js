@@ -27,6 +27,9 @@
   ],
   "author": "Rafael Soto",
   "license": "MIT",
+  "engines": {
+    "node": ">=24.8.0"
+  },
   "devDependencies": {
     "bili": "^4.8.1",
     "eslint": "^6.1.0",
