@@ -1,13 +1,5 @@
 name: build
-
-on:
-  push:
-    branches:
-    - master
-  pull_request:
-    branches:
-    - master
-
+on: [push]
 jobs:
   build-test:
     runs-on: ubuntu-latest
